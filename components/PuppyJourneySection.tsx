@@ -197,7 +197,7 @@ export default function PuppyJourneySection() {
               data-facing="right"
               className="pup-stop tp-chat__teddy mt-6 flex justify-center"
             >
-              <div className="w-24 sm:w-32">
+              <div className="w-32 sm:w-40">
                 <PupBuddy pose="sit" facing="right" label="Teddy sitting by the chat" />
               </div>
             </div>

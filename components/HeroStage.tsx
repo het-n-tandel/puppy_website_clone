@@ -144,8 +144,8 @@ export default function HeroStage() {
           data-pup-stop="true"
           data-pose="peek"
           data-facing="right"
-          className="pup-stop tp-hero__teddy absolute left-1/2 bottom-[3.2rem] -translate-x-1/2 z-20 pointer-events-auto transition-transform hover:-translate-y-2 duration-300"
-          style={{ width: '13rem', height: '11.5rem' }}
+          className="pup-stop tp-hero__teddy absolute left-1/2 bottom-[2.8rem] -translate-x-1/2 z-20 pointer-events-auto transition-transform hover:-translate-y-2 duration-300"
+          style={{ width: '15.5rem', height: '13.5rem' }}
         >
           <PupBuddy pose="peek" facing="right" label="Teddy peeking over the quilt" />
         </div>

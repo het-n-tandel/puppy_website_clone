@@ -134,7 +134,7 @@ export default function TwoWaysSection() {
           data-facing="right"
           className="pup-stop tp-fork__teddy mt-10 flex justify-center"
         >
-          <div className="w-28 sm:w-36">
+          <div className="w-36 sm:w-44">
             <PupBuddy pose="sit" facing="right" label="Teddy sitting at the fork" />
           </div>
         </div>

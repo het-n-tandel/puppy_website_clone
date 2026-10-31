@@ -85,7 +85,7 @@ export default function QuestionsNightSection() {
                 data-act="tilt"
                 className="pup-stop tp-night__teddy"
               >
-                <div className="w-28 sm:w-36">
+                <div className="w-36 sm:w-44">
                   <PupBuddy pose="tilt" facing="right" label="Teddy tilting head curious" />
                 </div>
               </div>

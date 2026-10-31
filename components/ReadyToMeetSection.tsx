@@ -64,7 +64,7 @@ export default function ReadyToMeetSection() {
                 data-facing="right"
                 className="pup-stop tp-house__teddy"
               >
-                <div className="w-32 sm:w-40">
+                <div className="w-40 sm:w-48">
                   <PupBuddy pose="bow" facing="right" label="Teddy in playful bow pose" />
                 </div>
               </div>

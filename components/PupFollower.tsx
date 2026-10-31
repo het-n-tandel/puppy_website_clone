@@ -210,7 +210,7 @@ export default function PupFollower() {
             left: `${pos.x}px`,
             top: `${pos.y}px`,
             transform: 'translate(-50%, -50%)',
-            width: '120px',
+            width: '150px',
           }}
           aria-hidden="true"
         >

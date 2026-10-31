@@ -86,7 +86,7 @@ export default function PuppyPassportSection() {
               data-facing="right"
               className="pup-stop tp-book__teddy mt-8 flex justify-center"
             >
-              <div className="w-28 sm:w-36">
+              <div className="w-36 sm:w-44">
                 <PupBuddy pose="sit" facing="right" label="Teddy sitting on the passport" />
               </div>
             </div>

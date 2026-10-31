@@ -140,7 +140,7 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
             data-pose="sit"
             data-facing="right"
             className="pup-stop tp-meet__teddy absolute left-[6vw] sm:left-[10vw] bottom-16 sm:bottom-20 z-20 pointer-events-auto"
-            style={{ width: 'clamp(9rem, 14vw, 13rem)' }}
+            style={{ width: 'clamp(11.5rem, 16vw, 15.5rem)' }}
           >
             <PupBuddy pose="sit" facing="right" label="Teddy sitting watching the puppies" />
           </div>

@@ -118,7 +118,7 @@ export default function HappyFamiliesSection() {
           data-facing="right"
           className="pup-stop tp-dusk__teddy mt-12 flex justify-center"
         >
-          <div className="w-28 sm:w-36">
+          <div className="w-36 sm:w-44">
             <PupBuddy pose="sit" facing="right" label="Teddy admiring happy families" />
           </div>
         </div>

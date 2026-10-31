@@ -55,7 +55,7 @@ export default function Footer() {
               data-pose="snug"
               data-facing="right"
               data-act="basket"
-              className="pup-stop tp-basket__pup -mt-36 ml-12 sm:ml-16 w-36 sm:w-44"
+              className="pup-stop tp-basket__pup -mt-40 ml-10 sm:ml-14 w-44 sm:w-52"
             >
               <PupBuddy pose="snug" facing="right" label="Teddy sleeping peacefully in basket" />
             </div>
