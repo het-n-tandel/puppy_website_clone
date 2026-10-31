@@ -52,13 +52,12 @@ export default function PupFollower() {
       }
 
       // 2. Meet the Pups Check:
-      // When approaching or inside the pinned "Meet the pups" showroom section:
-      // Teddy seamlessly joins the showroom runway frame on the parquet floor
+      // When inside the pinned "Meet the pups" runway, runway Teddy takes over on the parquet floor
       const meetSection = document.querySelector('section[aria-labelledby="meet-title"]');
       let inMeetRunway = false;
       if (meetSection) {
         const mRect = meetSection.getBoundingClientRect();
-        if (mRect.top <= window.innerHeight * 0.65 && mRect.bottom >= window.innerHeight * 0.25) {
+        if (mRect.top <= 60 && mRect.bottom >= window.innerHeight * 0.45) {
           inMeetRunway = true;
         }
       }
@@ -67,11 +66,10 @@ export default function PupFollower() {
         setIsMovableActive(false);
         setIsActivelyWalking(false);
 
-        // Hide all stops except showroom runway Teddy
-        stops.forEach((stop) => {
-          const isMeetTeddy = stop.classList.contains('tp-meet__teddy');
+        // Hide Hero and other section stops so runway Teddy has full focus
+        stops.forEach((stop, idx) => {
           const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
-          if (isMeetTeddy) {
+          if (idx === 1) {
             buddy.style.opacity = '1';
             buddy.style.visibility = 'visible';
           } else {
@@ -83,26 +81,17 @@ export default function PupFollower() {
       }
 
       // 3. Footer Check:
-      // When approaching or inside the footer ("Home, at last."):
-      // Teddy seamlessly joins the wicker basket frame and sleeps peacefully
-      const footerSection = document.querySelector('footer.tp-footer');
-      let inFooter = false;
-      if (footerSection) {
-        const fRect = footerSection.getBoundingClientRect();
-        if (fRect.top <= window.innerHeight * 0.75) {
-          inFooter = true;
-        }
-      }
-
-      if (inFooter) {
+      // When reached the very bottom, Teddy curls up asleep in the basket
+      const isAtBottom =
+        window.innerHeight + scrollY >= document.documentElement.scrollHeight - 140;
+      if (isAtBottom && stops.length > 0) {
+        const lastIdx = stops.length - 1;
         setIsMovableActive(false);
         setIsActivelyWalking(false);
 
-        // Reveal sleeping puppy in basket; hide all other stops
-        stops.forEach((stop) => {
-          const isBasketPup = stop.classList.contains('tp-basket__pup');
+        stops.forEach((stop, idx) => {
           const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
-          if (isBasketPup) {
+          if (idx === lastIdx) {
             buddy.style.opacity = '1';
             buddy.style.visibility = 'visible';
           } else {
