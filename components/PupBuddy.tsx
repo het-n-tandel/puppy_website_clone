@@ -40,7 +40,7 @@ export default function PupBuddy({
       : pose === 'bow'
       ? 'translate(-6 22) rotate(6 212 100)'
       : pose === 'snug'
-      ? 'translate(-12 18) rotate(-8 212 100)'
+      ? 'translate(0 9) rotate(4 212 100)'
       : 'translate(-10 -6) rotate(0 212 100)';
 
   const bodyTransform =
@@ -49,7 +49,7 @@ export default function PupBuddy({
       : pose === 'bow'
       ? 'translate(0 14) rotate(12 196 206)'
       : pose === 'snug'
-      ? 'translate(0 24) scale(0.95 0.88)'
+      ? 'translate(0 0) rotate(0 196 206)'
       : 'translate(0 -2) rotate(-24 196 206)';
 
   const eyesShut = pose === 'snug';
@@ -438,8 +438,8 @@ export default function PupBuddy({
             />
           </g>
 
-          {/* Peeking Ledge Paws */}
-          {pose === 'peek' && (
+          {/* Peeking / Snug Ledge Paws resting on quilt / basket rim */}
+          {(pose === 'peek' || pose === 'snug') && (
             <g data-p="ledge" opacity="1">
               <path
                 d="M175 159 C175 148 181 142 190 142 C199 142 205 148 205 159 Z M219 159 C219 148 225 142 234 142 C243 142 249 148 249 159 Z"

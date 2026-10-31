@@ -34,38 +34,62 @@ export default function Footer() {
           </div>
 
           {/* Handcrafted Cozy Woven Wicker Basket Scene */}
-          <div className="tp-basket relative max-w-sm mt-8">
+          <div className="tp-basket mt-8">
+            {/* Back Hollow & Top Rim Line */}
             <svg
               aria-hidden="true"
               viewBox="0 0 300 240"
-              className="tp-basket__back w-full h-auto"
+              className="tp-basket__back"
             >
-              <ellipse cx="212" cy="145" rx="96" ry="12" fill="#3a1e12" />
+              <ellipse cx="212" cy="145" rx="96" ry="12" className="tp-basket__hollow" />
               <path
                 d="M116 145 A96 12 0 0 1 308 145"
-                stroke="#6b3a24"
-                strokeWidth="6"
-                fill="none"
+                className="tp-basket__rim-line"
+              />
+              <path
+                d="M116 145 A96 12 0 0 1 308 145"
+                className="tp-basket__rim"
               />
             </svg>
 
-            {/* Sleeping Puppy Mascot curled up inside basket */}
+            {/* Sleeping Puppy Mascot curled up snug inside basket */}
             <div
               data-pup-stop="true"
               data-pose="snug"
               data-facing="right"
               data-act="basket"
-              className="pup-stop tp-basket__pup -mt-40 ml-10 sm:ml-14 w-44 sm:w-52"
+              className="pup-stop tp-basket__pup"
             >
-              <PupBuddy pose="snug" facing="right" label="Teddy sleeping peacefully in basket" />
+              <PupBuddy pose="snug" facing="right" label="Teddy, sitting snug in his basket" />
             </div>
 
-            {/* Front Wicker Weave & Blanket Rim */}
-            <div className="relative -mt-10 bg-gradient-to-b from-[#8a4e2e] to-[#5a311b] h-16 rounded-b-[40px] border-3 border-[#2a170e] shadow-lg flex items-center justify-center">
-              <span className="font-serif italic text-xs font-bold text-[#fbe3b4]/90 tracking-widest uppercase">
-                *fast asleep &amp; dreaming*
-              </span>
-            </div>
+            {/* Front Woven Wicker Basket Body & Rim */}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 300 240"
+              className="tp-basket__front"
+            >
+              <path
+                d="M116 145 C118 180 126 214 138 232 L286 232 C298 214 306 180 308 145 A96 12 0 0 1 116 145 Z"
+                className="tp-basket__body"
+              />
+              <path
+                d="M121 178 Q212 197 303 178 M127 206 Q212 223 297 206"
+                className="tp-basket__weave"
+              />
+              <path
+                d="M150 164 L158 230 M182 168 L185 232 M212 169 V232 M242 168 L239 232 M274 164 L266 230"
+                className="tp-basket__weave tp-basket__weave--stakes"
+              />
+              <path
+                d="M116 145 A96 12 0 0 0 308 145"
+                className="tp-basket__rim-line"
+              />
+              <path
+                d="M116 145 A96 12 0 0 0 308 145"
+                className="tp-basket__rim"
+              />
+            </svg>
           </div>
         </div>
 

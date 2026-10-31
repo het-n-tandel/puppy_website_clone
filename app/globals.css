@@ -140,6 +140,76 @@
   animation: pup-gentle-wag 1.8s infinite ease-in-out;
 }
 
+/* Wicker Basket Scene in Footer */
+.tp-basket {
+  --bw: clamp(14rem, 24vw, 19rem);
+  width: var(--bw);
+  aspect-ratio: 300 / 240;
+  position: relative;
+}
+
+.tp-basket > * {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.tp-basket > svg {
+  pointer-events: none;
+}
+
+.tp-basket__back {
+  z-index: 1;
+}
+
+.tp-basket__pup {
+  z-index: 10;
+}
+
+.tp-basket__front {
+  z-index: 25;
+}
+
+.tp-basket__hollow {
+  fill: #5d3519;
+  stroke: #2a170e;
+  stroke-width: 3px;
+}
+
+.tp-basket__rim-line {
+  fill: none;
+  stroke: #2a170e;
+  stroke-width: 13px;
+  stroke-linecap: round;
+}
+
+.tp-basket__rim {
+  fill: none;
+  stroke: #e8b46c;
+  stroke-width: 7.5px;
+  stroke-linecap: round;
+}
+
+.tp-basket__body {
+  fill: #d9a05a;
+  stroke: #2a170e;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.tp-basket__weave {
+  fill: none;
+  stroke: #2a170e47;
+  stroke-width: 2.6px;
+  stroke-linecap: round;
+}
+
+.tp-basket__weave--stakes {
+  stroke: #2a170e26;
+}
+
 body {
   background-color: var(--color-milk);
   background-image: radial-gradient(circle at 1px 1px, #2a170e0d 1px, transparent 1.6px);
