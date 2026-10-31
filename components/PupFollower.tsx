@@ -3,132 +3,116 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PupBuddy from './PupBuddy';
 
-interface PupStopMeta {
-  el: HTMLElement;
-  rect: DOMRect;
-  pose: 'peek' | 'sit' | 'tilt' | 'bow' | 'snug' | 'walk';
-  facing: 'left' | 'right';
-  act?: string;
-  centerY: number;
-}
-
 export default function PupFollower() {
   const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [currentPose, setCurrentPose] = useState<'peek' | 'sit' | 'tilt' | 'bow' | 'snug' | 'walk'>('sit');
   const [facing, setFacing] = useState<'left' | 'right'>('right');
-  const [position, setPosition] = useState<{ x: number; y: number; visible: boolean }>({
-    x: 0,
-    y: 0,
-    visible: false,
-  });
-  const [isTraveling, setIsTraveling] = useState(false);
+  const [pos, setPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isWalking, setIsWalking] = useState(false);
   const [pawPrints, setPawPrints] = useState<Array<{ id: number; x: number; y: number; angle: number }>>([]);
+
   const lastScrollY = useRef(0);
+  const walkTimeout = useRef<NodeJS.Timeout | null>(null);
   const printCounter = useRef(0);
 
   useEffect(() => {
     setMounted(true);
 
-    const updatePupPosition = () => {
-      const stops = Array.from(
-        document.querySelectorAll<HTMLElement>('[data-pup-stop="true"]')
-      );
-
-      if (stops.length === 0) return;
-
-      const viewportCenter = window.innerHeight * 0.45;
+    const handleScroll = () => {
       const scrollY = window.scrollY;
       const scrollDir = scrollY > lastScrollY.current ? 'down' : 'up';
       lastScrollY.current = scrollY;
 
-      // Find closest stop to the viewport center
-      let closestStop: HTMLElement | null = null;
-      let minDistance = Infinity;
+      // 1. IN LANDING PAGE (Hero section, scrollY < 260):
+      // Mascot sits naturally in the center of the hero quilt!
+      // The follower overlay must stay hidden.
+      if (scrollY < 260) {
+        setVisible(false);
+        setIsWalking(false);
+        return;
+      }
 
-      stops.forEach((stop) => {
-        const rect = stop.getBoundingClientRect();
-        const dist = Math.abs(rect.top - viewportCenter);
-        if (dist < minDistance) {
-          minDistance = dist;
-          closestStop = stop;
-        }
-      });
+      // 2. AFTER SCROLL: Mascot follows the user down the page
+      setVisible(true);
+      setIsWalking(true);
+      setCurrentPose('walk');
+      setFacing(scrollDir === 'down' ? 'right' : 'left');
 
-      if (closestStop) {
-        const stopEl = closestStop as HTMLElement;
-        const rect = stopEl.getBoundingClientRect();
-        const poseAttr = (stopEl.getAttribute('data-pose') || 'sit') as any;
-        const facingAttr = (stopEl.getAttribute('data-facing') || 'right') as any;
+      if (walkTimeout.current) clearTimeout(walkTimeout.current);
+      walkTimeout.current = setTimeout(() => {
+        setIsWalking(false);
+        // Find which section stop is closest
+        const stops = Array.from(
+          document.querySelectorAll<HTMLElement>('[data-pup-stop="true"]')
+        );
+        const center = window.innerHeight * 0.45;
+        let closest = stops[0];
+        let minDist = Infinity;
 
-        // If the closest stop is within viewport, dock or head towards it
-        const isNear = minDistance < 220;
-
-        if (isNear) {
-          setIsTraveling(false);
-          setCurrentPose(poseAttr);
-          setFacing(facingAttr);
-          setPosition({
-            x: rect.left + rect.width / 2,
-            y: rect.top + rect.height / 2,
-            visible: true,
-          });
-        } else {
-          // Pup is traveling smoothly between sections
-          setIsTraveling(true);
-          setCurrentPose('walk');
-          setFacing(scrollDir === 'down' ? 'right' : 'left');
-
-          // Smooth target floating on the right side of the screen as an escort
-          const targetX = Math.min(window.innerWidth - 80, Math.max(80, window.innerWidth * 0.88));
-          const targetY = viewportCenter;
-
-          setPosition({
-            x: targetX,
-            y: targetY,
-            visible: true,
-          });
-
-          // Occasionally leave a playful paw print
-          if (Math.random() < 0.18) {
-            const newPrint = {
-              id: printCounter.current++,
-              x: targetX + (Math.random() * 20 - 10),
-              y: targetY + 30 + (Math.random() * 10 - 5),
-              angle: scrollDir === 'down' ? 180 : 0,
-            };
-            setPawPrints((prev) => [...prev.slice(-12), newPrint]);
+        stops.forEach((s) => {
+          const rect = s.getBoundingClientRect();
+          const d = Math.abs(rect.top - center);
+          if (d < minDist) {
+            minDist = d;
+            closest = s;
           }
+        });
+
+        if (closest) {
+          const pose = closest.getAttribute('data-pose') as any;
+          setCurrentPose(pose || 'sit');
+        } else {
+          setCurrentPose('sit');
         }
+      }, 350);
+
+      // Follow smoothly docked at comfortable side margin
+      const rightX = Math.min(window.innerWidth - 75, Math.max(75, window.innerWidth * 0.92));
+      const targetY = window.innerHeight * 0.55;
+
+      setPos({ x: rightX, y: targetY });
+
+      // Leave gentle paw prints along trail
+      if (Math.random() < 0.22) {
+        const newPrint = {
+          id: printCounter.current++,
+          x: rightX + (Math.random() * 20 - 10),
+          y: targetY + 28 + (Math.random() * 10 - 5),
+          angle: scrollDir === 'down' ? 180 : 0,
+        };
+        setPawPrints((prev) => [...prev.slice(-8), newPrint]);
       }
     };
 
-    window.addEventListener('scroll', updatePupPosition, { passive: true });
-    window.addEventListener('resize', updatePupPosition, { passive: true });
-    updatePupPosition();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    handleScroll();
 
     return () => {
-      window.removeEventListener('scroll', updatePupPosition);
-      window.removeEventListener('resize', updatePupPosition);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+      if (walkTimeout.current) clearTimeout(walkTimeout.current);
     };
   }, []);
 
-  if (!mounted || !position.visible) return null;
+  if (!mounted || !visible) return null;
 
   return (
     <>
-      {/* Playful Floating Paw Prints along the screen trail */}
+      {/* Light Fading Paw Prints Trail */}
       <div className="fixed inset-0 pointer-events-none z-30 overflow-hidden" aria-hidden="true">
         {pawPrints.map((p) => (
           <div
             key={p.id}
-            className="absolute transition-opacity duration-1000 opacity-60"
+            className="absolute transition-opacity duration-1000 opacity-50"
             style={{
               left: `${p.x}px`,
               top: `${p.y}px`,
-              transform: `translate(-50%, -50%) rotate(${p.angle}deg) scale(0.65)`,
+              transform: `translate(-50%, -50%) rotate(${p.angle}deg) scale(0.6)`,
             }}
           >
-            <svg viewBox="0 0 40 40" className="w-6 h-6 text-[#c2622b]/40 fill-current">
+            <svg viewBox="0 0 40 40" className="w-5 h-5 text-[#c2622b]/50 fill-current">
               <ellipse cx="20" cy="27" rx="9" ry="8" />
               <circle cx="11" cy="14" r="3.2" />
               <circle cx="17" cy="9" r="3.5" />
@@ -139,23 +123,21 @@ export default function PupFollower() {
         ))}
       </div>
 
-      {/* Floating Traveling Dog Mascot */}
+      {/* Floating Traveling Dog Mascot Follower */}
       <div
-        className={`fixed z-40 pointer-events-auto transition-all ${
-          isTraveling ? 'duration-700 ease-out' : 'duration-300 ease-in-out'
-        }`}
+        className="fixed z-40 pointer-events-auto transition-all duration-300 ease-out"
         style={{
-          left: `${position.x}px`,
-          top: `${position.y}px`,
+          left: `${pos.x}px`,
+          top: `${pos.y}px`,
           transform: 'translate(-50%, -50%)',
-          width: isTraveling ? '110px' : '150px',
+          width: isWalking ? '105px' : '125px',
         }}
         aria-hidden="true"
       >
         <PupBuddy
           pose={currentPose}
           facing={facing}
-          className={`${isTraveling ? 'animate-bounce drop-shadow-xl' : 'drop-shadow-md'}`}
+          className={`${isWalking ? 'animate-bounce drop-shadow-xl' : 'drop-shadow-md'}`}
         />
       </div>
     </>

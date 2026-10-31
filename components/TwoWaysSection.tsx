@@ -10,7 +10,7 @@ export default function TwoWaysSection() {
     <section
       data-pup-scene="true"
       data-tone="light"
-      className="tp-scene tp-paths relative py-20 overflow-hidden bg-gradient-to-b from-[#fbe3b4] to-[#f7d18d] border-b-2 border-[#2a170e]/10"
+      className="tp-scene tp-paths relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-[#fbe3b4] to-[#f7d18d]"
       style={{
         ['--sky-top' as any]: '#fbe3b4',
         ['--sky-bottom' as any]: '#f7d18d',

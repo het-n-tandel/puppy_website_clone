@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Puppy } from '@/types/puppy';
+import PupBuddy from './PupBuddy';
 
 interface MeetThePupsProps {
   puppies: Puppy[];
@@ -23,7 +24,7 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
       const totalDist = container.offsetHeight - window.innerHeight;
 
       if (totalDist > 0) {
-        // Calculate progress from 0 to 1
+        // Calculate progress clamped between 0 and 1
         const progress = Math.min(1, Math.max(0, -rect.top / totalDist));
         setScrollProgress(progress);
       }
@@ -35,18 +36,18 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
   }, []);
 
   const displayPuppies = puppies.slice(0, 10);
-  // Calculate horizontal translation percentage
-  const maxTranslate = (displayPuppies.length - 2.5) * 280;
+  // Calculate horizontal translation so parade ends smoothly
+  const maxTranslate = (displayPuppies.length - 2) * 280;
   const translateX = -scrollProgress * maxTranslate;
 
   return (
     <section
       ref={containerRef}
-      className="relative h-[280vh] bg-gradient-to-b from-[#fff1d8] to-[#fbe3b4] select-none"
+      className="relative h-[220vh] bg-gradient-to-b from-[#fff1d8] to-[#fbe3b4] select-none"
       aria-labelledby="meet-title"
     >
       {/* Sticky Viewport Stage */}
-      <div className="sticky top-0 h-screen flex flex-col justify-between overflow-hidden pt-20 pb-8 sm:pb-12">
+      <div className="sticky top-0 h-screen flex flex-col justify-between overflow-hidden pt-16 sm:pt-20">
         {/* Section Header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-20">
           <div>
@@ -57,15 +58,19 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
               Real puppies, real photos, looking for their families right now.
             </p>
           </div>
-          <Link href="/puppies" className="btn-primary text-sm sm:text-base font-bold py-3 px-7 shrink-0 shadow-md">
+          <Link
+            href="/puppies"
+            className="btn-primary text-sm sm:text-base font-bold py-3 px-7 shrink-0 shadow-md"
+          >
             See all available puppies
           </Link>
         </div>
 
-        {/* Horizontal Parade Track */}
-        <div className="relative w-full flex-1 flex items-center overflow-hidden my-auto">
+        {/* Horizontal Parade Track Stage */}
+        <div className="relative w-full flex-1 flex flex-col justify-end overflow-hidden">
+          {/* Moving Doors Track */}
           <div
-            className="flex items-end gap-6 sm:gap-10 pl-[8vw] sm:pl-[20vw] pr-[20vw] transition-transform duration-75 ease-out will-change-transform"
+            className="flex items-end gap-6 sm:gap-10 pl-[30vw] sm:pl-[24vw] pr-[20vw] z-10 transition-transform duration-75 ease-out will-change-transform pb-2"
             style={{
               transform: `translate3d(${translateX}px, 0, 0)`,
             }}
@@ -90,10 +95,10 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
                     </p>
                   </div>
 
-                  {/* Arched Doorway with Peekaboo Door Leaf */}
+                  {/* Arched Doorway Resting Grounded on the Floor */}
                   <Link
                     href={`/puppies/${pup.slug}`}
-                    className="relative block w-44 sm:w-56 h-60 sm:h-76 rounded-t-full overflow-hidden border-[3.5px] border-[#2a170e] bg-[#fffdf8] shadow-lg transition-transform duration-300 hover:scale-105"
+                    className="relative block w-44 sm:w-56 h-60 sm:h-76 rounded-t-full overflow-hidden border-[3.5px] border-[#2a170e] bg-[#fffdf8] shadow-[4px_6px_0px_#2a170e] transition-transform duration-300 hover:scale-105"
                   >
                     {/* Puppy Photo inside the room */}
                     <Image
@@ -107,7 +112,7 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
                     {/* Door Leaf that swings open on hover with paw peephole */}
                     <div
                       className={`absolute inset-0 bg-[#e4a352] border-r-2 border-[#2a170e] transition-transform duration-500 origin-left flex items-center justify-center ${
-                        isHovered ? '-rotate-y-90 opacity-0' : 'rotate-y-0 opacity-85'
+                        isHovered ? '-rotate-y-90 opacity-0' : 'rotate-y-0 opacity-90'
                       }`}
                     >
                       <div className="text-[#2a170e]">
@@ -119,7 +124,7 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
 
                     {/* Status Badge */}
                     <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap">
-                      <span className="badge-sticker bg-[#fffdf8] text-[#2a170e] text-[11px] font-bold border border-[#2a170e]">
+                      <span className="bg-[#fffdf8] text-[#2a170e] text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-[#2a170e] shadow-sm">
                         {pup.status}
                       </span>
                     </div>
@@ -128,13 +133,36 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
               );
             })}
           </div>
-        </div>
 
-        {/* Scroll Indicator Prompt */}
-        <div className="text-center z-20 text-xs font-bold text-[#5a3a28] tracking-widest uppercase flex items-center justify-center gap-2">
-          <span>🐾</span>
-          <span>Scroll to walk through the puppy gallery</span>
-          <span>🐾</span>
+          {/* Teddy Mascot Sitting Grounded on the Left Floor watching the pups */}
+          <div
+            data-pup-stop="true"
+            data-pose="sit"
+            data-facing="right"
+            className="pup-stop tp-meet__teddy absolute left-[6vw] sm:left-[10vw] bottom-16 sm:bottom-20 z-20 pointer-events-auto"
+            style={{ width: 'clamp(9rem, 14vw, 13rem)' }}
+          >
+            <PupBuddy pose="sit" facing="right" label="Teddy sitting watching the puppies" />
+          </div>
+
+          {/* Grounded Wooden Floor Runway matching reference */}
+          <div
+            className="tp-meet__floor relative w-full h-20 sm:h-24 border-t-[3.5px] border-[#2a170e] z-10 shadow-[0_-10px_0_-4px_#f5d9a8]"
+            style={{
+              background: `linear-gradient(to bottom, #2a170e20, transparent 24%), repeating-linear-gradient(90deg, transparent 0 160px, #2a170e1a 160px 162px), linear-gradient(#e8b06a, #dc9a52)`,
+            }}
+          >
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between text-xs font-bold text-[#2a170e]/80 uppercase tracking-widest">
+              <span className="flex items-center gap-2">
+                <span>🐾</span>
+                <span className="hidden sm:inline">Showroom Runway Track</span>
+              </span>
+              <span className="flex items-center gap-1.5 animate-pulse text-[#2a170e]">
+                <span>Scroll to see more pups</span>
+                <span>→</span>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

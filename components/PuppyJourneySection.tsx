@@ -16,7 +16,7 @@ export default function PuppyJourneySection() {
     <section
       data-pup-scene="true"
       data-tone="light"
-      className="tp-scene tp-journey relative py-20 overflow-hidden bg-gradient-to-b from-[#f7d18d] to-[#f0b866] border-b-2 border-[#2a170e]/10"
+      className="tp-scene tp-journey relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-[#f7d18d] to-[#f0b866]"
       style={{
         ['--sky-top' as any]: '#f7d18d',
         ['--sky-bottom' as any]: '#f0b866',
