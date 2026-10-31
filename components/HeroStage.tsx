@@ -27,7 +27,7 @@ const SEATS: Seat[] = [
     w: '8.4rem',
     peek: 0.62,
     tilt: '-5deg',
-    image: 'https://puppy.instabizweb.com/media/Z0ToauDx7Eve/5fffe4d022/b942a5_4b8cfb8204d24eadaf524332aba1dc15-mv2.webp',
+    image: '/media/Z0ToauDx7Eve/5fffe4d022/b942a5_4b8cfb8204d24eadaf524332aba1dc15-mv2.webp',
   },
   {
     id: 'korean-maltipoo',
@@ -38,7 +38,7 @@ const SEATS: Seat[] = [
     w: '10.8rem',
     peek: 0.82,
     tilt: '3deg',
-    image: 'https://puppy.instabizweb.com/media/gAaGwoGej2g6/5523e884dd/b942a5_50f0ae67c9ff437d911597d52a9e63b3-mv2.jpg',
+    image: '/media/gAaGwoGej2g6/5523e884dd/b942a5_50f0ae67c9ff437d911597d52a9e63b3-mv2.jpg',
   },
   {
     id: 'pomeranian',
@@ -49,7 +49,7 @@ const SEATS: Seat[] = [
     w: '9.2rem',
     peek: 0.72,
     tilt: '-2deg',
-    image: 'https://puppy.instabizweb.com/media/xeMJCapr5vcU/e618c653b2/b942a5_14376a216177484dbbb27995d0f6aeb7-mv2.jpg',
+    image: '/media/xeMJCapr5vcU/e618c653b2/b942a5_14376a216177484dbbb27995d0f6aeb7-mv2.jpg',
   },
   {
     id: 'maltipoo-cavapoo',
@@ -60,7 +60,7 @@ const SEATS: Seat[] = [
     w: '9.4rem',
     peek: 0.74,
     tilt: '3deg',
-    image: 'https://puppy.instabizweb.com/media/YQhey4j7uWvZ/3ea10db6c1/b942a5_7ce7e7bd18424b6c8fb16dd30113ade2-mv2.jpg',
+    image: '/media/YQhey4j7uWvZ/3ea10db6c1/b942a5_7ce7e7bd18424b6c8fb16dd30113ade2-mv2.jpg',
   },
   {
     id: 'poodle',
@@ -71,7 +71,7 @@ const SEATS: Seat[] = [
     w: '11rem',
     peek: 0.84,
     tilt: '-3deg',
-    image: 'https://puppy.instabizweb.com/media/vMu0BPvkAZ-j/c65e53967d/b942a5_0b2c0c0d178c4005acbe28725a5ea573-mv2.jpg',
+    image: '/media/vMu0BPvkAZ-j/c65e53967d/b942a5_0b2c0c0d178c4005acbe28725a5ea573-mv2.jpg',
   },
   {
     id: 'maltipoo-2',
@@ -82,7 +82,7 @@ const SEATS: Seat[] = [
     w: '8.4rem',
     peek: 0.6,
     tilt: '4deg',
-    image: 'https://puppy.instabizweb.com/media/3WJNmn6VVgVu/732f779474/b942a5_2b5dcece361b4589890ae920c66a1b70-mv2.jpg',
+    image: '/media/3WJNmn6VVgVu/732f779474/b942a5_2b5dcece361b4589890ae920c66a1b70-mv2.jpg',
   },
 ];
 

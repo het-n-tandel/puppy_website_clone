@@ -58,7 +58,7 @@ export const HAPPY_FAMILIES_REVIEWS: ReviewItem[] = [
     quote: "Welcoming Milo into our home was the most seamless and heartwarming experience. The health certificates, vet records, and 24/7 post-adoption care from TeddyPups were truly exceptional.",
     date: "October 2026",
     rating: 5,
-    image: "https://puppy.instabizweb.com/media/Z0ToauDx7Eve/5fffe4d022/b942a5_4b8cfb8204d24eadaf524332aba1dc15-mv2.webp"
+    image: "/media/Z0ToauDx7Eve/5fffe4d022/b942a5_4b8cfb8204d24eadaf524332aba1dc15-mv2.webp"
   },
   {
     id: "rev-2",
@@ -69,7 +69,7 @@ export const HAPPY_FAMILIES_REVIEWS: ReviewItem[] = [
     quote: "Coco arrived in perfect health with all travel papers and a wonderful starter care basket. He settled into our family within hours. We couldn't be happier!",
     date: "September 2026",
     rating: 5,
-    image: "https://puppy.instabizweb.com/media/gAaGwoGej2g6/5523e884dd/b942a5_50f0ae67c9ff437d911597d52a9e63b3-mv2.jpg"
+    image: "/media/gAaGwoGej2g6/5523e884dd/b942a5_50f0ae67c9ff437d911597d52a9e63b3-mv2.jpg"
   },
   {
     id: "rev-3",
@@ -80,7 +80,7 @@ export const HAPPY_FAMILIES_REVIEWS: ReviewItem[] = [
     quote: "The entire team treated our puppy like royalty. We met Bella at their Dubai showroom, fell in love instantly, and took her home the very same afternoon.",
     date: "August 2026",
     rating: 5,
-    image: "https://puppy.instabizweb.com/media/xeMJCapr5vcU/e618c653b2/b942a5_14376a216177484dbbb27995d0f6aeb7-mv2.jpg"
+    image: "/media/xeMJCapr5vcU/e618c653b2/b942a5_14376a216177484dbbb27995d0f6aeb7-mv2.jpg"
   },
   {
     id: "rev-4",
@@ -91,7 +91,7 @@ export const HAPPY_FAMILIES_REVIEWS: ReviewItem[] = [
     quote: "Finding a genuine teacup pup with certified lineage seemed impossible until we connected with TeddyPups. Transparent communication from day one.",
     date: "July 2026",
     rating: 5,
-    image: "https://puppy.instabizweb.com/media/YQhey4j7uWvZ/3ea10db6c1/b942a5_7ce7e7bd18424b6c8fb16dd30113ade2-mv2.jpg"
+    image: "/media/YQhey4j7uWvZ/3ea10db6c1/b942a5_7ce7e7bd18424b6c8fb16dd30113ade2-mv2.jpg"
   }
 ];
 

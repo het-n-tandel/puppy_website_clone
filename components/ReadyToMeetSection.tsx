@@ -45,7 +45,7 @@ export default function ReadyToMeetSection() {
             {/* Arched Doorway with Puppy Waiting Inside */}
             <div className="relative w-44 h-56 rounded-t-full border-4 border-[#f2be6b] overflow-hidden shadow-xl bg-stone-900 shrink-0">
               <Image
-                src="https://puppy.instabizweb.com/media/Z0ToauDx7Eve/5fffe4d022/b942a5_4b8cfb8204d24eadaf524332aba1dc15-mv2.webp"
+                src="/media/Z0ToauDx7Eve/5fffe4d022/b942a5_4b8cfb8204d24eadaf524332aba1dc15-mv2.webp"
                 alt="Max waiting cheerfully inside"
                 fill
                 className="object-cover"

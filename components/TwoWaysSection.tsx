@@ -95,7 +95,7 @@ export default function TwoWaysSection() {
               <figure className="tp-window">
                 <span className="tp-window__glass">
                   <Image
-                    src="https://puppy.instabizweb.com/media/FHyoHcIosLZE/60f6e7e00a/27b888_323008bb0f6a41d4bde2a0da7206cd98f000.jpg"
+                    src="/media/FHyoHcIosLZE/60f6e7e00a/27b888_323008bb0f6a41d4bde2a0da7206cd98f000.jpg"
                     alt="A tiny apricot teddy bear puppy held up in the TeddyPups showroom"
                     fill
                     sizes="(min-width: 1024px) 16rem, 60vw"
@@ -167,7 +167,7 @@ export default function TwoWaysSection() {
                     {/* Porthole window with puppy photo */}
                     <g transform="translate(10 2)">
                       <image
-                        href="https://puppy.instabizweb.com/media/gAaGwoGej2g6/5523e884dd/b942a5_50f0ae67c9ff437d911597d52a9e63b3-mv2.jpg"
+                        href="/media/gAaGwoGej2g6/5523e884dd/b942a5_50f0ae67c9ff437d911597d52a9e63b3-mv2.jpg"
                         x="-25"
                         y="-25"
                         width="50"

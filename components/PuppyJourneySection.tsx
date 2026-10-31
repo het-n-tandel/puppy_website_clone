@@ -191,7 +191,7 @@ export default function PuppyJourneySection() {
                   <div className="tp-snaps">
                     <span className="tp-snaps__one">
                       <Image
-                        src="https://puppy.instabizweb.com/media/FHyoHcIosLZE/60f6e7e00a/27b888_323008bb0f6a41d4bde2a0da7206cd98f000.jpg"
+                        src="/media/FHyoHcIosLZE/60f6e7e00a/27b888_323008bb0f6a41d4bde2a0da7206cd98f000.jpg"
                         alt="Teddy puppy in showroom"
                         fill
                         sizes="10rem"
@@ -200,7 +200,7 @@ export default function PuppyJourneySection() {
                     </span>
                     <span className="tp-snaps__one">
                       <Image
-                        src="https://puppy.instabizweb.com/media/Z0ToauDx7Eve/5fffe4d022/b942a5_4b8cfb8204d24eadaf524332aba1dc15-mv2.webp"
+                        src="/media/Z0ToauDx7Eve/5fffe4d022/b942a5_4b8cfb8204d24eadaf524332aba1dc15-mv2.webp"
                         alt="Max puppy"
                         fill
                         sizes="10rem"
