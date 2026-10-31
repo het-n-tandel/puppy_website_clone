@@ -1,12 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import PuppyCard from '@/components/PuppyCard';
+import HeroStage from '@/components/HeroStage';
 import { getFeaturedPuppies } from '@/data/puppiesData';
 import { FAQS, HAPPY_FAMILIES_REVIEWS, ADOPTION_STEPS, GUARANTEES } from '@/data/contentData';
 import { currentSite } from '@/lib/siteConfig';
 import { getGeneralWhatsAppUrl } from '@/lib/whatsapp';
-import { MessageCircle, ShieldCheck, Heart, Sparkles, CheckCircle, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
   const featuredPuppies = getFeaturedPuppies(8);
@@ -21,97 +21,75 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="space-y-20 pb-20">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-8 pb-16 lg:py-24 bg-gradient-to-b from-[#fffdf8] to-[#fbe3b4]/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Text column */}
-            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 bg-[#fbe3b4] text-[#a24a1a] px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold shadow-sm">
-                <Sparkles className="w-4 h-4" />
-                <span>Dubai&apos;s Boutique Destination for Teacup Puppies</span>
-              </div>
+    <div className="space-y-16 pb-20">
+      {/* 1. HERO SECTION MATCHING SCREENSHOT 1:1 */}
+      <section className="relative overflow-hidden pt-8 sm:pt-14 bg-[#fffdf8] flex flex-col justify-between">
+        {/* Top Centered Copy */}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-5 z-10">
+          {/* Eyebrow with Hand-drawn Wavy Underline */}
+          <div className="inline-block relative">
+            <span className="font-serif italic text-2xl sm:text-3xl font-bold text-[#c2622b]">
+              every puppy is family
+            </span>
+            <svg
+              viewBox="0 0 220 24"
+              preserveAspectRatio="none"
+              className="absolute -bottom-2.5 left-0 h-3.5 w-full text-[#c2622b]"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 14c18-10 30 8 48-1s28-9 46 0 30 8 48-1 30-9 48 0 18 2 22 0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
 
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#2a170e] leading-[1.15] tracking-tight">
-                Where every puppy is loved like{' '}
-                <span className="text-[#c2622b] underline decoration-[#f2be6b] decoration-wavy underline-offset-8">
-                  family
-                </span>
-                .
-              </h1>
+          {/* Main Display Headline */}
+          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-[5.4rem] font-black text-[#2a170e] leading-[1.06] tracking-tight">
+            Premium teacup
+            <br />
+            puppies in Dubai
+          </h1>
 
-              <p className="text-base sm:text-lg text-[#5a3a28] max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                Discover ethically bred teacup Maltipoos, Poodles, and Pomeranians in Dubai. Hand-raised with love, verified health certificates, and complete international pedigree guarantees.
-              </p>
+          {/* Subtitle */}
+          <p className="text-base sm:text-lg text-[#5a3a28] max-w-xl mx-auto leading-relaxed font-medium">
+            Meet your new best friend in our Dubai showroom, or order a rare miniature breed from trusted breeders worldwide.
+          </p>
 
-              {/* CTAs */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-                <Link href="/puppies" className="btn-primary w-full sm:w-auto text-base py-3.5 px-8">
-                  <span>Find Your Puppy</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <a
-                  href={getGeneralWhatsAppUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-whatsapp w-full sm:w-auto text-base py-3.5 px-8"
-                >
-                  <MessageCircle className="w-5 h-5 fill-white text-transparent" />
-                  <span>WhatsApp Us</span>
-                </a>
-              </div>
-
-              {/* Trust badges */}
-              <div className="pt-6 border-t border-[#2a170e]/10 grid grid-cols-3 gap-4 text-center lg:text-left">
-                <div>
-                  <p className="font-serif text-2xl sm:text-3xl font-bold text-[#2a170e]">100%</p>
-                  <p className="text-xs sm:text-sm text-[#5a3a28]">Vet certified health</p>
-                </div>
-                <div>
-                  <p className="font-serif text-2xl sm:text-3xl font-bold text-[#2a170e]">24/7</p>
-                  <p className="text-xs sm:text-sm text-[#5a3a28]">Care & guidance</p>
-                </div>
-                <div>
-                  <p className="font-serif text-2xl sm:text-3xl font-bold text-[#2a170e]">VIP</p>
-                  <p className="text-xs sm:text-sm text-[#5a3a28]">UAE & global delivery</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Visual Hero Showcase */}
-            <div className="lg:col-span-5 relative flex justify-center">
-              <div className="relative w-full max-w-[380px] sm:max-w-[440px] aspect-[4/5] rounded-[48px] overflow-hidden border-4 border-[#2a170e] shadow-2xl bg-[#fbe3b4]">
-                <Image
-                  src={featuredPuppies[0]?.images[0] || '/brand/logo.png'}
-                  alt="Featured TeddyPups puppy"
-                  fill
-                  priority
-                  className="object-cover"
-                />
-                {/* Floating sticker 1 */}
-                <div className="absolute top-6 left-6 bg-[#fffdf8] text-[#2a170e] text-xs sm:text-sm font-bold py-1.5 px-4 rounded-full shadow-lg border border-[#2a170e]/20 flex items-center gap-1.5">
-                  <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
-                  <span>Meet Max the Maltipoo</span>
-                </div>
-                {/* Floating sticker 2 */}
-                <div className="absolute bottom-6 right-6 bg-[#2a170e] text-[#f2be6b] text-xs sm:text-sm font-semibold py-1.5 px-4 rounded-full shadow-lg flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-[#f2be6b]" />
-                  <span>Health Passport Included</span>
-                </div>
-              </div>
-            </div>
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-3">
+            <Link
+              href="/puppies"
+              className="btn-primary text-base font-bold py-3.5 px-8 shadow-md"
+            >
+              View available puppies
+            </Link>
+            <a
+              href={getGeneralWhatsAppUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost text-base font-bold py-3.5 px-8 bg-[#fffdf8] shadow-md border-2 border-[#2a170e]"
+            >
+              Enquire on WhatsApp
+            </a>
           </div>
         </div>
+
+        {/* Hero Stage: Peeking Puppies Lineup, Cartoon Mascot & Scalloped Blanket */}
+        <HeroStage />
       </section>
 
-      {/* 2. POPULAR BREEDS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 2. CURATED BREEDS FILTER CHIPS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <div className="text-center space-y-3 mb-8">
           <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
             Curated Pedigrees
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#2a170e]">
+          <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e]">
             Explore by Breed
           </h2>
           <p className="text-sm sm:text-base text-[#5a3a28] max-w-xl mx-auto">
@@ -140,13 +118,13 @@ export default function HomePage() {
             <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
               Available Now in Dubai
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#2a170e] mt-1">
+            <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e] mt-1">
               Meet Our Sweet Angels
             </h2>
           </div>
           <Link
             href="/puppies"
-            className="btn-ghost text-sm py-2 px-5 self-start sm:self-auto"
+            className="btn-ghost text-sm py-2 px-5 self-start sm:self-auto bg-[#fffdf8]"
           >
             <span>View All Puppies ({featuredPuppies.length}+)</span>
             <ArrowRight className="w-4 h-4" />
@@ -167,14 +145,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. WHY CHOOSE TEDDYPUPS */}
+      {/* 4. WHY CHOOSE TEDDYPUPS (GUARANTEES) */}
       <section className="bg-[#2a170e] text-[#fffdf8] py-20 border-y-4 border-[#f2be6b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-3 mb-14">
             <span className="text-xs font-bold uppercase tracking-widest text-[#f2be6b]">
               Ethical & Certified Care
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#fffdf8]">
+            <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#fffdf8]">
               Every Teddy Pup Comes With Peace of Mind
             </h2>
             <p className="text-sm sm:text-base text-[#fffdf8]/75 max-w-xl mx-auto">
@@ -203,13 +181,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. HOW IT WORKS / 4-STEP ADOPTION PROCESS */}
+      {/* 5. HOW IT WORKS / 4-STEP ADOPTION PATH */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center space-y-3 mb-14">
           <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
             Simple & Transparent
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#2a170e]">
+          <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e]">
             The Journey Home
           </h2>
           <p className="text-sm sm:text-base text-[#5a3a28] max-w-xl mx-auto">
@@ -239,7 +217,7 @@ export default function HomePage() {
         </div>
 
         <div className="mt-10 text-center">
-          <Link href="/how-it-works" className="btn-ghost text-sm py-2.5 px-6">
+          <Link href="/how-it-works" className="btn-ghost text-sm py-2.5 px-6 bg-[#fffdf8]">
             <span>Read Complete Adoption Guide</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
@@ -253,7 +231,7 @@ export default function HomePage() {
             <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
               Our Wall of Love
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#2a170e]">
+            <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e]">
               Happy Families Across the UAE
             </h2>
           </div>
@@ -281,7 +259,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-10 text-center">
-            <Link href="/happy-families" className="btn-ghost text-sm py-2.5 px-6">
+            <Link href="/happy-families" className="btn-ghost text-sm py-2.5 px-6 bg-[#fffdf8]">
               <span>View More Happy Families</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
@@ -289,13 +267,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. FREQUENTLY ASKED QUESTIONS */}
+      {/* 7. FAQ ACCORDION */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center space-y-3 mb-10">
           <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
             Got Questions?
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#2a170e]">
+          <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e]">
             Frequently Asked Questions
           </h2>
           <p className="text-sm text-[#5a3a28]">
@@ -323,16 +301,16 @@ export default function HomePage() {
         </div>
 
         <div className="mt-8 text-center">
-          <Link href="/faq" className="btn-ghost text-sm py-2.5 px-6">
+          <Link href="/faq" className="btn-ghost text-sm py-2.5 px-6 bg-[#fffdf8]">
             <span>Read All Questions & Answers</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>
 
-      {/* 8. INSTAGRAM COMMUNITY BANNER */}
+      {/* 8. INSTAGRAM BANNER */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#fbe3b4] rounded-[40px] p-8 sm:p-12 border-3 border-[#2a170e] text-center space-y-5">
+        <div className="bg-[#fbe3b4] rounded-[40px] p-8 sm:p-12 border-3 border-[#2a170e] text-center space-y-5 shadow-sm">
           <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
             Join Our Community
           </span>
