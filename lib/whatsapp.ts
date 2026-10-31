@@ -14,7 +14,7 @@ export function getWhatsAppInquiryUrl(puppyName?: string, puppyBreed?: string): 
   return `https://wa.me/${currentSite.contact.whatsapp}?text=${encodedMessage}`;
 }
 
-export function getGeneralWhatsAppUrl(): string {
-  const message = `Hi ${currentSite.brandName}! I'd love to know more about your puppies.`;
+export function getGeneralWhatsAppUrl(customMessage?: string): string {
+  const message = customMessage || `Hi ${currentSite.brandName}! I'd love to know more about your puppies.`;
   return `https://wa.me/${currentSite.contact.whatsapp}?text=${encodeURIComponent(message)}`;
 }

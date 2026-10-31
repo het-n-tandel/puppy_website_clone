@@ -1,18 +1,20 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import PuppyCard from '@/components/PuppyCard';
 import HeroStage from '@/components/HeroStage';
 import MeetThePups from '@/components/MeetThePups';
-import ScrollReveal from '@/components/ScrollReveal';
-import { ALL_PUPPIES, getFeaturedPuppies } from '@/data/puppiesData';
-import { FAQS, HAPPY_FAMILIES_REVIEWS, ADOPTION_STEPS, GUARANTEES } from '@/data/contentData';
-import { currentSite } from '@/lib/siteConfig';
+import TwoWaysSection from '@/components/TwoWaysSection';
+import PuppyJourneySection from '@/components/PuppyJourneySection';
+import PuppyPassportSection from '@/components/PuppyPassportSection';
+import HappyFamiliesSection from '@/components/HappyFamiliesSection';
+import QuestionsNightSection from '@/components/QuestionsNightSection';
+import ReadyToMeetSection from '@/components/ReadyToMeetSection';
+import PupFollower from '@/components/PupFollower';
+import { ALL_PUPPIES } from '@/data/puppiesData';
 import { getGeneralWhatsAppUrl } from '@/lib/whatsapp';
-import { ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
-  const featuredPuppies = getFeaturedPuppies(8);
-
   const breeds = [
     { name: 'Maltipoo', tag: 'maltipoo' },
     { name: 'Teacup Poodle', tag: 'poodle' },
@@ -23,8 +25,11 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="space-y-16 pb-20">
-      {/* 1. HERO SECTION MATCHING SCREENSHOT 1:1 */}
+    <div className="relative min-h-screen">
+      {/* Interactive Traveling Puppy Mascot Follower across the whole page */}
+      <PupFollower />
+
+      {/* 1. HERO SECTION */}
       <section className="relative overflow-hidden pt-8 sm:pt-14 bg-[#fffdf8] flex flex-col justify-between">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-5 z-10">
           {/* Eyebrow with Hand-drawn Wavy Underline */}
@@ -87,270 +92,45 @@ export default function HomePage() {
       {/* 2. STICKY HORIZONTAL SCROLL PARADE (MEET THE PUPS) */}
       <MeetThePups puppies={ALL_PUPPIES} />
 
-      {/* 3. CURATED BREEDS FILTER CHIPS */}
-      <ScrollReveal>
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-          <div className="text-center space-y-3 mb-8">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
-              Curated Pedigrees
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e]">
-              Explore by Breed
-            </h2>
-            <p className="text-sm sm:text-base text-[#5a3a28] max-w-xl mx-auto">
-              Choose from our rare imported and showroom-ready teacup puppies.
-            </p>
-          </div>
+      {/* 3. TWO WAYS TO MEET YOUR PUPPY */}
+      <TwoWaysSection />
 
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {breeds.map((b) => (
-              <Link
-                key={b.name}
-                href={`/puppies?breed=${b.tag}`}
-                className="inline-flex items-center gap-2 bg-[#fbe3b4]/60 hover:bg-[#f2be6b] text-[#2a170e] font-semibold text-sm sm:text-base py-2.5 px-6 rounded-full border border-[#2a170e]/15 transition-all duration-200 hover:scale-105"
-              >
-                <span>🐾</span>
-                <span>{b.name}</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-      </ScrollReveal>
+      {/* 4. YOUR PUPPY JOURNEY (CONCIERGE & WHATSAPP CHAT) */}
+      <PuppyJourneySection />
 
-      {/* 4. FEATURED PUPPIES SHOWCASE */}
-      <ScrollReveal delay={100}>
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
-                Available Now in Dubai
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e] mt-1">
-                Meet Our Sweet Angels
-              </h2>
-            </div>
+      {/* 5. PUPPY PASSPORT / WHY FAMILIES TRUST TEDDYPUPS */}
+      <PuppyPassportSection />
+
+      {/* 6. HAPPY FAMILIES & PUPPIES (POLAROID WALL) */}
+      <HappyFamiliesSection />
+
+      {/* 7. QUESTIONS, ANSWERED (STARRY NIGHT FAQ) */}
+      <QuestionsNightSection />
+
+      {/* 8. READY TO MEET YOUR NEW BEST FRIEND? */}
+      <ReadyToMeetSection />
+
+      {/* 9. BROWSE BY BREED QUICK CHIPS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+        <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
+          Curated Pedigrees
+        </span>
+        <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e] mt-2 mb-6">
+          Explore by Breed
+        </h2>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {breeds.map((b) => (
             <Link
-              href="/puppies"
-              className="btn-ghost text-sm py-2 px-5 self-start sm:self-auto bg-[#fffdf8]"
+              key={b.name}
+              href={`/puppies?breed=${b.tag}`}
+              className="inline-flex items-center gap-2 bg-[#fbe3b4]/70 hover:bg-[#f2be6b] text-[#2a170e] font-semibold text-sm sm:text-base py-2.5 px-6 rounded-full border border-[#2a170e]/15 transition-all duration-200 hover:scale-105 shadow-sm"
             >
-              <span>View All Puppies ({featuredPuppies.length}+)</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>🐾</span>
+              <span>{b.name}</span>
             </Link>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
-            {featuredPuppies.map((puppy, idx) => (
-              <PuppyCard key={puppy.id} puppy={puppy} priority={idx < 4} />
-            ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <Link href="/puppies" className="btn-primary text-base py-3.5 px-8">
-              <span>Browse Full Gallery</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </section>
-      </ScrollReveal>
-
-      {/* 5. WHY CHOOSE TEDDYPUPS (GUARANTEES) */}
-      <ScrollReveal delay={150}>
-        <section className="bg-[#2a170e] text-[#fffdf8] py-20 border-y-4 border-[#f2be6b]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center space-y-3 mb-14">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#f2be6b]">
-                Ethical & Certified Care
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#fffdf8]">
-                Every Teddy Pup Comes With Peace of Mind
-              </h2>
-              <p className="text-sm sm:text-base text-[#fffdf8]/75 max-w-xl mx-auto">
-                We uphold the highest veterinary standards to ensure your new puppy arrives happy, healthy, and protected.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {GUARANTEES.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="bg-[#fffdf8]/5 rounded-3xl p-6 border border-[#fffdf8]/10 hover:border-[#f2be6b] transition-colors flex flex-col space-y-3"
-                >
-                  <div className="w-10 h-10 rounded-full bg-[#f2be6b]/20 text-[#f2be6b] flex items-center justify-center font-bold text-lg">
-                    ✓
-                  </div>
-                  <h3 className="font-serif text-xl font-bold text-[#f2be6b]">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-[#fffdf8]/80 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </ScrollReveal>
-
-      {/* 6. HOW IT WORKS / 4-STEP ADOPTION PATH */}
-      <ScrollReveal delay={100}>
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-3 mb-14">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
-              Simple & Transparent
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e]">
-              The Journey Home
-            </h2>
-            <p className="text-sm sm:text-base text-[#5a3a28] max-w-xl mx-auto">
-              From first video cuddle to doorstep delivery, here is how you welcome your puppy home.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {ADOPTION_STEPS.map((step) => (
-              <div
-                key={step.step}
-                className="relative bg-[#fffdf8] rounded-3xl p-6 border-2 border-[#2a170e]/15 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
-              >
-                <div>
-                  <span className="font-serif text-3xl font-extrabold text-[#c2622b]">
-                    {step.step}
-                  </span>
-                  <h3 className="font-serif text-lg font-bold text-[#2a170e] mt-2 mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-[#5a3a28] leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-10 text-center">
-            <Link href="/how-it-works" className="btn-ghost text-sm py-2.5 px-6 bg-[#fffdf8]">
-              <span>Read Complete Adoption Guide</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </section>
-      </ScrollReveal>
-
-      {/* 7. HAPPY FAMILIES TESTIMONIALS */}
-      <ScrollReveal delay={100}>
-        <section className="bg-[#fbe3b4]/40 py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center space-y-3 mb-12">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
-                Our Wall of Love
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e]">
-                Happy Families Across the UAE
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {HAPPY_FAMILIES_REVIEWS.map((rev) => (
-                <div
-                  key={rev.id}
-                  className="bg-[#fffdf8] rounded-3xl p-6 border-2 border-[#2a170e]/15 shadow-sm flex flex-col justify-between"
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-1 text-amber-500">
-                      {'★'.repeat(rev.rating)}
-                    </div>
-                    <p className="text-xs italic text-[#5a3a28] leading-relaxed">
-                      &quot;{rev.quote}&quot;
-                    </p>
-                  </div>
-                  <div className="mt-4 pt-4 border-t border-[#2a170e]/10">
-                    <p className="font-serif font-bold text-sm text-[#2a170e]">{rev.author}</p>
-                    <p className="text-xs text-[#a24a1a]">{rev.puppyName} ({rev.breed}) · {rev.location}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-10 text-center">
-              <Link href="/happy-families" className="btn-ghost text-sm py-2.5 px-6 bg-[#fffdf8]">
-                <span>View More Happy Families</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-      </ScrollReveal>
-
-      {/* 8. FAQ ACCORDION */}
-      <ScrollReveal delay={100}>
-        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-3 mb-10">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
-              Got Questions?
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e]">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-sm text-[#5a3a28]">
-              Everything you need to know about adopting a puppy in Dubai.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            {FAQS.slice(0, 5).map((faq, idx) => (
-              <details
-                key={idx}
-                className="group bg-[#fffdf8] rounded-2xl border-2 border-[#2a170e]/15 p-5 [&_summary::-webkit-details-marker]:hidden"
-              >
-                <summary className="flex items-center justify-between cursor-pointer font-serif text-base sm:text-lg font-bold text-[#2a170e]">
-                  <span>{faq.question}</span>
-                  <span className="ml-4 shrink-0 transition-transform group-open:rotate-180 text-[#a24a1a]">
-                    ▼
-                  </span>
-                </summary>
-                <p className="mt-3 text-sm text-[#5a3a28] leading-relaxed border-t border-[#2a170e]/10 pt-3">
-                  {faq.answer}
-                </p>
-              </details>
-            ))}
-          </div>
-
-          <div className="mt-8 text-center">
-            <Link href="/faq" className="btn-ghost text-sm py-2.5 px-6 bg-[#fffdf8]">
-              <span>Read All Questions & Answers</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </section>
-      </ScrollReveal>
-
-      {/* 9. INSTAGRAM COMMUNITY BANNER */}
-      <ScrollReveal delay={100}>
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-[#fbe3b4] rounded-[40px] p-8 sm:p-12 border-3 border-[#2a170e] text-center space-y-5 shadow-sm">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
-              Join Our Community
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2a170e]">
-              Follow Daily Puppy Shenanigans on Instagram
-            </h2>
-            <p className="text-sm sm:text-base text-[#5a3a28] max-w-xl mx-auto">
-              Get daily doses of adorable teacup puppies, live showroom stories, and adoption announcements.
-            </p>
-            <div className="pt-2">
-              <a
-                href={currentSite.social.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary text-base py-3 px-8"
-              >
-                <span>Follow @teddypups.worldwide</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-        </section>
-      </ScrollReveal>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
