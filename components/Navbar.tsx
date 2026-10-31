@@ -30,7 +30,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile drawer on route change
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
@@ -80,11 +79,20 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`text-sm font-semibold transition-colors duration-200 relative ${
+                  className={`group/link flex items-center gap-1.5 text-sm font-semibold transition-colors duration-200 relative py-1 ${
                     isActive ? 'text-[#a24a1a]' : 'text-[#2a170e]/80 hover:text-[#a24a1a]'
                   }`}
                 >
-                  {link.name}
+                  <span
+                    className={`text-[11px] transition-all duration-300 ${
+                      isActive
+                        ? 'opacity-100 scale-100 text-[#a24a1a]'
+                        : 'opacity-0 scale-50 group-hover/link:opacity-60 group-hover/link:scale-100 text-[#c2622b]'
+                    }`}
+                  >
+                    🐾
+                  </span>
+                  <span>{link.name}</span>
                   {isActive && (
                     <span className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-[#a24a1a] rounded-full" />
                   )}
@@ -127,11 +135,12 @@ export default function Navbar() {
                     key={link.name}
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`text-lg font-semibold py-1 transition-colors ${
+                    className={`flex items-center gap-2 text-lg font-semibold py-1 transition-colors ${
                       isActive ? 'text-[#a24a1a]' : 'text-[#2a170e] hover:text-[#a24a1a]'
                     }`}
                   >
-                    {link.name}
+                    {isActive && <span>🐾</span>}
+                    <span>{link.name}</span>
                   </Link>
                 );
               })}

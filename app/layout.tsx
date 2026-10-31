@@ -3,6 +3,8 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
+import CursorTrail from '@/components/CursorTrail';
+import PageCurtain from '@/components/PageCurtain';
 import { currentSite } from '@/lib/siteConfig';
 
 export const metadata: Metadata = {
@@ -40,6 +42,8 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-[#fffdf8] text-[#2a170e]">
+        <PageCurtain />
+        <CursorTrail />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
