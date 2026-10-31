@@ -5,13 +5,14 @@ import PupBuddy from './PupBuddy';
 
 export default function PupFollower() {
   const [mounted, setMounted] = useState(false);
-  const [isMoving, setIsMoving] = useState(false);
+  const [isMovableActive, setIsMovableActive] = useState(false);
+  const [isActivelyWalking, setIsActivelyWalking] = useState(false);
   const [facing, setFacing] = useState<'left' | 'right'>('right');
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [pawPrints, setPawPrints] = useState<Array<{ id: number; x: number; y: number; angle: number }>>([]);
 
   const lastScrollY = useRef(0);
-  const stopTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const walkTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const printCounter = useRef(0);
 
   useEffect(() => {
@@ -30,70 +31,90 @@ export default function PupFollower() {
 
       const viewCenter = window.innerHeight * 0.45;
 
-      // 1. Check if we are docked directly on any stop
-      let dockedIndex = -1;
+      // 1. Hero Stage Check:
+      // When at the very top of the page, Teddy sits centered on the quilt
+      if (scrollY < 60) {
+        setIsMovableActive(false);
+        setIsActivelyWalking(false);
 
-      // At the very top of the page (Hero section), always dock to Hero (Stop 0)
-      if (scrollY < 120) {
-        dockedIndex = 0;
-      } else {
-        // If user is inside the sticky "Meet the pups" runway, dock directly to Stop 1
-        const meetSection = document.querySelector('section[aria-labelledby="meet-title"]');
-        if (meetSection) {
-          const mRect = meetSection.getBoundingClientRect();
-          if (mRect.top <= 80 && mRect.bottom >= window.innerHeight * 0.4) {
-            dockedIndex = 1;
-          }
-        }
-
-        if (dockedIndex === -1) {
-          // Check distance of each stop to the viewport center
-          stops.forEach((stop, idx) => {
-            const rect = stop.getBoundingClientRect();
-            const stopCenterY = rect.top + rect.height / 2;
-            const dist = Math.abs(stopCenterY - viewCenter);
-            if (dist < 100) {
-              dockedIndex = idx;
-            }
-          });
-        }
-      }
-
-      // RULE 2: When movable puppy still in picture / docked:
-      // Movable puppy DISAPPEARS, and STILL PUPPY at that stop APPEARS!
-      if (dockedIndex !== -1) {
-        setIsMoving(false);
-
-        // Still puppy at dockedIndex appears; all other still puppies disappear
+        // Hero still puppy is visible; all others hidden
         stops.forEach((stop, idx) => {
           const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
-          if (idx === dockedIndex) {
+          if (idx === 0) {
             buddy.style.opacity = '1';
-            buddy.style.transition = 'opacity 0.25s ease-in';
             buddy.style.visibility = 'visible';
           } else {
             buddy.style.opacity = '0';
-            buddy.style.transition = 'opacity 0.25s ease-out';
             buddy.style.visibility = 'hidden';
           }
         });
-
         return;
       }
 
-      // RULE 1: When movable puppy moves:
-      // ALL still picture puppies DISAPPEAR, and MOVABLE PUPPY APPEARS!
-      setIsMoving(true);
+      // 2. Meet the Pups Check:
+      // When inside the pinned "Meet the pups" runway, runway Teddy takes over on the parquet floor
+      const meetSection = document.querySelector('section[aria-labelledby="meet-title"]');
+      let inMeetRunway = false;
+      if (meetSection) {
+        const mRect = meetSection.getBoundingClientRect();
+        if (mRect.top <= 60 && mRect.bottom >= window.innerHeight * 0.45) {
+          inMeetRunway = true;
+        }
+      }
 
-      // Hide all still picture puppies
+      if (inMeetRunway) {
+        setIsMovableActive(false);
+        setIsActivelyWalking(false);
+
+        // Hide Hero and other section stops so runway Teddy has full focus
+        stops.forEach((stop, idx) => {
+          const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
+          if (idx === 1) {
+            buddy.style.opacity = '1';
+            buddy.style.visibility = 'visible';
+          } else {
+            buddy.style.opacity = '0';
+            buddy.style.visibility = 'hidden';
+          }
+        });
+        return;
+      }
+
+      // 3. Footer Check:
+      // When reached the very bottom, Teddy curls up asleep in the basket
+      const isAtBottom =
+        window.innerHeight + scrollY >= document.documentElement.scrollHeight - 140;
+      if (isAtBottom && stops.length > 0) {
+        const lastIdx = stops.length - 1;
+        setIsMovableActive(false);
+        setIsActivelyWalking(false);
+
+        stops.forEach((stop, idx) => {
+          const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
+          if (idx === lastIdx) {
+            buddy.style.opacity = '1';
+            buddy.style.visibility = 'visible';
+          } else {
+            buddy.style.opacity = '0';
+            buddy.style.visibility = 'hidden';
+          }
+        });
+        return;
+      }
+
+      // 4. Moving throughout the page:
+      // Movable puppy is active! All still puppies disappear.
+      setIsMovableActive(true);
+      setIsActivelyWalking(true);
+
+      // Hide all stationary picture puppies
       stops.forEach((stop) => {
         const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
         buddy.style.opacity = '0';
-        buddy.style.transition = 'opacity 0.15s ease-out';
         buddy.style.visibility = 'hidden';
       });
 
-      // Find which two stops we are between
+      // Calculate path interpolation between stops
       let fromIdx = 0;
       let toIdx = 1;
 
@@ -130,49 +151,29 @@ export default function PupFollower() {
 
       // Smoothly interpolate position
       const interpX = x1 + (x2 - x1) * t;
-      const interpY = y1 + (y2 - y1) * t;
+      const interpY = Math.min(window.innerHeight - 80, Math.max(100, y1 + (y2 - y1) * t));
 
       setPos({ x: interpX, y: interpY });
       setFacing(x2 >= x1 ? 'right' : 'left');
 
       // Add gentle paw print along the trail
-      if (Math.random() < 0.2) {
+      if (Math.random() < 0.22) {
         const newPrint = {
           id: printCounter.current++,
           x: interpX + (Math.random() * 16 - 8),
-          y: interpY + 24 + (Math.random() * 8 - 4),
+          y: interpY + 28 + (Math.random() * 8 - 4),
           angle: scrollDir === 'down' ? 180 : 0,
         };
         setPawPrints((prev) => [...prev.slice(-6), newPrint]);
       }
 
-      // If user stops scrolling for 250ms, find nearest stop and dock into it
-      if (stopTimeoutRef.current) clearTimeout(stopTimeoutRef.current);
-      stopTimeoutRef.current = setTimeout(() => {
-        let nearestIdx = 0;
-        let minD = Infinity;
-        stops.forEach((s, idx) => {
-          const r = s.getBoundingClientRect();
-          const d = Math.abs(r.top + r.height / 2 - viewCenter);
-          if (d < minD) {
-            minD = d;
-            nearestIdx = idx;
-          }
-        });
-
-        // Dock to nearest stop
-        setIsMoving(false);
-        stops.forEach((s, idx) => {
-          const buddy = s.querySelector<HTMLElement>('.pup-buddy') || s;
-          if (idx === nearestIdx) {
-            buddy.style.opacity = '1';
-            buddy.style.visibility = 'visible';
-          } else {
-            buddy.style.opacity = '0';
-            buddy.style.visibility = 'hidden';
-          }
-        });
-      }, 300);
+      // When user pauses scrolling:
+      // Teddy STAYS AT THAT EXACT POSITION on screen!
+      // He does NOT disappear, and does NOT force a distant stop to sit!
+      if (walkTimeoutRef.current) clearTimeout(walkTimeoutRef.current);
+      walkTimeoutRef.current = setTimeout(() => {
+        setIsActivelyWalking(false);
+      }, 200);
     };
 
     window.addEventListener('scroll', updatePups, { passive: true });
@@ -182,7 +183,7 @@ export default function PupFollower() {
     return () => {
       window.removeEventListener('scroll', updatePups);
       window.removeEventListener('resize', updatePups);
-      if (stopTimeoutRef.current) clearTimeout(stopTimeoutRef.current);
+      if (walkTimeoutRef.current) clearTimeout(walkTimeoutRef.current);
     };
   }, []);
 
@@ -199,7 +200,7 @@ export default function PupFollower() {
             style={{
               left: `${p.x}px`,
               top: `${p.y}px`,
-              transform: `translate(-50%, -50%) rotate(${p.angle}deg) scale(0.6)`,
+              transform: `translate(-50%, -50%) rotate(${p.angle}deg) scale(0.65)`,
             }}
           >
             <svg viewBox="0 0 40 40" className="w-5 h-5 text-[#c2622b]/60 fill-current">
@@ -213,21 +214,25 @@ export default function PupFollower() {
         ))}
       </div>
 
-      {/* MOVABLE PUPPY (Only visible while moving between stops!) */}
-      {isMoving && (
+      {/* MOVABLE PUPPY
+          Stays right there at pos.x, pos.y when user pauses scrolling!
+          When scrolling: pose="walk". When stopped: pose="stand" (standing alert on 4 paws, tail wagging).
+      */}
+      {isMovableActive && (
         <div
           className="fixed z-40 pointer-events-none transition-transform duration-75 ease-out will-change-transform drop-shadow-xl"
           style={{
             left: `${pos.x}px`,
             top: `${pos.y}px`,
             transform: 'translate(-50%, -50%)',
-            width: '150px',
+            width: 'clamp(145px, 16vw, 170px)',
           }}
           aria-hidden="true"
         >
           <PupBuddy
-            pose="walk"
+            pose={isActivelyWalking ? 'walk' : 'stand'}
             facing={facing}
+            label="Teddy following along your journey"
           />
         </div>
       )}

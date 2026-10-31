@@ -142,12 +142,12 @@ export default function HeroStage() {
         {/* Center Mascot: Teddy the Puppy */}
         <div
           data-pup-stop="true"
-          data-pose="peek"
+          data-pose="sit"
           data-facing="right"
-          className="pup-stop tp-hero__teddy absolute left-1/2 bottom-[2.8rem] -translate-x-1/2 z-20 pointer-events-auto transition-transform hover:-translate-y-2 duration-300"
+          className="pup-stop tp-hero__teddy absolute left-1/2 bottom-[3.6rem] -translate-x-1/2 z-20 pointer-events-auto transition-transform hover:-translate-y-2 duration-300"
           style={{ width: '15.5rem', height: '13.5rem' }}
         >
-          <PupBuddy pose="peek" facing="right" label="Teddy peeking over the quilt" />
+          <PupBuddy pose="sit" facing="right" label="Teddy sitting on the quilt" />
         </div>
       </div>
 

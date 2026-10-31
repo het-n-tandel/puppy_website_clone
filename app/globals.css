@@ -107,8 +107,13 @@
 }
 
 @keyframes pup-run-wag {
-  0%, 100% { transform: rotate(26deg); }
-  50% { transform: rotate(52deg); }
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(-35deg); }
+}
+
+@keyframes pup-gentle-wag {
+  0%, 100% { transform: rotate(-18deg); }
+  50% { transform: rotate(-30deg); }
 }
 
 .pup-running-body {
@@ -128,6 +133,11 @@
 .pup-running-tail {
   transform-origin: 84px 150px;
   animation: pup-run-wag 0.24s infinite ease-in-out;
+}
+
+.pup-gentle-wag {
+  transform-origin: 84px 150px;
+  animation: pup-gentle-wag 1.8s infinite ease-in-out;
 }
 
 body {

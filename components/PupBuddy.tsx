@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 export interface PupBuddyProps {
-  pose?: 'peek' | 'sit' | 'tilt' | 'bow' | 'snug' | 'walk';
+  pose?: 'peek' | 'sit' | 'tilt' | 'bow' | 'snug' | 'walk' | 'stand';
   facing?: 'left' | 'right';
   label?: string;
   className?: string;
@@ -33,7 +33,7 @@ export default function PupBuddy({
 
   // Pose transforms for head and legs
   const headTransform =
-    pose === 'walk'
+    pose === 'walk' || pose === 'stand'
       ? 'translate(-4 0) rotate(0 212 100)'
       : pose === 'tilt'
       ? 'translate(-10 -6) rotate(16 212 100)'
@@ -44,7 +44,7 @@ export default function PupBuddy({
       : 'translate(-10 -6) rotate(0 212 100)';
 
   const bodyTransform =
-    pose === 'walk'
+    pose === 'walk' || pose === 'stand'
       ? 'translate(0 2) rotate(0 196 206)'
       : pose === 'bow'
       ? 'translate(0 14) rotate(12 196 206)'
@@ -105,8 +105,12 @@ export default function PupBuddy({
             opacity="1"
             className={`${isPet ? 'animate-pulse' : ''} ${pose === 'walk' ? 'pup-running-body' : ''}`}
           >
-            {/* Back Far Leg */}
-            <g data-p="bf" transform="translate(94 192)" opacity="0.9">
+            {/* Back Far Leg - Hidden when sitting so only 4 legs are shown */}
+            <g
+              data-p="bf"
+              transform="translate(94 192)"
+              opacity={pose === 'walk' || pose === 'stand' ? '0.9' : '0'}
+            >
               <g className={pose === 'walk' ? 'pup-leg-swing-a' : ''}>
                 <path
                   d="M-14 -14 C-14 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 14 4 14 -14Z"
@@ -134,7 +138,7 @@ export default function PupBuddy({
             {/* Front Far Leg */}
             <g
               data-p="ff"
-              transform={`translate(168 192) ${pose === 'walk' ? 'rotate(0)' : 'rotate(24)'}`}
+              transform={`translate(168 192) ${pose === 'walk' || pose === 'stand' ? 'rotate(0)' : 'rotate(24)'}`}
             >
               <g className={pose === 'walk' ? 'pup-leg-swing-b' : ''}>
                 <path
@@ -160,11 +164,19 @@ export default function PupBuddy({
               </g>
             </g>
 
-            {/* Wagging Tail */}
+            {/* Wagging Tail - Proudly visible sticking up behind the puppy */}
             <g
               data-p="tail"
-              transform={isPet ? 'rotate(50 84 150)' : 'rotate(34 84 150)'}
-              className={`origin-[84px_150px] transition-transform duration-200 ${pose === 'walk' ? 'pup-running-tail' : ''}`}
+              transform={
+                isPet
+                  ? 'rotate(50 84 150)'
+                  : pose === 'sit'
+                  ? 'rotate(-22 84 150)'
+                  : 'rotate(-20 84 150)'
+              }
+              className={`origin-[84px_150px] transition-transform duration-200 ${
+                pose === 'walk' ? 'pup-running-tail' : 'pup-gentle-wag'
+              }`}
             >
               <path
                 d="M86 152 C80 146 76 140 74 136"
@@ -191,8 +203,12 @@ export default function PupBuddy({
               />
             </g>
 
-            {/* Back Near Leg */}
-            <g data-p="bn" transform="translate(110 194)" opacity="0.95">
+            {/* Back Near Leg - Hidden when sitting so only 4 legs are shown */}
+            <g
+              data-p="bn"
+              transform="translate(110 194)"
+              opacity={pose === 'walk' || pose === 'stand' ? '0.95' : '0'}
+            >
               <g className={pose === 'walk' ? 'pup-leg-swing-b' : ''}>
                 <path
                   d="M-15 -14 C-15 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 15 4 15 -14Z"
@@ -238,7 +254,7 @@ export default function PupBuddy({
             {/* Front Near Leg */}
             <g
               data-p="fn"
-              transform={`translate(186 194) ${pose === 'walk' ? 'rotate(0)' : 'rotate(24)'}`}
+              transform={`translate(186 194) ${pose === 'walk' || pose === 'stand' ? 'rotate(0)' : 'rotate(24)'}`}
             >
               <g className={pose === 'walk' ? 'pup-leg-swing-a' : ''}>
                 <path
@@ -265,8 +281,8 @@ export default function PupBuddy({
             </g>
           </g>
 
-          {/* Haunch (Sitting Paws) */}
-          {pose !== 'snug' && pose !== 'walk' && (
+          {/* Haunch (Sitting Paws) - Only rendered when sitting */}
+          {pose !== 'snug' && pose !== 'walk' && pose !== 'stand' && (
             <g data-p="haunch" opacity="1" transform="translate(0 1.44)">
               <path
                 d="M80.0 204.0Q75.1 194.9 85.7 189.9Q88.4 180.2 100.7 181.2Q110.0 174.6 119.3 181.2Q131.6 180.2 134.3 189.9Q144.9 194.9 140.0 204.0Q144.9 213.1 134.3 218.1Q131.6 227.8 119.3 226.8Q110.0 233.4 100.7 226.8Q88.4 227.8 85.7 218.1Q75.1 213.1 80.0 204.0Z"

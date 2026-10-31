@@ -164,7 +164,7 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
           {/* Teddy Mascot RUNNING ON THE SHOWROOM RUNWAY TRACK */}
           <div
             data-pup-stop="true"
-            data-pose={isScrolling ? 'walk' : 'sit'}
+            data-pose={isScrolling ? 'walk' : 'stand'}
             data-facing={facing}
             className="pup-stop tp-meet__teddy absolute bottom-[4.4rem] sm:bottom-[5.4rem] z-25 pointer-events-auto transition-all duration-150 ease-out drop-shadow-md"
             style={{
@@ -174,7 +174,7 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
             }}
           >
             <PupBuddy
-              pose={isScrolling ? 'walk' : 'sit'}
+              pose={isScrolling ? 'walk' : 'stand'}
               facing={facing}
               label="Teddy running on the showroom runway track"
             />
