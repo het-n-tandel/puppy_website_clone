@@ -105,35 +105,37 @@ export default function PupBuddy({
             opacity="1"
             className={`${isPet ? 'animate-pulse' : ''} ${pose === 'walk' ? 'pup-running-body' : ''}`}
           >
-            {/* Back Far Leg - Hidden when sitting so only 4 legs are shown */}
-            <g
-              data-p="bf"
-              transform="translate(94 192)"
-              opacity={pose === 'walk' || pose === 'stand' ? '0.9' : '0'}
-            >
-              <g className={pose === 'walk' ? 'pup-leg-swing-a' : ''}>
-                <path
-                  d="M-14 -14 C-14 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 14 4 14 -14Z"
-                  fill="#e4a352"
-                />
-                <path
-                  d="M-14 -14 C-14 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 14 4 14 -14"
-                  stroke="#2a170e"
-                  strokeWidth="3.4"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-                <path
-                  d="M-3.5 29 v5 M4.5 29 v5"
-                  stroke="#2a170e"
-                  strokeWidth="2.4"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  fill="none"
-                />
+            {/* Back Far Leg - Only rendered when walking or standing (never when sitting) */}
+            {(pose === 'walk' || pose === 'stand') && (
+              <g
+                data-p="bf"
+                transform="translate(94 192)"
+                opacity="0.9"
+              >
+                <g className={pose === 'walk' ? 'pup-leg-swing-a' : ''}>
+                  <path
+                    d="M-14 -14 C-14 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 14 4 14 -14Z"
+                    fill="#e4a352"
+                  />
+                  <path
+                    d="M-14 -14 C-14 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 14 4 14 -14"
+                    stroke="#2a170e"
+                    strokeWidth="3.4"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                  <path
+                    d="M-3.5 29 v5 M4.5 29 v5"
+                    stroke="#2a170e"
+                    strokeWidth="2.4"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                </g>
               </g>
-            </g>
+            )}
 
             {/* Front Far Leg */}
             <g
@@ -203,35 +205,37 @@ export default function PupBuddy({
               />
             </g>
 
-            {/* Back Near Leg - Hidden when sitting so only 4 legs are shown */}
-            <g
-              data-p="bn"
-              transform="translate(110 194)"
-              opacity={pose === 'walk' || pose === 'stand' ? '0.95' : '0'}
-            >
-              <g className={pose === 'walk' ? 'pup-leg-swing-b' : ''}>
-                <path
-                  d="M-15 -14 C-15 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 15 4 15 -14Z"
-                  fill="#f2be6b"
-                />
-                <path
-                  d="M-15 -14 C-15 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 15 4 15 -14"
-                  stroke="#2a170e"
-                  strokeWidth="3.4"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-                <path
-                  d="M-3.5 27 v5 M4.5 27 v5"
-                  stroke="#2a170e"
-                  strokeWidth="2.4"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  fill="none"
-                />
+            {/* Back Near Leg - Only rendered when walking or standing (never when sitting) */}
+            {(pose === 'walk' || pose === 'stand') && (
+              <g
+                data-p="bn"
+                transform="translate(110 194)"
+                opacity="0.95"
+              >
+                <g className={pose === 'walk' ? 'pup-leg-swing-b' : ''}>
+                  <path
+                    d="M-15 -14 C-15 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 15 4 15 -14Z"
+                    fill="#f2be6b"
+                  />
+                  <path
+                    d="M-15 -14 C-15 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 15 4 15 -14"
+                    stroke="#2a170e"
+                    strokeWidth="3.4"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                  <path
+                    d="M-3.5 27 v5 M4.5 27 v5"
+                    stroke="#2a170e"
+                    strokeWidth="2.4"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                </g>
               </g>
-            </g>
+            )}
 
             {/* Fluffy Body Torso */}
             <path

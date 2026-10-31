@@ -24,6 +24,7 @@ export default function PupFollower() {
   const [pose, setPose] = useState<any>('sit');
   const [facing, setFacing] = useState<'left' | 'right'>('right');
   const [pawPrints, setPawPrints] = useState<PawPrint[]>([]);
+  const [isAtBasket, setIsAtBasket] = useState(false);
 
   const prevPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const lastScrollYRef = useRef(0);
@@ -85,7 +86,7 @@ export default function PupFollower() {
       }, 260);
     };
 
-    // Cubic Bézier calculation with Ken Perlin smootherstep
+    // Cubic Bézier smootherstep
     const smootherstep = (t: number) => {
       const c = Math.max(0, Math.min(1, t));
       return c * c * c * (c * (6 * c - 15) + 10);
@@ -136,6 +137,10 @@ export default function PupFollower() {
         let targetScreenY = 0;
         let activePose = stopA.pose;
         let activeFacing = stopA.facing;
+
+        // Check if currently holding in the footer basket (last stop)
+        const isHoldingAtLastStop = (k === stops.length - 1 || (k === stops.length - 2 && v === 1 && isHolding));
+        setIsAtBasket(isHoldingAtLastStop);
 
         if (isHolding && v === 0) {
           // Locked to Stop A directly from its live DOM bounding box
@@ -207,23 +212,34 @@ export default function PupFollower() {
             activePose = 'stand'; // Paused while scrolling: stands proudly on 4 paws
           }
 
-          // Drop subtle pawprints along travel path
+          // Drop subtle 4-paw quadruped prints along travel path
           const distFromLastPrint = Math.hypot(
             posX - lastPrintPosRef.current.x,
             posY - lastPrintPosRef.current.y
           );
-          if (distFromLastPrint > 42 && isScrollingRef.current) {
+          if (distFromLastPrint > 52 && isScrollingRef.current) {
             lastPrintPosRef.current = { x: posX, y: posY };
-            const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
-            setPawPrints((prev) => [
-              ...prev.slice(-12),
-              {
-                id: ++printIdRef.current,
-                x: targetScreenX,
-                y: targetScreenY + 36,
-                angle,
-              },
-            ]);
+            const rad = Math.atan2(dy, dx);
+            const angle = (rad * 180) / Math.PI + 90;
+            const cos = Math.cos(rad);
+            const sin = Math.sin(rad);
+
+            // 4 distinct paws per stride (FL, FR, HL, HR)
+            const quadPaws = [
+              { ox: -sin * -8 + cos * 14, oy: cos * -8 + sin * 14 },
+              { ox: -sin * 8 + cos * 10, oy: cos * 8 + sin * 10 },
+              { ox: -sin * -7 + cos * -10, oy: cos * -7 + sin * -10 },
+              { ox: -sin * 7 + cos * -14, oy: cos * 7 + sin * -14 },
+            ];
+
+            const newPrints = quadPaws.map((p) => ({
+              id: ++printIdRef.current,
+              x: targetScreenX + p.ox,
+              y: targetScreenY + 36 + p.oy,
+              angle,
+            }));
+
+            setPawPrints((prev) => [...prev.slice(-24), ...newPrints]);
           }
         }
 
@@ -259,20 +275,20 @@ export default function PupFollower() {
 
   return (
     <>
-      {/* Delicate fading pawprints trail */}
+      {/* 4-Paw subtle light footprints trail */}
       <div className="fixed inset-0 pointer-events-none z-35 overflow-hidden" aria-hidden="true">
         {pawPrints.map((p) => (
           <div
             key={p.id}
-            className="absolute transition-opacity duration-1000 ease-out animate-pulse"
+            className="absolute transition-opacity duration-1000 ease-out"
             style={{
               left: `${p.x}px`,
               top: `${p.y}px`,
               transform: `translate(-50%, -50%) rotate(${p.angle}deg)`,
-              opacity: 0.28,
+              opacity: 0.16, // Very light and delicate
             }}
           >
-            <svg viewBox="0 0 64 64" width="22" height="22" fill="#2a170e">
+            <svg viewBox="0 0 64 64" width="14" height="14" fill="#c2622b">
               <path d="M32 30.5c-7.6 0-15.6 8.3-15.6 15.5 0 5.4 4.2 8.3 9.2 8.3 2.6 0 4.5-1.1 6.4-1.1s3.8 1.1 6.4 1.1c5 0 9.2-2.9 9.2-8.3 0-7.2-8-15.5-15.6-15.5zM19.28 26.71C21.07 30.08 20.42 33.92 17.84 35.29C15.25 36.67 11.71 35.05 9.92 31.69C8.13 28.32 8.78 24.48 11.36 23.11C13.95 21.73 17.49 23.35 19.28 26.71ZM29.62 15.64C30.32 19.62 28.46 23.26 25.47 23.79C22.48 24.32 19.48 21.53 18.78 17.56C18.08 13.58 19.94 9.94 22.93 9.41C25.92 8.88 28.92 11.67 29.62 15.64ZM45.22 17.56C44.52 21.53 41.52 24.32 38.53 23.79C35.54 23.26 33.68 19.62 34.38 15.64C35.08 11.67 38.08 8.88 41.07 9.41C44.06 9.94 45.92 13.58 45.22 17.56ZM54.08 31.69C52.29 35.05 48.75 36.67 46.16 35.29C43.58 33.92 42.93 30.08 44.72 26.71C46.51 23.35 50.05 21.73 52.64 23.11C55.22 24.48 55.87 28.32 54.08 31.69Z" />
             </svg>
           </div>
@@ -285,7 +301,9 @@ export default function PupFollower() {
         aria-hidden="true"
       >
         <div
-          className="absolute will-change-transform transition-transform duration-75 ease-out"
+          className={`absolute will-change-transform transition-all duration-150 ease-out ${
+            isAtBasket ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
+          }`}
           style={{
             transform: `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`,
             width: 'clamp(14rem, 18vw, 17.5rem)',

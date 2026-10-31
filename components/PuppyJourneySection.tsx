@@ -63,11 +63,11 @@ export default function PuppyJourneySection() {
             A premium, step-by-step concierge experience. We make adoption simple, secure, and purely joyful.
           </p>
 
-          <ol className="tp-chat__steps list-none p-0">
+          <ol className="tp-chat__steps list-none p-0 space-y-10">
             {/* Step 1 */}
             <li
               ref={step1Ref}
-              className="tp-chat__step"
+              className="tp-chat__step min-h-[20vh]"
               data-active={activeStep === 1 ? 'true' : undefined}
               data-done={activeStep > 1 ? 'true' : undefined}
             >
@@ -85,7 +85,7 @@ export default function PuppyJourneySection() {
             {/* Step 2 */}
             <li
               ref={step2Ref}
-              className="tp-chat__step"
+              className="tp-chat__step min-h-[20vh]"
               data-active={activeStep === 2 ? 'true' : undefined}
               data-done={activeStep > 2 ? 'true' : undefined}
             >
@@ -103,7 +103,7 @@ export default function PuppyJourneySection() {
             {/* Step 3 */}
             <li
               ref={step3Ref}
-              className="tp-chat__step"
+              className="tp-chat__step min-h-[20vh]"
               data-active={activeStep === 3 ? 'true' : undefined}
             >
               <span className="tp-chat__num font-plush" aria-hidden="true">
@@ -123,8 +123,8 @@ export default function PuppyJourneySection() {
           </Link>
         </div>
 
-        {/* RIGHT COLUMN: Sticky WhatsApp Phone Mockup with Dropping Messages */}
-        <div className="tp-chat__side">
+        {/* RIGHT COLUMN: Sticky WhatsApp Phone Mockup that stays steady throughout all 3 steps */}
+        <div className="tp-chat__side lg:sticky lg:top-24 self-start">
           <div
             className="tp-phone"
             aria-label="A WhatsApp conversation with TeddyPups U.A.E."
