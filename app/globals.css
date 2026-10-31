@@ -91,43 +91,43 @@
 }
 
 /* Running/Walking Puppy Leg & Body Cycle */
-@keyframes pup-run-leg-a {
-  0%, 100% { transform: rotate(-24deg); }
-  50% { transform: rotate(28deg); }
+@keyframes pup-leg-swing-a {
+  0%, 100% { transform: rotate(-14deg); }
+  50% { transform: rotate(14deg); }
 }
 
-@keyframes pup-run-leg-b {
-  0%, 100% { transform: rotate(28deg); }
-  50% { transform: rotate(-24deg); }
+@keyframes pup-leg-swing-b {
+  0%, 100% { transform: rotate(14deg); }
+  50% { transform: rotate(-14deg); }
 }
 
 @keyframes pup-run-bob {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-4px); }
 }
 
 @keyframes pup-run-wag {
-  0%, 100% { transform: rotate(25deg); }
-  50% { transform: rotate(62deg); }
+  0%, 100% { transform: rotate(26deg); }
+  50% { transform: rotate(52deg); }
 }
 
 .pup-running-body {
-  animation: pup-run-bob 0.32s infinite ease-in-out;
+  animation: pup-run-bob 0.28s infinite ease-in-out;
 }
 
-.pup-running-leg-a {
-  transform-origin: center top;
-  animation: pup-run-leg-a 0.32s infinite ease-in-out;
+.pup-leg-swing-a {
+  transform-origin: 0px 0px;
+  animation: pup-leg-swing-a 0.28s infinite ease-in-out;
 }
 
-.pup-running-leg-b {
-  transform-origin: center top;
-  animation: pup-run-leg-b 0.32s infinite ease-in-out;
+.pup-leg-swing-b {
+  transform-origin: 0px 0px;
+  animation: pup-leg-swing-b 0.28s infinite ease-in-out;
 }
 
 .pup-running-tail {
   transform-origin: 84px 150px;
-  animation: pup-run-wag 0.26s infinite ease-in-out;
+  animation: pup-run-wag 0.24s infinite ease-in-out;
 }
 
 body {

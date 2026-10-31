@@ -228,7 +228,6 @@ export default function PupFollower() {
           <PupBuddy
             pose="walk"
             facing={facing}
-            className="animate-bounce"
           />
         </div>
       )}

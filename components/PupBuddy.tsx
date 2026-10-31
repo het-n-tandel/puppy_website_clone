@@ -33,7 +33,9 @@ export default function PupBuddy({
 
   // Pose transforms for head and legs
   const headTransform =
-    pose === 'tilt'
+    pose === 'walk'
+      ? 'translate(-4 0) rotate(0 212 100)'
+      : pose === 'tilt'
       ? 'translate(-10 -6) rotate(16 212 100)'
       : pose === 'bow'
       ? 'translate(-6 22) rotate(6 212 100)'
@@ -42,7 +44,9 @@ export default function PupBuddy({
       : 'translate(-10 -6) rotate(0 212 100)';
 
   const bodyTransform =
-    pose === 'bow'
+    pose === 'walk'
+      ? 'translate(0 2) rotate(0 196 206)'
+      : pose === 'bow'
       ? 'translate(0 14) rotate(12 196 206)'
       : pose === 'snug'
       ? 'translate(0 24) scale(0.95 0.88)'
@@ -102,60 +106,58 @@ export default function PupBuddy({
             className={`${isPet ? 'animate-pulse' : ''} ${pose === 'walk' ? 'pup-running-body' : ''}`}
           >
             {/* Back Far Leg */}
-            <g
-              data-p="bf"
-              transform="translate(94 192) rotate(0)"
-              opacity="0.9"
-              className={pose === 'walk' ? 'pup-running-leg-a' : ''}
-            >
-              <path
-                d="M-14 -14 C-14 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 14 4 14 -14Z"
-                fill="#e4a352"
-              />
-              <path
-                d="M-14 -14 C-14 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 14 4 14 -14"
-                stroke="#2a170e"
-                strokeWidth="3.4"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M-3.5 29 v5 M4.5 29 v5"
-                stroke="#2a170e"
-                strokeWidth="2.4"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                fill="none"
-              />
+            <g data-p="bf" transform="translate(94 192)" opacity="0.9">
+              <g className={pose === 'walk' ? 'pup-leg-swing-a' : ''}>
+                <path
+                  d="M-14 -14 C-14 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 14 4 14 -14Z"
+                  fill="#e4a352"
+                />
+                <path
+                  d="M-14 -14 C-14 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 14 4 14 -14"
+                  stroke="#2a170e"
+                  strokeWidth="3.4"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+                <path
+                  d="M-3.5 29 v5 M4.5 29 v5"
+                  stroke="#2a170e"
+                  strokeWidth="2.4"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+              </g>
             </g>
 
             {/* Front Far Leg */}
             <g
               data-p="ff"
-              transform="translate(168 192) rotate(24)"
-              className={pose === 'walk' ? 'pup-running-leg-b' : ''}
+              transform={`translate(168 192) ${pose === 'walk' ? 'rotate(0)' : 'rotate(24)'}`}
             >
-              <path
-                d="M-11 -14 C-11 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 11 4 11 -14Z"
-                fill="#e4a352"
-              />
-              <path
-                d="M-11 -14 C-11 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 11 4 11 -14"
-                stroke="#2a170e"
-                strokeWidth="3.4"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M-3.5 29 v5 M4.5 29 v5"
-                stroke="#2a170e"
-                strokeWidth="2.4"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                fill="none"
-              />
+              <g className={pose === 'walk' ? 'pup-leg-swing-b' : ''}>
+                <path
+                  d="M-11 -14 C-11 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 11 4 11 -14Z"
+                  fill="#e4a352"
+                />
+                <path
+                  d="M-11 -14 C-11 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 11 4 11 -14"
+                  stroke="#2a170e"
+                  strokeWidth="3.4"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+                <path
+                  d="M-3.5 29 v5 M4.5 29 v5"
+                  stroke="#2a170e"
+                  strokeWidth="2.4"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+              </g>
             </g>
 
             {/* Wagging Tail */}
@@ -190,32 +192,29 @@ export default function PupBuddy({
             </g>
 
             {/* Back Near Leg */}
-            <g
-              data-p="bn"
-              transform="translate(110 194) rotate(0)"
-              opacity="0.9"
-              className={pose === 'walk' ? 'pup-running-leg-b' : ''}
-            >
-              <path
-                d="M-15 -14 C-15 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 15 4 15 -14Z"
-                fill="#f2be6b"
-              />
-              <path
-                d="M-15 -14 C-15 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 15 4 15 -14"
-                stroke="#2a170e"
-                strokeWidth="3.4"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M-3.5 27 v5 M4.5 27 v5"
-                stroke="#2a170e"
-                strokeWidth="2.4"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                fill="none"
-              />
+            <g data-p="bn" transform="translate(110 194)" opacity="0.95">
+              <g className={pose === 'walk' ? 'pup-leg-swing-b' : ''}>
+                <path
+                  d="M-15 -14 C-15 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 15 4 15 -14Z"
+                  fill="#f2be6b"
+                />
+                <path
+                  d="M-15 -14 C-15 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 15 4 15 -14"
+                  stroke="#2a170e"
+                  strokeWidth="3.4"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+                <path
+                  d="M-3.5 27 v5 M4.5 27 v5"
+                  stroke="#2a170e"
+                  strokeWidth="2.4"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+              </g>
             </g>
 
             {/* Fluffy Body Torso */}
@@ -239,29 +238,30 @@ export default function PupBuddy({
             {/* Front Near Leg */}
             <g
               data-p="fn"
-              transform="translate(186 194) rotate(24)"
-              className={pose === 'walk' ? 'pup-running-leg-a' : ''}
+              transform={`translate(186 194) ${pose === 'walk' ? 'rotate(0)' : 'rotate(24)'}`}
             >
-              <path
-                d="M-12 -14 C-12 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 12 4 12 -14Z"
-                fill="#f2be6b"
-              />
-              <path
-                d="M-12 -14 C-12 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 12 4 12 -14"
-                stroke="#2a170e"
-                strokeWidth="3.4"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M-3.5 27 v5 M4.5 27 v5"
-                stroke="#2a170e"
-                strokeWidth="2.4"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                fill="none"
-              />
+              <g className={pose === 'walk' ? 'pup-leg-swing-a' : ''}>
+                <path
+                  d="M-12 -14 C-12 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 12 4 12 -14Z"
+                  fill="#f2be6b"
+                />
+                <path
+                  d="M-12 -14 C-12 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 12 4 12 -14"
+                  stroke="#2a170e"
+                  strokeWidth="3.4"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+                <path
+                  d="M-3.5 27 v5 M4.5 27 v5"
+                  stroke="#2a170e"
+                  strokeWidth="2.4"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+              </g>
             </g>
           </g>
 

@@ -166,7 +166,7 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
             data-pup-stop="true"
             data-pose={isScrolling ? 'walk' : 'sit'}
             data-facing={facing}
-            className="pup-stop tp-meet__teddy absolute bottom-14 sm:bottom-16 z-25 pointer-events-auto transition-all duration-150 ease-out drop-shadow-md"
+            className="pup-stop tp-meet__teddy absolute bottom-[4.4rem] sm:bottom-[5.4rem] z-25 pointer-events-auto transition-all duration-150 ease-out drop-shadow-md"
             style={{
               left: `${runningLeftPercent}%`,
               width: 'clamp(11.5rem, 16vw, 15.5rem)',
@@ -177,7 +177,6 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
               pose={isScrolling ? 'walk' : 'sit'}
               facing={facing}
               label="Teddy running on the showroom runway track"
-              className={isScrolling ? 'animate-bounce' : ''}
             />
           </div>
 
