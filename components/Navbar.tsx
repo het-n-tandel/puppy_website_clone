@@ -67,7 +67,7 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`relative flex flex-col items-center text-[0.95rem] font-bold transition-colors py-1 ${
+                className={`group relative flex flex-col items-center text-[0.95rem] font-bold transition-colors py-1 ${
                   isActive ? 'text-[#c2622b]' : 'text-[#2a170e] hover:text-[#c2622b]'
                 }`}
               >
@@ -77,7 +77,7 @@ export default function Navbar() {
                   className={`text-[12px] leading-none transition-all duration-200 ${
                     isActive
                       ? 'opacity-100 translate-y-0.5 text-[#c2622b]'
-                      : 'opacity-0 -translate-y-1 hover:opacity-70'
+                      : 'opacity-0 -translate-y-1 group-hover:opacity-70 group-hover:translate-y-0.5'
                   }`}
                 >
                   🐾
