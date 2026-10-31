@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+:root {
+  --color-cocoa: #2a170e;
+  --color-cocoa-soft: #5a3a28;
+  --color-honey: #f2be6b;
+  --color-honey-soft: #fbe3b4;
+  --color-milk: #fffdf8;
+  --color-toffee: #c2622b;
+  --color-toffee-deep: #a24a1a;
+  --color-toffee-ink: #8e3f15;
+  --color-sky: #bfddf5;
+  --color-sky-deep: #2f6e9e;
+  --color-blush: #f9cdbf;
+
+  --background: var(--color-milk);
+  --foreground: var(--color-cocoa);
+}
+
+@theme {
+  --color-cocoa: #2a170e;
+  --color-cocoa-soft: #5a3a28;
+  --color-honey: #f2be6b;
+  --color-honey-soft: #fbe3b4;
+  --color-milk: #fffdf8;
+  --color-toffee: #c2622b;
+  --color-toffee-deep: #a24a1a;
+  --color-toffee-ink: #8e3f15;
+  --color-sky: #bfddf5;
+  --color-sky-deep: #2f6e9e;
+  --color-blush: #f9cdbf;
+
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: var(--color-milk);
+  color: var(--color-cocoa);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Luxury whimsical button styles matching reference website */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-toffee-deep);
+  color: var(--color-milk);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 0.4rem 0 -0.1rem var(--color-cocoa);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) rotate(-1deg);
+  box-shadow: 0 0.6rem 0 -0.1rem var(--color-cocoa);
+}
+
+.btn-primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 0.2rem 0 -0.1rem var(--color-cocoa);
+}
+
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #1f7a4d;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 0.4rem 0 -0.1rem var(--color-cocoa);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-whatsapp:hover {
+  transform: translateY(-2px) rotate(1deg);
+  background-color: #238b58;
+  box-shadow: 0 0.6rem 0 -0.1rem var(--color-cocoa);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: var(--color-cocoa);
+  border: 2px solid var(--color-cocoa);
+  font-weight: 600;
+  padding: 0.7rem 1.4rem;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-ghost:hover {
+  background-color: var(--color-cocoa);
+  color: var(--color-milk);
+}
+
+/* Handcrafted Card & Blob Styles */
+.sketch-card {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.sketch-card:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+
+.badge-sticker {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  box-shadow: 0 2px 4px rgba(42, 23, 14, 0.12);
+}
