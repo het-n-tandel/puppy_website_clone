@@ -18,46 +18,42 @@ export default function PupFollower() {
   useEffect(() => {
     setMounted(true);
 
-    const updatePups = () => {
+    const updatePosition = () => {
       const scrollY = window.scrollY;
       const scrollDir = scrollY >= lastScrollY.current ? 'down' : 'up';
       lastScrollY.current = scrollY;
 
-      const stops = Array.from(
-        document.querySelectorAll<HTMLElement>('[data-pup-stop="true"]')
-      );
+      const windowW = window.innerWidth;
+      const windowH = window.innerHeight;
 
-      if (stops.length === 0) return;
-
-      const viewCenter = window.innerHeight * 0.45;
-
-      // 1. Hero Stage Check:
-      // When at the very top of the page, Teddy sits centered on the quilt
+      // 1. TOP OF PAGE: Hero Section Quilt
       if (scrollY < 60) {
         setIsMovableActive(false);
         setIsActivelyWalking(false);
 
-        // Hero still puppy is visible; all others hidden
-        stops.forEach((stop, idx) => {
-          const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
-          if (idx === 0) {
-            buddy.style.opacity = '1';
-            buddy.style.visibility = 'visible';
-          } else {
-            buddy.style.opacity = '0';
-            buddy.style.visibility = 'hidden';
-          }
-        });
+        // Hero still puppy is visible
+        const heroTeddy = document.querySelector<HTMLElement>('.tp-hero__teddy .pup-buddy');
+        if (heroTeddy) {
+          heroTeddy.style.opacity = '1';
+          heroTeddy.style.visibility = 'visible';
+        }
         return;
       }
 
-      // 2. Meet the Pups Check:
-      // When inside the pinned "Meet the pups" runway, runway Teddy takes over on the parquet floor
-      const meetSection = document.querySelector('section[aria-labelledby="meet-title"]');
+      // Hide Hero still puppy once scrolled
+      const heroTeddy = document.querySelector<HTMLElement>('.tp-hero__teddy .pup-buddy');
+      if (heroTeddy) {
+        heroTeddy.style.opacity = '0';
+        heroTeddy.style.visibility = 'hidden';
+      }
+
+      // 2. SHOWROOM RUNWAY: Meet the Pups
+      const meetSec = document.querySelector('section[aria-labelledby="meet-title"]');
       let inMeetRunway = false;
-      if (meetSection) {
-        const mRect = meetSection.getBoundingClientRect();
-        if (mRect.top <= 60 && mRect.bottom >= window.innerHeight * 0.45) {
+      if (meetSec) {
+        const mRect = meetSec.getBoundingClientRect();
+        // If the showroom section is pinned in viewport
+        if (mRect.top <= 60 && mRect.bottom >= windowH * 0.45) {
           inMeetRunway = true;
         }
       }
@@ -65,124 +61,108 @@ export default function PupFollower() {
       if (inMeetRunway) {
         setIsMovableActive(false);
         setIsActivelyWalking(false);
-
-        // Hide Hero and other section stops so runway Teddy has full focus
-        stops.forEach((stop, idx) => {
-          const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
-          if (idx === 1) {
-            buddy.style.opacity = '1';
-            buddy.style.visibility = 'visible';
-          } else {
-            buddy.style.opacity = '0';
-            buddy.style.visibility = 'hidden';
-          }
-        });
         return;
       }
 
-      // 3. Footer Check:
-      // When reached the very bottom, Teddy curls up asleep in the basket
+      // 3. FOOTER BASKET: Very bottom
       const isAtBottom =
-        window.innerHeight + scrollY >= document.documentElement.scrollHeight - 140;
-      if (isAtBottom && stops.length > 0) {
-        const lastIdx = stops.length - 1;
+        windowH + scrollY >= document.documentElement.scrollHeight - 160;
+      if (isAtBottom) {
         setIsMovableActive(false);
         setIsActivelyWalking(false);
 
-        stops.forEach((stop, idx) => {
-          const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
-          if (idx === lastIdx) {
-            buddy.style.opacity = '1';
-            buddy.style.visibility = 'visible';
-          } else {
-            buddy.style.opacity = '0';
-            buddy.style.visibility = 'hidden';
-          }
-        });
+        const footerTeddy = document.querySelector<HTMLElement>('.tp-basket__pup .pup-buddy');
+        if (footerTeddy) {
+          footerTeddy.style.opacity = '1';
+          footerTeddy.style.visibility = 'visible';
+        }
         return;
       }
 
-      // 4. Moving throughout the page:
-      // Movable puppy is active! All still puppies disappear.
+      // Hide footer basket still puppy when not at bottom
+      const footerTeddy = document.querySelector<HTMLElement>('.tp-basket__pup .pup-buddy');
+      if (footerTeddy) {
+        footerTeddy.style.opacity = '0';
+        footerTeddy.style.visibility = 'hidden';
+      }
+
+      // 4. MOVING ACROSS ALL HOME PAGE SECTIONS
+      // The movable puppy stays active throughout every frame!
       setIsMovableActive(true);
       setIsActivelyWalking(true);
 
-      // Hide all stationary picture puppies
-      stops.forEach((stop) => {
-        const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
-        buddy.style.opacity = '0';
-        buddy.style.visibility = 'hidden';
-      });
+      // Define section focal checkpoints
+      const checkpoints: Array<{ selector: string; targetX: number; targetYOffset: number }> = [
+        { selector: 'section[aria-labelledby="meet-title"]', targetX: 0.5, targetYOffset: 0.65 },
+        { selector: 'section[aria-labelledby="paths-title"]', targetX: 0.5, targetYOffset: 0.62 },
+        { selector: 'section[aria-labelledby="journey-title"]', targetX: 0.42, targetYOffset: 0.6 },
+        { selector: 'section[aria-labelledby="trust-title"]', targetX: 0.46, targetYOffset: 0.58 },
+        { selector: 'section[aria-labelledby="families-title"]', targetX: 0.55, targetYOffset: 0.62 },
+        { selector: 'section[aria-labelledby="faq-title"]', targetX: 0.48, targetYOffset: 0.6 },
+        { selector: 'section[aria-labelledby="ready-title"]', targetX: 0.45, targetYOffset: 0.62 },
+      ];
 
-      // Calculate path interpolation between stops
-      let fromIdx = 0;
-      let toIdx = 1;
+      // Find current section & calculate interpolation
+      let currentCheckX = windowW * 0.5;
+      let currentCheckY = windowH * 0.65;
 
-      for (let i = 0; i < stops.length - 1; i++) {
-        const r1 = stops[i].getBoundingClientRect();
-        const r2 = stops[i + 1].getBoundingClientRect();
-        const y1 = r1.top + window.scrollY;
-        const y2 = r2.top + window.scrollY;
-        const currentY = scrollY + viewCenter;
+      for (let i = 0; i < checkpoints.length; i++) {
+        const el = document.querySelector(checkpoints[i].selector);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // If this section is around the viewport center
+          if (rect.top <= windowH * 0.8 && rect.bottom >= windowH * 0.2) {
+            const nextIdx = Math.min(checkpoints.length - 1, i + 1);
+            const progress = Math.min(1, Math.max(0, -rect.top / (rect.height || 1)));
 
-        if (currentY >= y1 && currentY <= y2) {
-          fromIdx = i;
-          toIdx = i + 1;
-          break;
-        } else if (currentY > y2) {
-          fromIdx = i;
-          toIdx = Math.min(stops.length - 1, i + 1);
+            const xStart = windowW * checkpoints[i].targetX;
+            const xEnd = windowW * checkpoints[nextIdx].targetX;
+            const yStart = windowH * checkpoints[i].targetYOffset;
+            const yEnd = windowH * checkpoints[nextIdx].targetYOffset;
+
+            // Add gentle sinusoidal wiggle for authentic puppy trot
+            const trotWiggle = Math.sin(scrollY * 0.015) * 22;
+
+            currentCheckX = xStart + (xEnd - xStart) * progress + trotWiggle;
+            currentCheckY = yStart + (yEnd - yStart) * progress;
+            setFacing(xEnd >= xStart ? 'right' : 'left');
+            break;
+          }
         }
       }
 
-      const rect1 = stops[fromIdx].getBoundingClientRect();
-      const rect2 = stops[toIdx].getBoundingClientRect();
+      // Keep safely inside screen boundaries
+      const clampedX = Math.min(windowW - 100, Math.max(90, currentCheckX));
+      const clampedY = Math.min(windowH - 90, Math.max(120, currentCheckY));
 
-      const absY1 = rect1.top + window.scrollY;
-      const absY2 = rect2.top + window.scrollY;
-      const range = Math.max(1, absY2 - absY1);
-      const t = Math.min(1, Math.max(0, (scrollY + viewCenter - absY1) / range));
-
-      // Viewport coordinates of fromStop and toStop
-      const x1 = rect1.left + rect1.width / 2;
-      const y1 = rect1.top + rect1.height / 2;
-      const x2 = rect2.left + rect2.width / 2;
-      const y2 = rect2.top + rect2.height / 2;
-
-      // Smoothly interpolate position
-      const interpX = x1 + (x2 - x1) * t;
-      const interpY = Math.min(window.innerHeight - 80, Math.max(100, y1 + (y2 - y1) * t));
-
-      setPos({ x: interpX, y: interpY });
-      setFacing(x2 >= x1 ? 'right' : 'left');
+      setPos({ x: clampedX, y: clampedY });
 
       // Add gentle paw print along the trail
       if (Math.random() < 0.22) {
         const newPrint = {
           id: printCounter.current++,
-          x: interpX + (Math.random() * 16 - 8),
-          y: interpY + 28 + (Math.random() * 8 - 4),
+          x: clampedX + (Math.random() * 16 - 8),
+          y: clampedY + 30 + (Math.random() * 8 - 4),
           angle: scrollDir === 'down' ? 180 : 0,
         };
         setPawPrints((prev) => [...prev.slice(-6), newPrint]);
       }
 
-      // When user pauses scrolling:
-      // Teddy STAYS AT THAT EXACT POSITION on screen!
-      // He does NOT disappear, and does NOT force a distant stop to sit!
+      // When scroll pauses:
+      // Puppy STAYS RIGHT AT (x, y) on screen in standing pose!
       if (walkTimeoutRef.current) clearTimeout(walkTimeoutRef.current);
       walkTimeoutRef.current = setTimeout(() => {
         setIsActivelyWalking(false);
       }, 200);
     };
 
-    window.addEventListener('scroll', updatePups, { passive: true });
-    window.addEventListener('resize', updatePups, { passive: true });
-    updatePups();
+    window.addEventListener('scroll', updatePosition, { passive: true });
+    window.addEventListener('resize', updatePosition, { passive: true });
+    updatePosition();
 
     return () => {
-      window.removeEventListener('scroll', updatePups);
-      window.removeEventListener('resize', updatePups);
+      window.removeEventListener('scroll', updatePosition);
+      window.removeEventListener('resize', updatePosition);
       if (walkTimeoutRef.current) clearTimeout(walkTimeoutRef.current);
     };
   }, []);
@@ -214,9 +194,10 @@ export default function PupFollower() {
         ))}
       </div>
 
-      {/* MOVABLE PUPPY
-          Stays right there at pos.x, pos.y when user pauses scrolling!
-          When scrolling: pose="walk". When stopped: pose="stand" (standing alert on 4 paws, tail wagging).
+      {/* CONTINUOUS MOVABLE PUPPY COMPANION
+          - Active across every single frame of the home page
+          - Stays firmly in position when scrolling pauses in pose="stand"
+          - Never vanishes or clips out of bounds
       */}
       {isMovableActive && (
         <div
@@ -225,7 +206,7 @@ export default function PupFollower() {
             left: `${pos.x}px`,
             top: `${pos.y}px`,
             transform: 'translate(-50%, -50%)',
-            width: 'clamp(145px, 16vw, 170px)',
+            width: 'clamp(145px, 16vw, 175px)',
           }}
           aria-hidden="true"
         >

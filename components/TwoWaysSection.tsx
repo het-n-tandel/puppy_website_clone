@@ -1,13 +1,58 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import PupBuddy from './PupBuddy';
 
 export default function TwoWaysSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [flightT, setFlightT] = useState(0.2);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const windowH = window.innerHeight;
+      // Flight runs as section moves through the viewport
+      const totalRange = windowH + rect.height;
+      const progress = Math.min(1, Math.max(0, (windowH - rect.top) / totalRange));
+      setFlightT(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Compute position & angle along the cubic Bezier flight curve
+  // P0 = (40, 250), C1 = (170, 40), C2 = (470, 20), P3 = (620, 168)
+  const t = flightT;
+  const t1 = 1 - t;
+  const planeX =
+    t1 * t1 * t1 * 40 +
+    3 * t1 * t1 * t * 170 +
+    3 * t1 * t * t * 470 +
+    t * t * t * 620;
+  const planeY =
+    t1 * t1 * t1 * 250 +
+    3 * t1 * t1 * t * 40 +
+    3 * t1 * t * t * 20 +
+    t * t * t * 168;
+
+  const dx =
+    3 * t1 * t1 * (170 - 40) +
+    6 * t1 * t * (470 - 170) +
+    3 * t * t * (620 - 470);
+  const dy =
+    3 * t1 * t1 * (40 - 250) +
+    6 * t1 * t * (20 - 40) +
+    3 * t * t * (168 - 20);
+  const planeAngle = (Math.atan2(dy, dx) * 180) / Math.PI;
+
   return (
     <section
+      ref={sectionRef}
       data-pup-scene="true"
       data-tone="light"
       className="tp-scene tp-paths select-none"
@@ -100,8 +145,11 @@ export default function TwoWaysSection() {
                     Dubai
                   </text>
 
-                  {/* Airplane flying along the arc */}
-                  <g transform="translate(410 70)">
+                  {/* Airplane flying along the arc from Korea to Dubai */}
+                  <g
+                    transform={`translate(${planeX.toFixed(1)} ${planeY.toFixed(1)}) rotate(${(planeAngle * 0.7).toFixed(1)})`}
+                    style={{ transition: 'transform 0.08s ease-out' }}
+                  >
                     <g transform="translate(-126 -78)">
                       <path d="M28 60 L8 26 L34 26 L60 54 Z" className="tp-flight__wing" />
                       <path

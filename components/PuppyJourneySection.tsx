@@ -1,206 +1,258 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import PupBuddy from './PupBuddy';
-import { getGeneralWhatsAppUrl } from '@/lib/whatsapp';
-import { Check, Phone, Video, MoreVertical } from 'lucide-react';
 
 export default function PuppyJourneySection() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const step1Ref = useRef<HTMLLIElement>(null);
+  const step2Ref = useRef<HTMLLIElement>(null);
+  const step3Ref = useRef<HTMLLIElement>(null);
+
+  const [activeStep, setActiveStep] = useState<number>(1);
   const [selectedBreed, setSelectedBreed] = useState<string>('Maltipoo');
 
   const breeds = ['Maltipoo', 'Pomeranian', 'Poodle', 'Cavapoo', 'Shih Tzu'];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const vMid = window.innerHeight * 0.55;
+
+      const r1 = step1Ref.current?.getBoundingClientRect();
+      const r2 = step2Ref.current?.getBoundingClientRect();
+      const r3 = step3Ref.current?.getBoundingClientRect();
+
+      if (r3 && r3.top <= vMid) {
+        setActiveStep(3);
+      } else if (r2 && r2.top <= vMid) {
+        setActiveStep(2);
+      } else if (r1 && r1.top <= vMid) {
+        setActiveStep(1);
+      } else {
+        setActiveStep(1);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <section
+      ref={containerRef}
       data-pup-scene="true"
       data-tone="light"
-      className="tp-scene tp-journey relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-[#f7d18d] to-[#f0b866]"
+      className="tp-scene tp-chat select-none"
       style={{
         ['--sky-top' as any]: '#f7d18d',
         ['--sky-bottom' as any]: '#f0b866',
+        background: 'linear-gradient(to bottom, #f7d18d, #f0b866)',
       }}
       aria-labelledby="journey-title"
     >
-      <div className="gutter mx-auto max-w-[110rem] px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center max-w-6xl mx-auto">
-          {/* LEFT COLUMN: 3 Step Concierge Guide */}
-          <div className="lg:col-span-6 space-y-8">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#a24a1a]">
-                Concierge Adoption
+      <div className="tp-chat__grid gutter px-4 sm:px-6 lg:px-8">
+        {/* LEFT COLUMN: 3 Step Story Flow */}
+        <div className="tp-chat__story">
+          <h2 id="journey-title" className="font-plush text-huge text-[#2a170e]">
+            Your puppy journey
+          </h2>
+          <p className="text-lede mt-5 max-w-[42ch] text-[#5a3a28]">
+            A premium, step-by-step concierge experience. We make adoption simple, secure, and purely joyful.
+          </p>
+
+          <ol className="tp-chat__steps list-none p-0">
+            {/* Step 1 */}
+            <li
+              ref={step1Ref}
+              className="tp-chat__step"
+              data-active={activeStep === 1 ? 'true' : undefined}
+              data-done={activeStep > 1 ? 'true' : undefined}
+            >
+              <span className="tp-chat__num font-plush" aria-hidden="true">
+                {activeStep > 1 ? '✓' : '1'}
               </span>
-              <h2
-                id="journey-title"
-                className="font-serif text-3xl sm:text-5xl font-black text-[#2a170e] mt-1 tracking-tight"
-              >
-                Your puppy journey
-              </h2>
-              <p className="mt-4 text-base sm:text-lg text-[#5a3a28] leading-relaxed">
-                A premium, step-by-step concierge experience. We make adoption simple, secure, and purely joyful.
-              </p>
+              <div>
+                <h3 className="font-plush tp-chat__title text-[#2a170e]">Choose your breed</h3>
+                <p className="tp-chat__text">
+                  Select your preferred breed or tell us what you&apos;re looking for. We&apos;ll guide you based on availability and your lifestyle.
+                </p>
+              </div>
+            </li>
+
+            {/* Step 2 */}
+            <li
+              ref={step2Ref}
+              className="tp-chat__step"
+              data-active={activeStep === 2 ? 'true' : undefined}
+              data-done={activeStep > 2 ? 'true' : undefined}
+            >
+              <span className="tp-chat__num font-plush" aria-hidden="true">
+                {activeStep > 2 ? '✓' : '2'}
+              </span>
+              <div>
+                <h3 className="font-plush tp-chat__title text-[#2a170e]">Get photos &amp; details</h3>
+                <p className="tp-chat__text">
+                  Our team will share real photos, health details, and all necessary information directly on WhatsApp.
+                </p>
+              </div>
+            </li>
+
+            {/* Step 3 */}
+            <li
+              ref={step3Ref}
+              className="tp-chat__step"
+              data-active={activeStep === 3 ? 'true' : undefined}
+            >
+              <span className="tp-chat__num font-plush" aria-hidden="true">
+                3
+              </span>
+              <div>
+                <h3 className="font-plush tp-chat__title text-[#2a170e]">Secure &amp; safe delivery</h3>
+                <p className="tp-chat__text">
+                  Once confirmed, we handle everything professionally and ensure your puppy reaches you safely and stress-free.
+                </p>
+              </div>
+            </li>
+          </ol>
+
+          <Link href="/how-it-works" className="btn btn-ghost tp-chat__cta">
+            How it works →
+          </Link>
+        </div>
+
+        {/* RIGHT COLUMN: Sticky WhatsApp Phone Mockup with Dropping Messages */}
+        <div className="tp-chat__side">
+          <div
+            className="tp-phone"
+            aria-label="A WhatsApp conversation with TeddyPups U.A.E."
+            role="group"
+          >
+            {/* Phone Top Bar */}
+            <div className="tp-phone__bar">
+              <div className="relative w-10 h-10 rounded-full overflow-hidden border border-[#2a170e]/20 flex-shrink-0">
+                <Image
+                  src="/brand/logo.png"
+                  alt="TeddyPups Logo"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="tp-phone__name">TeddyPups U.A.E.</span>
+                <span className="tp-phone__status">● online</span>
+              </div>
             </div>
 
-            <ol className="space-y-6">
-              {/* Step 1 */}
-              <li className="flex items-start gap-4 bg-[#fffdf8]/70 backdrop-blur-sm p-4 rounded-2xl border-2 border-[#2a170e]/10 shadow-sm">
-                <span className="flex-shrink-0 w-10 h-10 rounded-2xl bg-[#a24a1a] text-[#fffdf8] font-serif font-black text-xl flex items-center justify-center shadow">
-                  1
-                </span>
-                <div>
-                  <h3 className="font-serif text-lg font-bold text-[#2a170e]">
-                    Choose your breed
-                  </h3>
-                  <p className="text-sm text-[#5a3a28] mt-1 leading-relaxed">
+            {/* Phone Screen with Messages Dropping on Scroll */}
+            <div className="tp-phone__screen">
+              {/* Initial Greeting */}
+              <p className="tp-msg tp-msg--me">
+                Hi TeddyPups! I&apos;d love to know more about your puppies.
+              </p>
+
+              {/* Message 1 (Step 1 Executed: Breed Selection) */}
+              <div
+                className="tp-msg-group"
+                data-step="0"
+                data-show={activeStep >= 1 ? 'true' : 'false'}
+              >
+                <div className="tp-msg tp-msg--them">
+                  <p>
                     Select your preferred breed or tell us what you&apos;re looking for. We&apos;ll guide you based on availability and your lifestyle.
                   </p>
+                  <ul className="tp-chips" aria-label="Breeds we have now">
+                    {breeds.map((b) => (
+                      <li key={b}>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedBreed(b)}
+                          className={`cursor-pointer transition-colors ${
+                            selectedBreed === b ? '!bg-[#a24a1a] !text-white' : ''
+                          }`}
+                        >
+                          {b}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </li>
+              </div>
 
-              {/* Step 2 */}
-              <li className="flex items-start gap-4 bg-[#fffdf8]/70 backdrop-blur-sm p-4 rounded-2xl border-2 border-[#2a170e]/10 shadow-sm">
-                <span className="flex-shrink-0 w-10 h-10 rounded-2xl bg-[#a24a1a] text-[#fffdf8] font-serif font-black text-xl flex items-center justify-center shadow">
-                  2
-                </span>
-                <div>
-                  <h3 className="font-serif text-lg font-bold text-[#2a170e]">
-                    Get photos & details
-                  </h3>
-                  <p className="text-sm text-[#5a3a28] mt-1 leading-relaxed">
-                    Our team will share real photos, health details, and all necessary information directly on WhatsApp.
-                  </p>
-                </div>
-              </li>
-
-              {/* Step 3 */}
-              <li className="flex items-start gap-4 bg-[#fffdf8]/70 backdrop-blur-sm p-4 rounded-2xl border-2 border-[#2a170e]/10 shadow-sm">
-                <span className="flex-shrink-0 w-10 h-10 rounded-2xl bg-[#a24a1a] text-[#fffdf8] font-serif font-black text-xl flex items-center justify-center shadow">
-                  3
-                </span>
-                <div>
-                  <h3 className="font-serif text-lg font-bold text-[#2a170e]">
-                    Secure & safe delivery
-                  </h3>
-                  <p className="text-sm text-[#5a3a28] mt-1 leading-relaxed">
-                    Once confirmed, we handle everything professionally and ensure your puppy reaches you safely and stress-free.
-                  </p>
-                </div>
-              </li>
-            </ol>
-
-            <div>
-              <Link
-                href="/how-it-works"
-                className="btn-ghost inline-flex items-center gap-2 text-sm sm:text-base font-bold py-2.5 px-6 bg-[#fffdf8] border-2 border-[#2a170e]"
+              {/* Message 2 (Step 2 Executed: Real Photos Drop in) */}
+              <div
+                className="tp-msg-group"
+                data-step="1"
+                data-show={activeStep >= 2 ? 'true' : 'false'}
               >
-                <span>Read Full Adoption Guide</span>
-                <span>→</span>
-              </Link>
+                <div className="tp-msg tp-msg--them tp-msg--media">
+                  <div className="tp-snaps">
+                    <span className="tp-snaps__one">
+                      <Image
+                        src="https://puppy.instabizweb.com/media/FHyoHcIosLZE/60f6e7e00a/27b888_323008bb0f6a41d4bde2a0da7206cd98f000.jpg"
+                        alt="Teddy puppy in showroom"
+                        fill
+                        sizes="10rem"
+                        className="object-cover"
+                      />
+                    </span>
+                    <span className="tp-snaps__one">
+                      <Image
+                        src="https://puppy.instabizweb.com/media/Z0ToauDx7Eve/5fffe4d022/b942a5_4b8cfb8204d24eadaf524332aba1dc15-mv2.webp"
+                        alt="Max puppy"
+                        fill
+                        sizes="10rem"
+                        className="object-cover"
+                      />
+                    </span>
+                  </div>
+                  <p className="mt-1.5 font-medium">
+                    Here is {selectedBreed} Max! 🐾 Healthy, playful, and ready to meet you.
+                  </p>
+                </div>
+              </div>
+
+              {/* Message 3 (Step 3 Executed: Secure Delivery Confirmed) */}
+              <div
+                className="tp-msg-group"
+                data-step="2"
+                data-show={activeStep >= 3 ? 'true' : 'false'}
+              >
+                <div className="tp-msg tp-msg--them bg-[#dcf8c6]">
+                  <p className="font-medium text-[#2a170e]">
+                    ✈️ Delivery confirmed directly to your home in Dubai! Certified vet check, microchip, and passport all included.
+                  </p>
+                  <span className="inline-block mt-1 text-[11px] font-bold text-[#1f7a4d] uppercase tracking-wide">
+                    ✓ Ready for homecoming
+                  </span>
+                </div>
+              </div>
             </div>
+
+            {/* Compose WhatsApp Bar */}
+            <a
+              href="https://wa.me/971541676733?text=Hi%20TeddyPups!%20I'd%20love%20to%20know%20more%20about%20your%20puppies."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="tp-phone__compose"
+            >
+              <span>Reply on WhatsApp...</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              </svg>
+            </a>
           </div>
 
-          {/* RIGHT COLUMN: WhatsApp Phone Concierge Chat Mockup */}
-          <div className="lg:col-span-6 flex flex-col items-center">
-            <div className="w-full max-w-sm bg-[#fffdf8] rounded-[40px] border-4 border-[#2a170e] shadow-[8px_8px_0px_0px_#2a170e] overflow-hidden flex flex-col">
-              {/* Phone Status Bar */}
-              <div className="bg-[#1f5f3e] text-white px-5 py-3 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="relative w-9 h-9 rounded-full bg-[#f2be6b] border border-white flex items-center justify-center overflow-hidden">
-                    <span className="text-lg">🐶</span>
-                  </div>
-                  <div>
-                    <h4 className="font-serif font-bold text-sm leading-tight text-white flex items-center gap-1.5">
-                      TeddyPups U.A.E.
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
-                    </h4>
-                    <span className="text-[10px] text-emerald-200">online</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 text-white/90">
-                  <Video className="w-4 h-4 cursor-pointer hover:text-white" />
-                  <Phone className="w-4 h-4 cursor-pointer hover:text-white" />
-                  <MoreVertical className="w-4 h-4 cursor-pointer hover:text-white" />
-                </div>
-              </div>
-
-              {/* Chat Message Stream */}
-              <div className="p-4 space-y-3.5 bg-[#f5ede1] min-h-[340px] flex flex-col justify-between text-xs sm:text-sm">
-                <div className="space-y-3">
-                  {/* Outgoing Message */}
-                  <div className="flex justify-end">
-                    <div className="bg-[#dcf8c6] text-[#2a170e] rounded-2xl rounded-tr-none px-3.5 py-2 max-w-[85%] shadow-sm border border-[#2a170e]/10">
-                      <p>Hi TeddyPups! I&apos;d love to know more about your puppies.</p>
-                      <div className="flex justify-end items-center gap-1 mt-1 text-[10px] text-gray-500">
-                        <span>10:42 AM</span>
-                        <Check className="w-3 h-3 text-blue-500" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Incoming Concierge Prompt */}
-                  <div className="flex justify-start">
-                    <div className="bg-white text-[#2a170e] rounded-2xl rounded-tl-none px-3.5 py-2.5 max-w-[88%] shadow-sm border border-[#2a170e]/10 space-y-2">
-                      <p className="font-medium text-[#2a170e]">
-                        Welcome to TeddyPups! Which breed melts your heart today?
-                      </p>
-
-                      {/* Interactive Breed Pill Buttons */}
-                      <div className="flex flex-wrap gap-1.5 pt-1">
-                        {breeds.map((b) => (
-                          <button
-                            key={b}
-                            onClick={() => setSelectedBreed(b)}
-                            className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
-                              selectedBreed === b
-                                ? 'bg-[#a24a1a] text-white shadow-sm scale-105'
-                                : 'bg-[#fbe3b4]/70 text-[#2a170e] hover:bg-[#f2be6b]'
-                            }`}
-                          >
-                            {b}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Concierge Response to Breed */}
-                  <div className="flex justify-start animate-fade-in">
-                    <div className="bg-white text-[#2a170e] rounded-2xl rounded-tl-none px-3.5 py-2 max-w-[88%] shadow-sm border border-[#2a170e]/10">
-                      <p>
-                        Wonderful choice! Our <span className="font-bold text-[#a24a1a]">{selectedBreed}</span> puppies are fully vaccinated, microchipped, and showroom-ready.
-                      </p>
-                      <span className="text-[10px] text-gray-400 block text-right mt-1">10:43 AM</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom WhatsApp CTA Button */}
-                <div className="pt-2">
-                  <a
-                    href={getGeneralWhatsAppUrl(`Hi TeddyPups! I'm interested in adopting a ${selectedBreed} puppy.`)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full btn-primary text-xs sm:text-sm font-bold py-2.5 px-4 text-center shadow-md flex items-center justify-center gap-2"
-                  >
-                    <span>Say hello on WhatsApp</span>
-                    <span>💬</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Mascot Stop for Section 3 */}
-            <div
-              data-pup-stop="true"
-              data-pose="sit"
-              data-facing="right"
-              className="pup-stop tp-chat__teddy mt-6 flex justify-center"
-            >
-              <div className="w-32 sm:w-40">
-                <PupBuddy pose="sit" facing="right" label="Teddy sitting by the chat" />
-              </div>
-            </div>
+          {/* Teddy Mascot sitting right beside the phone */}
+          <div
+            data-pup-stop="true"
+            data-pose="sit"
+            data-facing="right"
+            className="pup-stop tp-chat__teddy"
+          >
+            <PupBuddy pose="sit" facing="right" label="Teddy listening at the chat" />
           </div>
         </div>
       </div>
