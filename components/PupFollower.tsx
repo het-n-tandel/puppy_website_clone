@@ -29,15 +29,15 @@ export default function PupFollower() {
 
       if (stops.length === 0) return;
 
-      const viewCenter = window.innerHeight * 0.45;
+      const viewCenter = window.innerHeight * 0.48;
 
-      // 1. Hero Stage Check:
-      // When at the very top of the page, Teddy sits centered on the quilt
+      // =========================================================================
+      // 1. HERO SECTION CHECK (Top of page)
+      // =========================================================================
       if (scrollY < 60) {
         setIsMovableActive(false);
         setIsActivelyWalking(false);
 
-        // Hero still puppy is visible; all others hidden
         stops.forEach((stop, idx) => {
           const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
           if (idx === 0) {
@@ -51,13 +51,45 @@ export default function PupFollower() {
         return;
       }
 
-      // 2. Meet the Pups Check:
-      // When inside the pinned "Meet the pups" runway, runway Teddy takes over on the parquet floor
-      const meetSection = document.querySelector('section[aria-labelledby="meet-title"]');
+      // =========================================================================
+      // 2. FOOTER BASKET CHECK ("Home, at last.")
+      // Prevents puppy floating over text; puppy snuggles into basket immediately
+      // =========================================================================
+      const basketStop = stops[stops.length - 1];
+      if (basketStop) {
+        const bRect = basketStop.getBoundingClientRect();
+        // If the basket is in the lower portion of the screen or footer is reached
+        if (bRect.top <= window.innerHeight * 0.82) {
+          setIsMovableActive(false);
+          setIsActivelyWalking(false);
+
+          stops.forEach((stop, idx) => {
+            const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
+            if (idx === stops.length - 1) {
+              buddy.style.opacity = '1';
+              buddy.style.visibility = 'visible';
+            } else {
+              buddy.style.opacity = '0';
+              buddy.style.visibility = 'hidden';
+            }
+          });
+          return;
+        }
+      }
+
+      // =========================================================================
+      // 3. MEET THE PUPS SECTION (Sticky Showroom Runway)
+      // =========================================================================
+      const meetSection = document.querySelector<HTMLElement>(
+        'section[aria-labelledby="meet-title"]'
+      );
       let inMeetRunway = false;
+      let meetRect: DOMRect | null = null;
+
       if (meetSection) {
-        const mRect = meetSection.getBoundingClientRect();
-        if (mRect.top <= 60 && mRect.bottom >= window.innerHeight * 0.45) {
+        meetRect = meetSection.getBoundingClientRect();
+        // Inside pinned runway track
+        if (meetRect.top <= 80 && meetRect.bottom >= window.innerHeight * 0.45) {
           inMeetRunway = true;
         }
       }
@@ -66,7 +98,6 @@ export default function PupFollower() {
         setIsMovableActive(false);
         setIsActivelyWalking(false);
 
-        // Hide Hero and other section stops so runway Teddy has full focus
         stops.forEach((stop, idx) => {
           const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
           if (idx === 1) {
@@ -80,30 +111,9 @@ export default function PupFollower() {
         return;
       }
 
-      // 3. Footer Check:
-      // When reached the very bottom, Teddy curls up asleep in the basket
-      const isAtBottom =
-        window.innerHeight + scrollY >= document.documentElement.scrollHeight - 140;
-      if (isAtBottom && stops.length > 0) {
-        const lastIdx = stops.length - 1;
-        setIsMovableActive(false);
-        setIsActivelyWalking(false);
-
-        stops.forEach((stop, idx) => {
-          const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
-          if (idx === lastIdx) {
-            buddy.style.opacity = '1';
-            buddy.style.visibility = 'visible';
-          } else {
-            buddy.style.opacity = '0';
-            buddy.style.visibility = 'hidden';
-          }
-        });
-        return;
-      }
-
-      // 4. Moving throughout the page:
-      // Movable puppy is active! All still puppies disappear.
+      // =========================================================================
+      // 4. MOVING THROUGHOUT THE PAGE (Active Follower Mode)
+      // =========================================================================
       setIsMovableActive(true);
       setIsActivelyWalking(true);
 
@@ -114,54 +124,97 @@ export default function PupFollower() {
         buddy.style.visibility = 'hidden';
       });
 
-      // Calculate path interpolation between stops
-      let fromIdx = 0;
-      let toIdx = 1;
+      let calculatedX = window.innerWidth * 0.5;
+      let calculatedY = viewCenter;
+      let targetFacing: 'left' | 'right' = 'right';
 
-      for (let i = 0; i < stops.length - 1; i++) {
-        const r1 = stops[i].getBoundingClientRect();
-        const r2 = stops[i + 1].getBoundingClientRect();
-        const y1 = r1.top + window.scrollY;
-        const y2 = r2.top + window.scrollY;
-        const currentY = scrollY + viewCenter;
+      // --- Scenario A: Transition between HeroStage and MeetThePups ---
+      if (meetRect && meetRect.top > 80) {
+        const heroStop = stops[0];
+        const hRect = heroStop.getBoundingClientRect();
+        const startX = hRect.left + hRect.width / 2;
+        const startY = hRect.top + hRect.height / 2;
 
-        if (currentY >= y1 && currentY <= y2) {
-          fromIdx = i;
-          toIdx = i + 1;
-          break;
-        } else if (currentY > y2) {
-          fromIdx = i;
-          toIdx = Math.min(stops.length - 1, i + 1);
+        // Progress smoothly down from quilt towards runway entrance
+        const totalDist = Math.max(1, meetRect.top - 80);
+        const t = Math.min(1, Math.max(0, (scrollY - 60) / (scrollY - 60 + totalDist)));
+
+        // Keep centered or gently guide towards left side of showroom without jumping to 8%
+        calculatedX = startX + (window.innerWidth * 0.25 - startX) * (t * 0.6);
+        calculatedY = Math.min(
+          window.innerHeight - 90,
+          Math.max(90, startY + (window.innerHeight - 90 - startY) * t)
+        );
+        targetFacing = 'right';
+      }
+      // --- Scenario B: Transition exiting MeetThePups towards TwoWaysSection ---
+      else if (meetRect && meetRect.bottom < window.innerHeight * 0.45 && stops.length > 2) {
+        const twoWaysStop = stops[2];
+        const twRect = twoWaysStop.getBoundingClientRect();
+        const endX = twRect.left + twRect.width / 2;
+        const endY = twRect.top + twRect.height / 2;
+
+        // Start from the runway exit (right side of parquet floor)
+        const startX = window.innerWidth * 0.72;
+        const startY = window.innerHeight - 90;
+
+        const exitScroll = window.innerHeight * 0.45 - meetRect.bottom;
+        const t = Math.min(1, Math.max(0, exitScroll / 400));
+
+        calculatedX = startX + (endX - startX) * t;
+        calculatedY = Math.min(
+          window.innerHeight - 90,
+          Math.max(90, startY + (endY - startY) * t)
+        );
+        targetFacing = endX >= startX ? 'right' : 'left';
+      }
+      // --- Scenario C: Between standard sections (TwoWays -> ... -> Footer) ---
+      else {
+        // Find which two stops we are between
+        let fromIdx = 2;
+        let toIdx = 3;
+
+        for (let i = 2; i < stops.length - 1; i++) {
+          const r1 = stops[i].getBoundingClientRect();
+          const r2 = stops[i + 1].getBoundingClientRect();
+          const c1 = r1.top + r1.height / 2;
+          const c2 = r2.top + r2.height / 2;
+
+          if (c1 <= viewCenter && c2 >= viewCenter) {
+            fromIdx = i;
+            toIdx = i + 1;
+            break;
+          } else if (c2 < viewCenter) {
+            fromIdx = i;
+            toIdx = Math.min(stops.length - 1, i + 1);
+          }
         }
+
+        const r1 = stops[fromIdx].getBoundingClientRect();
+        const r2 = stops[toIdx].getBoundingClientRect();
+
+        const x1 = r1.left + r1.width / 2;
+        const y1 = r1.top + r1.height / 2;
+        const x2 = r2.left + r2.width / 2;
+        const y2 = r2.top + r2.height / 2;
+
+        const distY = Math.max(1, y2 - y1);
+        const t = Math.min(1, Math.max(0, (viewCenter - y1) / distY));
+
+        calculatedX = x1 + (x2 - x1) * t;
+        calculatedY = Math.min(window.innerHeight - 80, Math.max(80, y1 + (y2 - y1) * t));
+        targetFacing = x2 >= x1 ? 'right' : 'left';
       }
 
-      const rect1 = stops[fromIdx].getBoundingClientRect();
-      const rect2 = stops[toIdx].getBoundingClientRect();
-
-      const absY1 = rect1.top + window.scrollY;
-      const absY2 = rect2.top + window.scrollY;
-      const range = Math.max(1, absY2 - absY1);
-      const t = Math.min(1, Math.max(0, (scrollY + viewCenter - absY1) / range));
-
-      // Viewport coordinates of fromStop and toStop
-      const x1 = rect1.left + rect1.width / 2;
-      const y1 = rect1.top + rect1.height / 2;
-      const x2 = rect2.left + rect2.width / 2;
-      const y2 = rect2.top + rect2.height / 2;
-
-      // Smoothly interpolate position
-      const interpX = x1 + (x2 - x1) * t;
-      const interpY = Math.min(window.innerHeight - 80, Math.max(100, y1 + (y2 - y1) * t));
-
-      setPos({ x: interpX, y: interpY });
-      setFacing(x2 >= x1 ? 'right' : 'left');
+      setPos({ x: calculatedX, y: calculatedY });
+      setFacing(targetFacing);
 
       // Add gentle paw print along the trail
       if (Math.random() < 0.22) {
         const newPrint = {
           id: printCounter.current++,
-          x: interpX + (Math.random() * 16 - 8),
-          y: interpY + 28 + (Math.random() * 8 - 4),
+          x: calculatedX + (Math.random() * 16 - 8),
+          y: calculatedY + 28 + (Math.random() * 8 - 4),
           angle: scrollDir === 'down' ? 180 : 0,
         };
         setPawPrints((prev) => [...prev.slice(-6), newPrint]);
@@ -169,7 +222,7 @@ export default function PupFollower() {
 
       // When user pauses scrolling:
       // Teddy STAYS AT THAT EXACT POSITION on screen!
-      // He does NOT disappear, and does NOT force a distant stop to sit!
+      // No disappearing, no jumping, stays alert standing in place
       if (walkTimeoutRef.current) clearTimeout(walkTimeoutRef.current);
       walkTimeoutRef.current = setTimeout(() => {
         setIsActivelyWalking(false);
