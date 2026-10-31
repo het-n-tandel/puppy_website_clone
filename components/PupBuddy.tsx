@@ -99,10 +99,15 @@ export default function PupBuddy({
             data-p="body"
             transform={bodyTransform}
             opacity="1"
-            className={isPet ? 'animate-pulse' : ''}
+            className={`${isPet ? 'animate-pulse' : ''} ${pose === 'walk' ? 'pup-running-body' : ''}`}
           >
             {/* Back Far Leg */}
-            <g data-p="bf" transform="translate(94 192) rotate(0)" opacity="0.9">
+            <g
+              data-p="bf"
+              transform="translate(94 192) rotate(0)"
+              opacity="0.9"
+              className={pose === 'walk' ? 'pup-running-leg-a' : ''}
+            >
               <path
                 d="M-14 -14 C-14 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 14 4 14 -14Z"
                 fill="#e4a352"
@@ -126,7 +131,11 @@ export default function PupBuddy({
             </g>
 
             {/* Front Far Leg */}
-            <g data-p="ff" transform="translate(168 192) rotate(24)">
+            <g
+              data-p="ff"
+              transform="translate(168 192) rotate(24)"
+              className={pose === 'walk' ? 'pup-running-leg-b' : ''}
+            >
               <path
                 d="M-11 -14 C-11 4 -12 18 -12 27 C-12 34 -7 36 0 36 C9 36 13 33 13 27 C13 18 11 4 11 -14Z"
                 fill="#e4a352"
@@ -153,7 +162,7 @@ export default function PupBuddy({
             <g
               data-p="tail"
               transform={isPet ? 'rotate(50 84 150)' : 'rotate(34 84 150)'}
-              className="origin-[84px_150px] transition-transform duration-200"
+              className={`origin-[84px_150px] transition-transform duration-200 ${pose === 'walk' ? 'pup-running-tail' : ''}`}
             >
               <path
                 d="M86 152 C80 146 76 140 74 136"
@@ -181,7 +190,12 @@ export default function PupBuddy({
             </g>
 
             {/* Back Near Leg */}
-            <g data-p="bn" transform="translate(110 194) rotate(0)" opacity="0.9">
+            <g
+              data-p="bn"
+              transform="translate(110 194) rotate(0)"
+              opacity="0.9"
+              className={pose === 'walk' ? 'pup-running-leg-b' : ''}
+            >
               <path
                 d="M-15 -14 C-15 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 15 4 15 -14Z"
                 fill="#f2be6b"
@@ -223,7 +237,11 @@ export default function PupBuddy({
             />
 
             {/* Front Near Leg */}
-            <g data-p="fn" transform="translate(186 194) rotate(24)">
+            <g
+              data-p="fn"
+              transform="translate(186 194) rotate(24)"
+              className={pose === 'walk' ? 'pup-running-leg-a' : ''}
+            >
               <path
                 d="M-12 -14 C-12 4 -12 16 -12 25 C-12 32 -7 34 0 34 C9 34 13 31 13 25 C13 16 12 4 12 -14Z"
                 fill="#f2be6b"
@@ -248,7 +266,7 @@ export default function PupBuddy({
           </g>
 
           {/* Haunch (Sitting Paws) */}
-          {pose !== 'snug' && (
+          {pose !== 'snug' && pose !== 'walk' && (
             <g data-p="haunch" opacity="1" transform="translate(0 1.44)">
               <path
                 d="M80.0 204.0Q75.1 194.9 85.7 189.9Q88.4 180.2 100.7 181.2Q110.0 174.6 119.3 181.2Q131.6 180.2 134.3 189.9Q144.9 194.9 140.0 204.0Q144.9 213.1 134.3 218.1Q131.6 227.8 119.3 226.8Q110.0 233.4 100.7 226.8Q88.4 227.8 85.7 218.1Q75.1 213.1 80.0 204.0Z"

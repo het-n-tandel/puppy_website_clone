@@ -37,15 +37,26 @@ export default function PupFollower() {
       if (scrollY < 120) {
         dockedIndex = 0;
       } else {
-        // Check distance of each stop to the viewport center
-        stops.forEach((stop, idx) => {
-          const rect = stop.getBoundingClientRect();
-          const stopCenterY = rect.top + rect.height / 2;
-          const dist = Math.abs(stopCenterY - viewCenter);
-          if (dist < 90) {
-            dockedIndex = idx;
+        // If user is inside the sticky "Meet the pups" runway, dock directly to Stop 1
+        const meetSection = document.querySelector('section[aria-labelledby="meet-title"]');
+        if (meetSection) {
+          const mRect = meetSection.getBoundingClientRect();
+          if (mRect.top <= 80 && mRect.bottom >= window.innerHeight * 0.4) {
+            dockedIndex = 1;
           }
-        });
+        }
+
+        if (dockedIndex === -1) {
+          // Check distance of each stop to the viewport center
+          stops.forEach((stop, idx) => {
+            const rect = stop.getBoundingClientRect();
+            const stopCenterY = rect.top + rect.height / 2;
+            const dist = Math.abs(stopCenterY - viewCenter);
+            if (dist < 100) {
+              dockedIndex = idx;
+            }
+          });
+        }
       }
 
       // RULE 2: When movable puppy still in picture / docked:

@@ -14,6 +14,11 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [facing, setFacing] = useState<'left' | 'right'>('right');
+
+  const prevProgressRef = useRef(0);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,18 +32,40 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
         // Calculate progress clamped between 0 and 1
         const progress = Math.min(1, Math.max(0, -rect.top / totalDist));
         setScrollProgress(progress);
+
+        // Track running direction
+        if (progress > prevProgressRef.current + 0.003) {
+          setFacing('right');
+          setIsScrolling(true);
+        } else if (progress < prevProgressRef.current - 0.003) {
+          setFacing('left');
+          setIsScrolling(true);
+        }
+        prevProgressRef.current = progress;
+
+        // Reset to stationary sitting pose after scrolling pauses
+        if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = setTimeout(() => {
+          setIsScrolling(false);
+        }, 220);
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
   }, []);
 
   const displayPuppies = puppies.slice(0, 10);
   // Calculate horizontal translation so parade ends smoothly
   const maxTranslate = (displayPuppies.length - 2) * 280;
   const translateX = -scrollProgress * maxTranslate;
+
+  // Running position across runway track
+  const runningLeftPercent = Math.min(78, Math.max(8, 8 + scrollProgress * 62));
 
   return (
     <section
@@ -134,22 +161,32 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
             })}
           </div>
 
-          {/* Teddy Mascot Sitting Grounded on the Left Floor watching the pups */}
+          {/* Teddy Mascot RUNNING ON THE SHOWROOM RUNWAY TRACK */}
           <div
             data-pup-stop="true"
-            data-pose="sit"
-            data-facing="right"
-            className="pup-stop tp-meet__teddy absolute left-[6vw] sm:left-[10vw] bottom-16 sm:bottom-20 z-20 pointer-events-auto"
-            style={{ width: 'clamp(11.5rem, 16vw, 15.5rem)' }}
+            data-pose={isScrolling ? 'walk' : 'sit'}
+            data-facing={facing}
+            className="pup-stop tp-meet__teddy absolute bottom-14 sm:bottom-16 z-25 pointer-events-auto transition-all duration-150 ease-out drop-shadow-md"
+            style={{
+              left: `${runningLeftPercent}%`,
+              width: 'clamp(11.5rem, 16vw, 15.5rem)',
+              transform: 'translateX(-50%)',
+            }}
           >
-            <PupBuddy pose="sit" facing="right" label="Teddy sitting watching the puppies" />
+            <PupBuddy
+              pose={isScrolling ? 'walk' : 'sit'}
+              facing={facing}
+              label="Teddy running on the showroom runway track"
+              className={isScrolling ? 'animate-bounce' : ''}
+            />
           </div>
 
-          {/* Grounded Wooden Floor Runway matching reference */}
+          {/* Grounded Wooden Parquet Floor Runway with treadmill motion */}
           <div
             className="tp-meet__floor relative w-full h-20 sm:h-24 border-t-[3.5px] border-[#2a170e] z-10 shadow-[0_-10px_0_-4px_#f5d9a8]"
             style={{
               background: `linear-gradient(to bottom, #2a170e20, transparent 24%), repeating-linear-gradient(90deg, transparent 0 160px, #2a170e1a 160px 162px), linear-gradient(#e8b06a, #dc9a52)`,
+              backgroundPosition: `${-scrollProgress * 800}px 0`,
             }}
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between text-xs font-bold text-[#2a170e]/80 uppercase tracking-widest">
@@ -158,7 +195,7 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
                 <span className="hidden sm:inline">Showroom Runway Track</span>
               </span>
               <span className="flex items-center gap-1.5 animate-pulse text-[#2a170e]">
-                <span>Scroll to see more pups</span>
+                <span>Scroll to see Teddy run &amp; explore pups</span>
                 <span>→</span>
               </span>
             </div>
