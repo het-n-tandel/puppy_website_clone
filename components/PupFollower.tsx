@@ -372,6 +372,7 @@ export default function PupFollower() {
               pose={pose}
               facing={facing}
               asStop={false}
+              hideBody={pose === 'snug' || pose === 'sleep'}
             />
           </div>
         </div>

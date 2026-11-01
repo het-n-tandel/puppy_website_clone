@@ -196,14 +196,12 @@ html[data-pup="true"] .tp-night__wonder {
   display: none !important;
 }
 
-html[data-pup="true"]:not([data-at-basket="true"]) .tp-basket__pup,
-html[data-pup="true"]:not([data-at-basket="true"]) .tp-basket__pup * {
+html[data-pup="true"]:not([data-at-basket="true"]) .tp-basket__pup {
   visibility: hidden !important;
   opacity: 0 !important;
 }
 
-html[data-pup="true"][data-at-basket="true"] .tp-basket__pup,
-html[data-pup="true"][data-at-basket="true"] .tp-basket__pup * {
+html[data-pup="true"][data-at-basket="true"] .tp-basket__pup {
   visibility: visible !important;
   opacity: 1 !important;
 }
@@ -1482,12 +1480,22 @@ img, video {
 }
 
 .tp-basket__pup {
-  z-index: 15;
+  z-index: 10;
 }
 
-.tp-basket__pup > * {
-  visibility: visible !important;
-  opacity: 1 !important;
+/* Ensure puppy in basket only shows head and paws, body is completely removed */
+.tp-basket [data-p="body"],
+.tp-basket [data-p="haunch"],
+.tp-basket [data-p="shadow"],
+[data-pose="snug"] [data-p="body"],
+[data-pose="snug"] [data-p="haunch"],
+[data-pose="snug"] [data-p="shadow"],
+[data-pose="sleep"] [data-p="body"],
+[data-pose="sleep"] [data-p="haunch"],
+[data-pose="sleep"] [data-p="shadow"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
 .tp-basket__hollow {
@@ -1529,8 +1537,7 @@ img, video {
 }
 
 /* On subpages without dynamic companion, basket puppy is naturally visible */
-html:not([data-pup="true"]) .tp-basket__pup,
-html:not([data-pup="true"]) .tp-basket__pup * {
+html:not([data-pup="true"]) .tp-basket__pup {
   visibility: visible;
   opacity: 1;
 }

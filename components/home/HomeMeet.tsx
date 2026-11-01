@@ -128,39 +128,38 @@ export default function HomeMeet() {
         data-pup-scene="true"
         data-tone="light"
         data-pinned="true"
-        className="tp-scene tp-meet relative min-h-[220vh] select-none"
-        style={({ '--sky-top': '#fff1d8', '--sky-bottom': '#fbe3b4' }) as React.CSSProperties}
+        data-pin-range="true"
+        className="tp-scene tp-meet relative min-h-[360vh] select-none"
+        style={({ '--sky-top': '#fff1d8', '--sky-bottom': '#fbe3b4', '--pinned': scrollProgress }) as React.CSSProperties}
         aria-labelledby="meet-title"
       >
-        <div data-pin-range="true" style={({ '--pinned': scrollProgress }) as React.CSSProperties}>
-          <div className="tp-meet__stage sticky top-0 h-screen flex flex-col justify-between overflow-hidden">
-            {/* Header */}
-            <header className="tp-meet__head gutter z-20">
-              <div>
-                <h2 id="meet-title" className="font-plush text-huge">
-                  Meet the pups
-                </h2>
-                <p className="text-lede mt-3 max-w-[44ch] text-[var(--ink-soft)]">
-                  Real puppies, real photos, looking for their families right now.
-                </p>
-              </div>
-              <a className="btn btn-primary shrink-0 shadow-md" href="/puppies">
-                See all available puppies
-              </a>
-            </header>
+        <div className="tp-meet__stage sticky top-0 h-screen flex flex-col justify-between overflow-hidden">
+          {/* Header */}
+          <header className="tp-meet__head gutter z-20">
+            <div>
+              <h2 id="meet-title" className="font-plush text-huge">
+                Meet the pups
+              </h2>
+              <p className="text-lede mt-3 max-w-[44ch] text-[var(--ink-soft)]">
+                Real puppies, real photos, looking for their families right now.
+              </p>
+            </div>
+            <a className="btn btn-primary shrink-0 shadow-md" href="/puppies">
+              See all available puppies
+            </a>
+          </header>
 
-            {/* Horizontal Hallway & Runway Track */}
-            <div className="tp-meet__hall relative flex-1 flex flex-col justify-end overflow-hidden">
-              <ol
-                ref={trackRef}
-                className="tp-meet__track will-change-transform pb-2 z-10"
-                style={{
-                  transform: `translate3d(${translateX}px, 0, 0)`,
-                  transition: 'transform 75ms ease-out',
-                }}
-                data-treadmill="true"
-                aria-label="Puppies looking for a family"
-              >
+          {/* Horizontal Hallway & Runway Track */}
+          <div className="tp-meet__hall relative flex-1 flex flex-col justify-end overflow-hidden">
+            <ol
+              ref={trackRef}
+              className="tp-meet__track will-change-transform pb-2 z-10"
+              style={{
+                transform: `translate3d(${translateX}px, 0, 0)`,
+              }}
+              data-treadmill="true"
+              aria-label="Puppies looking for a family"
+            >
                 {/* Door 1: Max */}
                 <li ref={(el) => { doorRefs.current[0] = el; }} className="tp-door cursor-pointer" data-open={openStates[0] ? 'true' : 'false'} onClick={(e) => toggleDoor(0, e)}>
                   <a className="tp-door__link" style={({ '--door': '#a24a1a' }) as React.CSSProperties} href="/puppies/maltipoo-max-male">
@@ -533,7 +532,7 @@ export default function HomeMeet() {
 
               {/* Teddy Mascot RUNNING FIRMLY ON SHOWROOM RUNWAY TRACK */}
               <div
-                className="tp-meet__teddy absolute bottom-[4.2rem] sm:bottom-[5rem] z-40 pointer-events-auto select-none transition-[left] duration-75 ease-out"
+                className="tp-meet__teddy absolute bottom-[4.2rem] sm:bottom-[5rem] z-40 pointer-events-auto select-none"
                 style={{
                   left: `${runningLeftPercent}%`,
                   width: 'clamp(7.5rem, 10vw, 9rem)',
@@ -560,7 +559,6 @@ export default function HomeMeet() {
               />
             </div>
           </div>
-        </div>
       </section>
     </div>
   );
