@@ -277,7 +277,8 @@ export default function HomeHero() {
                   onMouseLeave={() => setIsHoveredByUser(false)}
                 >
                   <Link
-                    className="tp-lineup__pup"
+                    className="tp-lineup__pup hero-pup-bob"
+                    style={{ animationDelay: `${parseInt(seat.i) * 0.45}s` }}
                     data-pup-friend="true"
                     aria-label={`Meet ${currentPup.name}, ${currentPup.breed}`}
                     href={`/puppies/${currentPup.slug}`}

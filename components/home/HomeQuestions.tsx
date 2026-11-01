@@ -5,6 +5,7 @@ import PupBuddy from '@/components/PupBuddy';
 import Link from 'next/link';
 
 export default function HomeQuestions() {
+  const [isQuestionHovered, setIsQuestionHovered] = useState(false);
   const [openIndices, setOpenIndices] = useState<{ [key: number]: boolean }>({
     0: true,
     1: true,
@@ -199,13 +200,18 @@ export default function HomeQuestions() {
                 <PupBuddy
                   pose="curious"
                   facing="right"
+                  isPerked={isQuestionHovered}
                   label="Teddy in curious pose, looking up at questions"
                 />
               </div>
             </div>
           </div>
 
-          <dl className="tp-night__list">
+          <dl
+            className="tp-night__list"
+            onMouseEnter={() => setIsQuestionHovered(true)}
+            onMouseLeave={() => setIsQuestionHovered(false)}
+          >
             <div
               className="tp-qa cursor-pointer select-none transition-all duration-200"
               data-pup-look=""

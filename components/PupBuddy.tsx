@@ -20,6 +20,7 @@ export interface PupBuddyProps {
   className?: string;
   asStop?: boolean;
   hideBody?: boolean;
+  isPerked?: boolean;
 }
 
 export default function PupBuddy({
@@ -29,6 +30,7 @@ export default function PupBuddy({
   className = '',
   asStop = true,
   hideBody,
+  isPerked: propIsPerked,
 }: PupBuddyProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [bubbleText, setBubbleText] = useState<string | null>(null);
@@ -127,8 +129,9 @@ export default function PupBuddy({
   let ledgeOpacity = 0;
   let bodyTransform = 'translate(0 0) rotate(0 196 206)';
   let headTransform = 'translate(0 0) rotate(0 212 100)';
-  let earLTransform = isPerked ? 'rotate(-1 174 82)' : 'rotate(1 174 82)';
-  let earRTransform = isPerked ? 'rotate(-2 250 82)' : 'rotate(-4 250 82)';
+  const activeIsPerked = propIsPerked !== undefined ? propIsPerked : isPerked;
+  let earLTransform = activeIsPerked ? 'rotate(-1 174 82)' : 'rotate(1 174 82)';
+  let earRTransform = activeIsPerked ? 'rotate(-2 250 82)' : 'rotate(-4 250 82)';
 
   if (pose === 'peek') {
     // Hero: Peeking centered over quilt blanket with paws on rim, both ears down
@@ -267,6 +270,15 @@ export default function PupBuddy({
       {pose === 'curious' && (
         <div className="pup-curious-q font-plush pointer-events-none select-none" aria-hidden="true">
           ?
+        </div>
+      )}
+
+      {/* Floating "z z z" for sleep/snug pose */}
+      {(pose === 'sleep' || pose === 'snug') && (
+        <div className="pup-zzz pointer-events-none select-none" aria-hidden="true">
+          <span className="pup-z pup-z-1 font-scrawl">z</span>
+          <span className="pup-z pup-z-2 font-scrawl">z</span>
+          <span className="pup-z pup-z-3 font-scrawl">z</span>
         </div>
       )}
 

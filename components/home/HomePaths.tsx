@@ -86,7 +86,7 @@ export default function HomePaths() {
                     <circle cx="620" cy="168" r="7" className="tp-flight__dot"></circle>
                     <text x="40" y="284" textAnchor="middle" className="tp-flight__label">Korea</text>
                     <text x="620" y="202" textAnchor="middle" className="tp-flight__label">Dubai</text>
-                    <g transform="translate(410 70)">
+                    <g className="tp-flight__plane" transform="translate(410 70)">
                       <g transform="translate(-126 -78)">
                         <path d="M28 60 L8 26 L34 26 L60 54 Z" className="tp-flight__wing"></path>
                         <path d="M108 112 L142 156 L172 156 L158 112 Z" className="tp-flight__wing tp-flight__wing--far"></path>

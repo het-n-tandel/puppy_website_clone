@@ -1,11 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PupBuddy from '@/components/PupBuddy';
 import Link from 'next/link';
 
 export default function HomeJourney() {
   const [activeStep, setActiveStep] = useState<number>(0);
+  const [isUserInteracting, setIsUserInteracting] = useState<boolean>(false);
+
+  // Auto-progress through the 3 steps so animations across all milestones play continuously
+  useEffect(() => {
+    if (isUserInteracting) return;
+    const timer = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % 3);
+    }, 4200);
+    return () => clearInterval(timer);
+  }, [isUserInteracting]);
 
   // Determine pose based on step choreography:
   // Step 1: sitting, tail wagging, as chat shows breed chips
@@ -32,7 +42,11 @@ export default function HomeJourney() {
               A premium, step-by-step concierge experience. We make adoption simple, secure, and purely joyful.
             </p>
 
-            <ol className="tp-chat__steps">
+            <ol
+              className="tp-chat__steps"
+              onMouseEnter={() => setIsUserInteracting(true)}
+              onMouseLeave={() => setIsUserInteracting(false)}
+            >
               <li
                 className="tp-chat__step cursor-pointer"
                 data-active={activeStep === 0 ? 'true' : 'false'}
@@ -188,10 +202,10 @@ export default function HomeJourney() {
                       <circle cx="14" cy="52" r="5" className="tp-route__dot"></circle>
                       <path d="M164 32 l12 -12 l12 12 v14 h-24 z" className="tp-route__home"></path>
                       <path d="M176 42 c-2-3-7-2-6 2c1 3 6 5 6 5s5-2 6-5c1-4-4-5-6-2z" className="tp-route__heart"></path>
-                      {/* Dotted path pawprints */}
-                      <circle cx="65" cy="28" r="3.5" fill="#c2622b" />
-                      <circle cx="108" cy="46" r="3.5" fill="#c2622b" />
-                      <circle cx="142" cy="36" r="3.5" fill="#c2622b" />
+                      {/* Dotted path pawprints with animated appear */}
+                      <circle cx="65" cy="28" r="3.5" fill="#c2622b" className="tp-route__paw-1" />
+                      <circle cx="108" cy="46" r="3.5" fill="#c2622b" className="tp-route__paw-2" />
+                      <circle cx="142" cy="36" r="3.5" fill="#c2622b" className="tp-route__paw-3" />
                     </svg>
                   </div>
                 </div>
