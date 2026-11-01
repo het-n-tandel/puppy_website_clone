@@ -182,7 +182,7 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
             <PupBuddy
               pose={isScrolling ? 'walk' : 'stand'}
               facing={facing}
-              label="Teddy running on the showroom runway track"
+              label="Teddy"
             />
           </div>
 

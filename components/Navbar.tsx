@@ -4,9 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { currentSite } from '@/lib/siteConfig';
-import { getGeneralWhatsAppUrl } from '@/lib/whatsapp';
 import { Menu, X } from 'lucide-react';
+import { currentSite } from '@/lib/siteConfig';
 
 const NAV_LINKS = [
   { name: 'Home', href: '/' },
@@ -29,14 +28,12 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
-      const dy = y - lastScrollY.current;
-
       setScrolled(y > 20);
 
-      // Hide header on rapid scroll down; reveal when scrolling up or near top
-      if (y > 110 && dy > 6) {
+      // Hide navbar when scrolling down, show when scrolling up
+      if (y > lastScrollY.current && y > 120) {
         setHidden(true);
-      } else if (dy < -4 || y <= 20) {
+      } else {
         setHidden(false);
       }
 
@@ -53,15 +50,16 @@ export default function Navbar() {
 
   return (
     <header
+      id="site-header"
       className="tp-header fixed top-0 inset-x-0 z-50 select-none"
       data-home={isHome ? 'true' : undefined}
       data-scrolled={scrolled ? 'true' : 'false'}
       data-hidden={hidden ? 'true' : 'false'}
     >
       {/* Header Bar */}
-      <div className="max-w-[110rem] mx-auto px-4 sm:px-6 lg:px-8 h-[var(--header-h,4.75rem)] flex items-center justify-between relative z-10">
+      <div className="tp-header__bar gutter max-w-[110rem] mx-auto px-4 sm:px-6 lg:px-8 h-[var(--header-h,4.75rem)] flex items-center justify-between relative z-10">
         {/* Brand Logo & Name */}
-        <Link href="/" className="tp-header__brand flex items-center gap-3 group">
+        <Link href="/" className="tp-header__brand flex items-center gap-3 group" aria-label="TeddyPups U.A.E. — home">
           <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-[#2a170e]/20 group-hover:scale-105 transition-transform">
             <Image
               src="/brand/logo.png"
@@ -71,13 +69,13 @@ export default function Navbar() {
               priority
             />
           </div>
-          <span className="font-plush text-2xl sm:text-[1.75rem] font-black tracking-tight text-[#2a170e]">
+          <span className="font-plush tp-header__name text-2xl sm:text-[1.75rem] font-black tracking-tight text-[#2a170e]">
             TeddyPups
           </span>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-7 tp-header__nav">
+        <nav aria-label="Main" className="hidden lg:flex items-center gap-7 tp-header__nav">
           <ul className="flex items-center gap-7 list-none">
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
@@ -88,7 +86,8 @@ export default function Navbar() {
                     className={`tp-nav-link text-[0.98rem] font-bold transition-colors py-1 relative inline-flex items-center ${
                       isActive ? 'text-[#a24a1a]' : 'text-[#2a170e] hover:text-[#8e3f15]'
                     }`}
-                    data-active={isActive ? 'true' : undefined}
+                    data-active={isActive ? 'true' : 'false'}
+                    aria-current={isActive ? 'page' : undefined}
                   >
                     <span>{link.name}</span>
                     {/* Cute Paw icon under active/hovered link */}
@@ -113,7 +112,7 @@ export default function Navbar() {
         {/* WhatsApp Button & Mobile Menu Toggle */}
         <div className="flex items-center gap-3">
           <a
-            href={getGeneralWhatsAppUrl()}
+            href="https://wa.me/971541676733?text=Hi%20TeddyPups!%20I'd%20love%20to%20know%20more%20about%20your%20puppies."
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-whatsapp hidden sm:inline-flex text-sm font-bold"
@@ -152,7 +151,7 @@ export default function Navbar() {
       <dialog
         aria-label="Site menu"
         open={isOpen}
-        className={`tp-menu fixed inset-0 z-50 m-0 h-dvh max-h-none w-screen max-w-none bg-honey p-0 text-cocoa backdrop:bg-cocoa/40 ${
+        className={`tp-menu fixed inset-0 z-50 m-0 h-dvh max-h-none w-screen max-w-none border-0 bg-milk p-0 text-cocoa backdrop:bg-cocoa/40 ${
           isOpen ? 'flex' : 'hidden'
         }`}
       >
@@ -192,7 +191,7 @@ export default function Navbar() {
           </nav>
           <div className="space-y-3">
             <a
-              href={getGeneralWhatsAppUrl()}
+              href="https://wa.me/971541676733?text=Hi%20TeddyPups!%20I'd%20love%20to%20know%20more%20about%20your%20puppies."
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-whatsapp w-full"

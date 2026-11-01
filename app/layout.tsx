@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import CursorTrail from '@/components/CursorTrail';
 import PageCurtain from '@/components/PageCurtain';
 import { currentSite } from '@/lib/siteConfig';
@@ -16,39 +15,39 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: `${currentSite.brandName} — Premium teacup puppies in ${currentSite.locationCity}`,
+  title: 'TeddyPups U.A.E. — Premium teacup puppies in Dubai',
   description:
-    'Teacup and teddy bear puppies available now in Dubai and imported from trusted breeders — every listing shows real photos of the puppy.',
+    'Teddy bear and teacup puppies in Dubai. Meet local puppies in our Downtown Dubai showroom or bring home a rare breed imported from trusted breeders.',
   metadataBase: new URL('https://puppywebsiteclone.vercel.app'),
   alternates: {
-    canonical: '/',
+    canonical: 'https://puppywebsiteclone.vercel.app',
   },
   icons: {
     icon: '/icon.png',
     apple: '/icon.png',
   },
   openGraph: {
-    title: `${currentSite.brandName} — Premium teacup puppies in ${currentSite.locationCity}`,
+    title: 'TeddyPups U.A.E. — Premium teacup puppies in Dubai',
     description:
-      'Teacup and teddy bear puppies available now in Dubai and imported from trusted breeders — every listing shows real photos of the puppy.',
-    siteName: currentSite.brandName,
+      'Teddy bear and teacup puppies in Dubai. Meet local puppies in our Downtown Dubai showroom or bring home a rare breed imported from trusted breeders.',
+    siteName: 'TeddyPups U.A.E.',
     locale: 'en_AE',
     type: 'website',
     images: [
       {
-        url: '/brand/logo.png',
+        url: 'https://puppywebsiteclone.vercel.app/brand/logo.png',
         width: 800,
         height: 800,
-        alt: currentSite.brandName,
+        alt: 'TeddyPups U.A.E.',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${currentSite.brandName} — Premium teacup puppies in ${currentSite.locationCity}`,
+    title: 'TeddyPups U.A.E. — Premium teacup puppies in Dubai',
     description:
-      'Teacup and teddy bear puppies available now in Dubai and imported from trusted breeders — every listing shows real photos of the puppy.',
-    images: ['/brand/logo.png'],
+      'Teddy bear and teacup puppies in Dubai. Meet local puppies in our Downtown Dubai showroom or bring home a rare breed imported from trusted breeders.',
+    images: ['https://puppywebsiteclone.vercel.app/brand/logo.png'],
   },
 };
 
@@ -68,9 +67,10 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-[#fffdf8] text-[#2a170e]">
+        {/* Skip to Content Link matching original */}
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[#2a170e] focus:text-[#fffdf8] focus:rounded-full focus:shadow-lg focus:outline-none"
+          className="sr-only-focusable fixed left-4 top-4 z-[100] rounded-full bg-cocoa px-5 py-3 font-semibold text-milk"
         >
           Skip to content
         </a>
@@ -81,7 +81,26 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
-        <FloatingWhatsApp />
+
+        {/* Sticky Mobile Bottom Bar matching original (7th WhatsApp link) */}
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t-2 border-cocoa bg-milk px-3 pb-[calc(0.6rem+env(safe-area-inset-bottom))] pt-2.5 md:hidden">
+          <div className="mx-auto flex max-w-md gap-2">
+            <a
+              href="https://wa.me/971541676733?text=Hi%20TeddyPups!%20I'd%20love%20to%20know%20more%20about%20your%20puppies."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-whatsapp !min-h-12 flex-1 !shadow-none"
+            >
+              WhatsApp us
+            </a>
+            <a
+              href="tel:+971541676733"
+              className="btn btn-ghost !min-h-12 !px-5"
+            >
+              Call
+            </a>
+          </div>
+        </div>
       </body>
     </html>
   );

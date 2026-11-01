@@ -273,15 +273,6 @@ export default function PupBuddy({
         </div>
       )}
 
-      {/* Floating "z z z" for sleep/snug pose */}
-      {(pose === 'sleep' || pose === 'snug') && (
-        <div className="pup-zzz pointer-events-none select-none" aria-hidden="true">
-          <span className="pup-z pup-z-1 font-scrawl">z</span>
-          <span className="pup-z pup-z-2 font-scrawl">z</span>
-          <span className="pup-z pup-z-3 font-scrawl">z</span>
-        </div>
-      )}
-
       {/* Interactive Speech Bubble */}
       <span className="pup-bubble-at">
         <span
