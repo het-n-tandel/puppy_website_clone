@@ -79,10 +79,22 @@
   font-weight: 500;
 }
 
-/* Exactly One Custom Paw Cursor that tracks pointer */
-@media (hover: hover) and (pointer: fine) {
-  *, *::before, *::after {
-    cursor: none !important;
+/* Authentic TeddyPups Custom Paw Cursor matching reference site */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html, body {
+    cursor: url(/cursor/paw.svg) 9 6, auto;
+  }
+  :is(a, button, summary, label[for], [role="button"], [role="tab"], select, input[type="checkbox"], input[type="radio"], input[type="submit"], input[type="button"], .btn, .tp-door, .tp-qa, .cursor-pointer, .pup-buddy) {
+    cursor: url(/cursor/paw-press.svg) 9 6, pointer !important;
+  }
+  :active {
+    cursor: url(/cursor/paw-press.svg) 9 6, pointer !important;
+  }
+  :is(input:not([type="checkbox"],[type="radio"],[type="submit"],[type="range"]), textarea, [contenteditable="true"]) {
+    cursor: text !important;
+  }
+  :is(p, h1, h2, h3, h4, li, blockquote, figcaption, dd, dt) {
+    cursor: inherit;
   }
 }
 
