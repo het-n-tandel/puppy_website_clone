@@ -1,10 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import PupBuddy from '@/components/PupBuddy';
 import Link from 'next/link';
 
 export default function HomeTrust() {
+  const [hoveredStamp, setHoveredStamp] = useState<number | null>(null);
+
   return (
     <div data-section="trust">
       <section
@@ -26,14 +28,15 @@ export default function HomeTrust() {
               </h2>
               <div
                 data-pup-stop="true"
-                data-pose="stand"
+                data-pose={hoveredStamp !== null ? 'tilt' : 'stand'}
                 data-facing="right"
                 data-lane="true"
-                className="pup-stop tp-book__teddy"
+                className="pup-stop tp-book__teddy transition-all duration-300"
               >
                 <PupBuddy
-                  pose="stand"
+                  pose={hoveredStamp !== null ? 'tilt' : 'stand'}
                   facing="right"
+                  isPerked={hoveredStamp !== null}
                   label="Teddy, standing proudly beside certified passport stamps"
                 />
               </div>
@@ -45,6 +48,8 @@ export default function HomeTrust() {
               <li
                 className="tp-entry cursor-pointer"
                 style={({ '--ink-stamp': '#a24a1a', '--tilt': '-8deg', '--i': '0' }) as React.CSSProperties}
+                onMouseEnter={() => setHoveredStamp(0)}
+                onMouseLeave={() => setHoveredStamp(null)}
               >
                 <span className="tp-stamp tp-stamp--round">
                   <svg viewBox="0 0 64 64" className="tp-stamp__icon" aria-hidden="true">
@@ -76,6 +81,8 @@ export default function HomeTrust() {
               <li
                 className="tp-entry cursor-pointer"
                 style={({ '--ink-stamp': '#1f6b45', '--tilt': '5deg', '--i': '1' }) as React.CSSProperties}
+                onMouseEnter={() => setHoveredStamp(1)}
+                onMouseLeave={() => setHoveredStamp(null)}
               >
                 <span className="tp-stamp tp-stamp--ticket">
                   <svg viewBox="0 0 64 64" className="tp-stamp__icon" aria-hidden="true">
@@ -108,6 +115,8 @@ export default function HomeTrust() {
               <li
                 className="tp-entry cursor-pointer"
                 style={({ '--ink-stamp': '#5a3a28', '--tilt': '-4deg', '--i': '2' }) as React.CSSProperties}
+                onMouseEnter={() => setHoveredStamp(2)}
+                onMouseLeave={() => setHoveredStamp(null)}
               >
                 <span className="tp-stamp tp-stamp--oval">
                   <svg viewBox="0 0 64 64" className="tp-stamp__icon" aria-hidden="true">
@@ -139,6 +148,8 @@ export default function HomeTrust() {
               <li
                 className="tp-entry cursor-pointer"
                 style={({ '--ink-stamp': '#c2622b', '--tilt': '7deg', '--i': '3' }) as React.CSSProperties}
+                onMouseEnter={() => setHoveredStamp(3)}
+                onMouseLeave={() => setHoveredStamp(null)}
               >
                 <span className="tp-stamp tp-stamp--scallop">
                   <svg viewBox="0 0 64 64" className="tp-stamp__icon" aria-hidden="true">

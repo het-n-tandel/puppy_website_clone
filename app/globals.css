@@ -79,10 +79,10 @@
   font-weight: 500;
 }
 
-/* Custom Paw Cursor that tracks pointer with lag */
+/* Exactly One Custom Paw Cursor that tracks pointer */
 @media (hover: hover) and (pointer: fine) {
-  html, body, a, button, summary, label, [role="button"], select, input, textarea {
-    cursor: none;
+  *, *::before, *::after {
+    cursor: none !important;
   }
 }
 
