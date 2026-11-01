@@ -5,6 +5,16 @@
 @source "../data/**/*.{js,ts,jsx,tsx}";
 
 :root {
+  --cream: #fffdf8;
+  --peach: #fdebd0;
+  --apricot: #f3c47a;
+  --amber: #f0b968;
+  --rust: #a84a1d;
+  --brown: #5a3320;
+  --choc: #24140c;
+  --green: #1f7a52;
+  --ink: #24140c;
+
   --color-cocoa: #2a170e;
   --color-cocoa-soft: #5a3a28;
   --color-honey: #f2be6b;
@@ -16,6 +26,15 @@
   --color-sky: #bfddf5;
   --color-sky-deep: #2f6e9e;
   --color-blush: #f9cdbf;
+
+  --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+  --font-hand: 'Shantell Sans', ui-rounded, 'Comic Sans MS', cursive;
+  --header-h: 4.75rem;
+
+  --ease-pounce: cubic-bezier(.34, 1.56, .64, 1);
+  --ease-silk: cubic-bezier(.22, 1, .36, 1);
+  --ease-snap: cubic-bezier(.7, 0, .2, 1);
 
   --background: var(--color-milk);
   --foreground: var(--color-cocoa);
@@ -34,23 +53,30 @@
   --color-sky-deep: #2f6e9e;
   --color-blush: #f9cdbf;
 
-  --font-serif: "Fraunces", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-hand: "Shantell Sans", "Comic Sans MS", cursive;
+  --font-serif: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-hand: var(--font-hand);
 }
 
 .font-plush {
-  font-family: var(--font-serif);
+  text-wrap: balance;
+  font-family: var(--font-display);
   font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
   letter-spacing: -0.025em;
   font-weight: 800;
   line-height: 0.95;
 }
 
+.font-plush-text {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 100, "WONK" 0, "opsz" 36;
+}
+
 .font-scrawl {
   font-family: var(--font-hand);
+  font-variation-settings: "INFM" 60, "BNCE" 30;
   letter-spacing: 0;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Authentic Paw Cursor matching the reference site */
@@ -155,6 +181,39 @@
   animation: pup-gentle-wag 1.8s infinite ease-in-out;
 }
 
+/* ==========================================================================
+   AUTHENTIC SCROLL-TRACKING PUPPY COMPANION & PLACEHOLDER MANAGEMENT
+   ========================================================================== */
+html[data-pup="true"] .pup-stop:not(.tp-basket__pup),
+html[data-pup="true"] .pup-stop:not(.tp-basket__pup) *,
+html[data-pup="true"] [data-pup-stop="true"]:not(.tp-basket__pup),
+html[data-pup="true"] [data-pup-stop="true"]:not(.tp-basket__pup) * {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+html[data-pup="true"] .tp-night__wonder {
+  display: none !important;
+}
+
+html[data-pup="true"]:not([data-at-basket="true"]) .tp-basket__pup,
+html[data-pup="true"]:not([data-at-basket="true"]) .tp-basket__pup * {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+html[data-pup="true"][data-at-basket="true"] .tp-basket__pup,
+html[data-pup="true"][data-at-basket="true"] .tp-basket__pup * {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: var(--color-milk);
   background-image: radial-gradient(circle at 1px 1px, #2a170e0d 1px, transparent 1.6px);
@@ -162,68 +221,179 @@ body {
   color: var(--color-cocoa);
   font-family: var(--font-sans);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Luxury whimsical button styles matching reference website */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
+/* Fast tap response without delay across mobile devices */
+a, button, input, select, textarea, [role="button"], summary {
+  touch-action: manipulation;
+}
+
+/* Cross-browser subtle scrollbar for Windows, Mac, Linux */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c2622b40 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #c2622b40;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #c2622b80;
+}
+
+/* Mobile responsive safe-area variables */
+@media (max-width: 767px) {
+  :root {
+    --header-h: 4.25rem;
+    --bar-h: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Prevent iOS Safari from auto-zooming inputs on tap */
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Platform independent image and media rendering */
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ==========================================================================
+   AUTHENTIC TEDDYPUPS HEADER & SCALLOPED HEM
+   ========================================================================== */
+.tp-header {
+  transition: transform 0.5s var(--ease-silk);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+.tp-header[data-hidden="true"] {
+  transform: translateY(-120%);
+}
+
+.tp-header:before {
+  content: "";
+  background: var(--color-milk);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tp-header__hem {
+  opacity: 0;
+  filter: drop-shadow(0 4px 4px #2a170e14);
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  display: block;
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 0;
+}
+
+.tp-header__hem-fill {
+  fill: var(--color-milk);
+}
+
+.tp-header__hem-line {
+  fill: none;
+  stroke: #2a170e24;
+  stroke-width: 1.5px;
+}
+
+.tp-header[data-scrolled="true"]:before,
+.tp-header[data-scrolled="true"] .tp-header__hem,
+.tp-header:not([data-home]):before,
+.tp-header:not([data-home]) .tp-header__hem {
+  opacity: 1;
+}
+
+.tp-header__brand:hover .tp-header__logo {
+  transform: rotate(-8deg);
+}
+
+.tp-header__logo {
+  transition: transform 0.6s var(--ease-pounce);
+}
+
+.tp-nav-link:hover .tp-nav-link__paw,
+.tp-nav-link[data-active="true"] .tp-nav-link__paw {
+  opacity: 1 !important;
+  transform: translateX(-50%) scale(1) rotate(-10deg) !important;
+}
+
+/* ==========================================================================
+   AUTHENTIC TACTILE BUTTONS
+   ========================================================================== */
+.btn {
+  min-height: 3.25rem;
+  transition: transform 0.35s var(--ease-pounce), background-color 0.25s ease, box-shadow 0.35s var(--ease-silk);
+  border-radius: 9999px;
   justify-content: center;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.6rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: inline-flex;
+  position: relative;
+  user-select: none;
+  text-decoration: none;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn-primary {
   background-color: var(--color-toffee-deep);
   color: var(--color-milk);
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  box-shadow: 0 0.4rem 0 -0.1rem var(--color-cocoa);
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  text-decoration: none;
+  box-shadow: 0 0.5rem 0 -0.15rem var(--color-cocoa);
 }
 
 .btn-primary:hover {
+  box-shadow: 0 0.7rem 0 -0.15rem var(--color-cocoa);
   transform: translateY(-2px) rotate(-1deg);
-  box-shadow: 0 0.6rem 0 -0.1rem var(--color-cocoa);
-}
-
-.btn-primary:active {
-  transform: translateY(2px);
-  box-shadow: 0 0.2rem 0 -0.1rem var(--color-cocoa);
 }
 
 .btn-whatsapp {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background-color: #1f7a4d;
   color: #ffffff;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  box-shadow: 0 0.4rem 0 -0.1rem var(--color-cocoa);
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  text-decoration: none;
+  box-shadow: 0 0.5rem 0 -0.15rem var(--color-cocoa);
+  background-color: #1f7a4d;
 }
 
 .btn-whatsapp:hover {
+  box-shadow: 0 0.7rem 0 -0.15rem var(--color-cocoa);
   transform: translateY(-2px) rotate(1deg);
-  background-color: #238b58;
-  box-shadow: 0 0.6rem 0 -0.1rem var(--color-cocoa);
+  background-color: #1b6d44;
 }
 
 .btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background-color: transparent;
   color: var(--color-cocoa);
   border: 2px solid var(--color-cocoa);
-  font-weight: 600;
-  padding: 0.7rem 1.4rem;
-  border-radius: 9999px;
-  transition: all 0.2s ease;
-  text-decoration: none;
+  background-color: transparent;
 }
 
 .btn-ghost:hover {
@@ -632,10 +802,10 @@ body {
 }
 
 .tp-book__teddy {
-  width: clamp(9.5rem, 13vw, 12.5rem);
+  width: clamp(7.5rem, 10vw, 9.2rem);
   position: absolute;
-  bottom: 0.5rem;
-  right: clamp(0.5rem, 3vw, 1.5rem);
+  bottom: clamp(0.4rem, 1.2vw, 1rem);
+  right: clamp(0.5rem, 2.5vw, 1.5rem);
   z-index: 10;
 }
 
@@ -812,6 +982,24 @@ body {
   display: grid;
 }
 
+.tp-chat__step {
+  grid-template-columns: 3.4rem 1fr;
+  align-content: start;
+  column-gap: 1.1rem;
+  display: grid;
+  opacity: 0.38;
+  min-height: 44vh;
+  transition: opacity 0.5s ease;
+}
+
+.tp-chat__step:last-child {
+  min-height: 40vh;
+}
+
+.tp-chat__step:is([data-active="true"], [data-done="true"]) {
+  opacity: 1;
+}
+
 .tp-chat__step[data-active="true"] .tp-chat__num {
   background: var(--color-toffee-deep);
   color: var(--color-milk);
@@ -850,6 +1038,22 @@ body {
     position: sticky;
     top: 18vh;
     align-self: start;
+  }
+}
+
+.tp-chat__teddy {
+  width: clamp(7.5rem, 26vw, 9.5rem);
+  position: absolute;
+  bottom: -0.6rem;
+  left: max(0rem, 50% - 12rem);
+  z-index: 10;
+}
+
+@media (min-width: 1024px) {
+  .tp-chat__teddy {
+    width: 10.5rem;
+    bottom: -1.6rem;
+    left: -8rem;
   }
 }
 
@@ -940,26 +1144,109 @@ body {
   flex-direction: column;
   gap: 0.45rem;
   display: flex;
-  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .tp-msg-group[data-show="false"] {
-  display: none;
+  display: none !important;
 }
 
-.tp-msg-group[data-show="true"] {
-  animation: tp-msg-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+.tp-msg-group[data-show="true"] > * {
+  animation: tp-msg-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.tp-msg-group[data-show="true"] > :nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.tp-msg-group[data-show="true"] > :nth-child(3) {
+  animation-delay: 0.36s;
 }
 
 @keyframes tp-msg-in {
-  from {
+  0% {
     opacity: 0;
-    transform: translateY(16px) scale(0.96);
+    transform: translateY(1.2rem) scale(0.92);
   }
-  to {
+  100% {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+.tp-clip {
+  aspect-ratio: 4/5;
+  background: var(--color-cocoa);
+  border-radius: 0.8rem;
+  width: 9.6rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.tp-clip video,
+.tp-clip img {
+  object-fit: cover;
+  object-position: 50% 30%;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tp-clip__play {
+  border: 2px solid var(--color-cocoa);
+  background: rgba(255, 253, 248, 0.94);
+  border-radius: 50%;
+  place-items: center;
+  width: 2.85rem;
+  height: 2.85rem;
+  display: grid;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.tp-clip__play:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.tp-clip__play svg {
+  width: 1.3rem;
+  height: 1.3rem;
+  fill: var(--color-cocoa);
+  margin-left: 2px;
+}
+
+.tp-route {
+  width: 100%;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.tp-route__line {
+  fill: none;
+  stroke: var(--color-toffee-deep);
+  stroke-width: 2.5px;
+  stroke-dasharray: 2 7;
+  stroke-linecap: round;
+}
+
+.tp-route__dot {
+  fill: var(--color-toffee-deep);
+}
+
+.tp-route__home {
+  fill: var(--color-honey);
+  stroke: var(--color-cocoa);
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
+}
+
+.tp-route__paw {
+  fill: var(--color-toffee);
+  opacity: 0.65;
 }
 
 .tp-chips {
@@ -1129,13 +1416,39 @@ body {
   box-shadow: inset 0 0 0 1px rgba(42, 23, 14, 0.08);
 }
 
-/* Hide duplicate in-component placeholder buddies so only the single traveling mascot is visible */
-.pup-stop {
-  pointer-events: none;
+/* Rich Warm Brown Text Selection matching reference site */
+::selection,
+*::selection {
+  background-color: #8e3f15 !important;
+  color: #fffdf8 !important;
 }
-.pup-stop > * {
-  visibility: hidden !important;
-  opacity: 0 !important;
+
+::-moz-selection,
+*::-moz-selection {
+  background-color: #8e3f15 !important;
+  color: #fffdf8 !important;
+}
+
+:root {
+  --gutter: clamp(1.25rem, 3.8vw, 4rem);
+}
+
+.gutter {
+  padding-inline: var(--gutter);
+}
+
+.text-huge {
+  font-size: clamp(2.6rem, 6.4vw, 6.25rem);
+  line-height: 0.95;
+}
+
+.text-lede {
+  font-size: clamp(1.125rem, 1.4vw, 1.375rem);
+  line-height: 1.5;
+}
+
+.pup-stop {
+  pointer-events: auto;
 }
 
 /* Woven Wicker Basket in Footer */
@@ -1164,12 +1477,17 @@ body {
   z-index: 1;
 }
 
-.tp-basket__pup {
-  z-index: 10;
+.tp-basket__front {
+  z-index: 5;
 }
 
-.tp-basket__front {
-  z-index: 25;
+.tp-basket__pup {
+  z-index: 15;
+}
+
+.tp-basket__pup > * {
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .tp-basket__hollow {
@@ -1210,10 +1528,11 @@ body {
   stroke: rgba(42, 23, 14, 0.15);
 }
 
-/* Ensure the puppy tucked in the basket is visible */
-.tp-basket__pup .pup-buddy {
-  visibility: visible !important;
-  opacity: 1 !important;
+/* On subpages without dynamic companion, basket puppy is naturally visible */
+html:not([data-pup="true"]) .tp-basket__pup,
+html:not([data-pup="true"]) .tp-basket__pup * {
+  visibility: visible;
+  opacity: 1;
 }
 
 /* Preserve cursor rotation in every direction */

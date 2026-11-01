@@ -56,7 +56,7 @@ export default function QuestionsNightSection() {
               </span>
               <h2
                 id="questions-title"
-                className="font-serif text-3xl sm:text-5xl font-black text-[#fffdf8] mt-1 tracking-tight"
+                className="font-plush text-3xl sm:text-5xl md:text-6xl font-black text-[#fffdf8] mt-1 tracking-tight"
               >
                 Questions, answered
               </h2>

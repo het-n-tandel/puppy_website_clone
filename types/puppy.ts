@@ -20,6 +20,8 @@ export interface Puppy {
   healthCertificate?: boolean;
   passport?: boolean;
   colorWash?: string;
+  origin?: string;
+  videoUrl?: string;
 }
 
 export interface InquiryRecord {

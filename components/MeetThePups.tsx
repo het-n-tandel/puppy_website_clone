@@ -78,7 +78,7 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
         {/* Section Header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-20">
           <div>
-            <h2 id="meet-title" className="font-serif text-3xl sm:text-5xl font-black text-[#2a170e]">
+            <h2 id="meet-title" className="font-plush text-3xl sm:text-5xl md:text-6xl font-black text-[#2a170e]">
               Meet the pups
             </h2>
             <p className="text-sm sm:text-base text-[#5a3a28] mt-2 max-w-lg font-medium">
@@ -95,9 +95,9 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
 
         {/* Horizontal Parade Track Stage */}
         <div className="relative w-full flex-1 flex flex-col justify-end overflow-hidden">
-          {/* Moving Doors Track */}
+          {/* Moving Doors Track Resting Flush on Floor Line (Matching Screenshot 1) */}
           <div
-            className="flex items-end gap-6 sm:gap-10 pl-[30vw] sm:pl-[24vw] pr-[20vw] z-10 transition-transform duration-75 ease-out will-change-transform pb-2"
+            className="flex items-end gap-6 sm:gap-10 pl-[30vw] sm:pl-[24vw] pr-[20vw] z-10 transition-transform duration-75 ease-out will-change-transform pb-0"
             style={{
               transform: `translate3d(${translateX}px, 0, 0)`,
             }}
@@ -122,7 +122,7 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
                     </p>
                   </div>
 
-                  {/* Arched Doorway Resting Grounded on the Floor */}
+                  {/* Arched Doorway Resting Grounded Flush on Floor Line */}
                   <Link
                     href={`/puppies/${pup.slug}`}
                     className="relative block w-44 sm:w-56 h-60 sm:h-76 rounded-t-full overflow-hidden border-[3.5px] border-[#2a170e] bg-[#fffdf8] shadow-[4px_6px_0px_#2a170e] transition-transform duration-300 hover:scale-105"
@@ -136,24 +136,30 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                     />
 
-                    {/* Door Leaf that swings open on hover with paw peephole */}
+                    {/* Open Door Leaf Swung Open on Left with Paw Peephole and Gold Knob */}
                     <div
-                      className={`absolute inset-0 bg-[#e4a352] border-r-2 border-[#2a170e] transition-transform duration-500 origin-left flex items-center justify-center ${
-                        isHovered ? '-rotate-y-90 opacity-0' : 'rotate-y-0 opacity-90'
+                      className={`absolute inset-0 bg-[#8c4927] border-r-2 border-[#2a170e] transition-transform duration-500 origin-left flex items-center justify-center ${
+                        isHovered ? '-rotate-y-90 opacity-0' : '-rotate-y-45 opacity-90'
                       }`}
+                      style={{
+                        transformOrigin: 'left center',
+                        boxShadow: 'inset -8px 0 16px rgba(0,0,0,0.3)',
+                      }}
                     >
-                      <div className="text-[#2a170e]">
-                        <svg viewBox="0 0 64 64" width="36" height="36" fill="currentColor">
+                      <div className="text-[#fbe3b4] flex flex-col items-center gap-6">
+                        {/* Paw peephole */}
+                        <svg viewBox="0 0 64 64" width="28" height="28" fill="currentColor">
                           <path d="M32 30.5c-7.6 0-15.6 8.3-15.6 15.5 0 5.4 4.2 8.3 9.2 8.3 2.6 0 4.5-1.1 6.4-1.1s3.8 1.1 6.4 1.1c5 0 9.2-2.9 9.2-8.3 0-7.2-8-15.5-15.6-15.5zM19.28 26.71C21.07 30.08 20.42 33.92 17.84 35.29C15.25 36.67 11.71 35.05 9.92 31.69C8.13 28.32 8.78 24.48 11.36 23.11C13.95 21.73 17.49 23.35 19.28 26.71ZM29.62 15.64C30.32 19.62 28.46 23.26 25.47 23.79C22.48 24.32 19.48 21.53 18.78 17.56C18.08 13.58 19.94 9.94 22.93 9.41C25.92 8.88 28.92 11.67 29.62 15.64ZM45.22 17.56C44.52 21.53 41.52 24.32 38.53 23.79C35.54 23.26 33.68 19.62 34.38 15.64C35.08 11.67 38.08 8.88 41.07 9.41C44.06 9.94 45.92 13.58 45.22 17.56ZM54.08 31.69C52.29 35.05 48.75 36.67 46.16 35.29C43.58 33.92 42.93 30.08 44.72 26.71C46.51 23.35 50.05 21.73 52.64 23.11C55.22 24.48 55.87 28.32 54.08 31.69Z" />
                         </svg>
+                        {/* Gold handle */}
+                        <div className="w-1.5 h-6 rounded-full bg-[#f2be6b] border border-[#2a170e]" />
                       </div>
                     </div>
 
-                    {/* Status Badge */}
-                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap">
-                      <span className="bg-[#fffdf8] text-[#2a170e] text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-[#2a170e] shadow-sm">
-                        {pup.status}
-                      </span>
+                    {/* Speech Bubble "Available" Badge (Matching Screenshot 1) */}
+                    <div className="absolute top-12 right-2.5 z-15 bg-[#fffdf8] text-[#2a170e] text-xs font-bold px-3 py-1 rounded-full border-2 border-[#2a170e] shadow-md">
+                      Available
+                      <span className="absolute -bottom-1 left-3 w-2 h-2 bg-[#fffdf8] border-r-2 border-b-2 border-[#2a170e] rotate-45" />
                     </div>
                   </Link>
                 </div>
@@ -161,15 +167,15 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
             })}
           </div>
 
-          {/* Teddy Mascot RUNNING ON THE SHOWROOM RUNWAY TRACK */}
+          {/* Teddy Mascot RUNNING FIRMLY ON RUNWAY TRACK (Matching Screenshot 1) */}
           <div
             data-pup-stop="true"
             data-pose={isScrolling ? 'walk' : 'stand'}
             data-facing={facing}
-            className="pup-stop tp-meet__teddy absolute bottom-[4.4rem] sm:bottom-[5.4rem] z-25 pointer-events-auto transition-all duration-150 ease-out drop-shadow-md"
+            className="pup-stop tp-meet__teddy absolute bottom-[3.8rem] sm:bottom-[4.8rem] z-25 pointer-events-auto transition-all duration-150 ease-out"
             style={{
               left: `${runningLeftPercent}%`,
-              width: 'clamp(11.5rem, 16vw, 15.5rem)',
+              width: 'clamp(7.2rem, 9.5vw, 8.6rem)',
               transform: 'translateX(-50%)',
             }}
           >

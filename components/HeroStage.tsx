@@ -24,7 +24,7 @@ const SEATS: Seat[] = [
     breed: 'Cavapoo',
     slug: 'copper-male',
     x: '8%',
-    w: '8.4rem',
+    w: 'clamp(3.8rem, 12.5vw, 8.4rem)',
     peek: 0.62,
     tilt: '-5deg',
     image: '/media/Z0ToauDx7Eve/5fffe4d022/b942a5_4b8cfb8204d24eadaf524332aba1dc15-mv2.webp',
@@ -35,7 +35,7 @@ const SEATS: Seat[] = [
     breed: 'Korean Teacup Maltipoo',
     slug: 'korean-teacup-maltipoo-female',
     x: '22%',
-    w: '10.8rem',
+    w: 'clamp(4.6rem, 15vw, 10.8rem)',
     peek: 0.82,
     tilt: '3deg',
     image: '/media/gAaGwoGej2g6/5523e884dd/b942a5_50f0ae67c9ff437d911597d52a9e63b3-mv2.jpg',
@@ -46,7 +46,7 @@ const SEATS: Seat[] = [
     breed: 'Pomeranian',
     slug: 'korean-teacup-poodle-female',
     x: '35%',
-    w: '9.2rem',
+    w: 'clamp(4.2rem, 13.5vw, 9.2rem)',
     peek: 0.72,
     tilt: '-2deg',
     image: '/media/xeMJCapr5vcU/e618c653b2/b942a5_14376a216177484dbbb27995d0f6aeb7-mv2.jpg',
@@ -57,7 +57,7 @@ const SEATS: Seat[] = [
     breed: 'Maltipoo',
     slug: 'maltipoo-cavapoo-male',
     x: '65%',
-    w: '9.4rem',
+    w: 'clamp(4.2rem, 13.5vw, 9.4rem)',
     peek: 0.74,
     tilt: '3deg',
     image: '/media/YQhey4j7uWvZ/3ea10db6c1/b942a5_7ce7e7bd18424b6c8fb16dd30113ade2-mv2.jpg',
@@ -68,7 +68,7 @@ const SEATS: Seat[] = [
     breed: 'Toy Poodle',
     slug: 'toy-poodle-male-female',
     x: '78%',
-    w: '11rem',
+    w: 'clamp(4.6rem, 15vw, 11rem)',
     peek: 0.84,
     tilt: '-3deg',
     image: '/media/vMu0BPvkAZ-j/c65e53967d/b942a5_0b2c0c0d178c4005acbe28725a5ea573-mv2.jpg',
@@ -79,7 +79,7 @@ const SEATS: Seat[] = [
     breed: 'Maltipoo',
     slug: 'maltipoo-female-2',
     x: '92%',
-    w: '8.4rem',
+    w: 'clamp(3.8rem, 12.5vw, 8.4rem)',
     peek: 0.6,
     tilt: '4deg',
     image: '/media/3WJNmn6VVgVu/732f779474/b942a5_2b5dcece361b4589890ae920c66a1b70-mv2.jpg',
@@ -139,15 +139,18 @@ export default function HeroStage() {
           );
         })}
 
-        {/* Center Mascot: Teddy the Puppy */}
+        {/* Center Mascot: Teddy the Puppy (Peeking Pose - Matching Screenshot 2) */}
         <div
           data-pup-stop="true"
-          data-pose="sit"
+          data-pose="peek"
           data-facing="right"
-          className="pup-stop tp-hero__teddy absolute left-1/2 bottom-[3.6rem] -translate-x-1/2 z-20 pointer-events-auto transition-transform hover:-translate-y-2 duration-300"
-          style={{ width: '15.5rem', height: '13.5rem' }}
+          className="pup-stop hero-mascot-teddy absolute left-1/2 bottom-[2.2rem] sm:bottom-[2.6rem] -translate-x-1/2 z-20 pointer-events-auto transition-transform hover:-translate-y-2 duration-300"
+          style={{
+            width: 'clamp(9.5rem, min(24vw, 26vh), 14.5rem)',
+            height: 'clamp(7.5rem, min(22vw, 24vh), 12.5rem)',
+          }}
         >
-          <PupBuddy pose="sit" facing="right" label="Teddy sitting on the quilt" />
+          <PupBuddy pose="peek" facing="right" label="Teddy peeking over the quilt" />
         </div>
       </div>
 

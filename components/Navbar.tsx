@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -20,13 +20,30 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
   const pathname = usePathname();
+
+  const isHome = pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 15);
+      const y = window.scrollY;
+      const dy = y - lastScrollY.current;
+
+      setScrolled(y > 20);
+
+      // Hide header on rapid scroll down; reveal when scrolling up or near top
+      if (y > 110 && dy > 6) {
+        setHidden(true);
+      } else if (dy < -4 || y <= 20) {
+        setHidden(false);
+      }
+
+      lastScrollY.current = y;
     };
-    window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -36,55 +53,61 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-[#fffdf8]/95 backdrop-blur-md shadow-sm border-b border-[#2a170e]/10 py-3'
-          : 'bg-[#fffdf8] py-4 sm:py-5'
-      }`}
+      className="tp-header fixed top-0 inset-x-0 z-50 select-none"
+      data-home={isHome ? 'true' : undefined}
+      data-scrolled={scrolled ? 'true' : 'false'}
+      data-hidden={hidden ? 'true' : 'false'}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      {/* Header Bar */}
+      <div className="max-w-[110rem] mx-auto px-4 sm:px-6 lg:px-8 h-[var(--header-h,4.75rem)] flex items-center justify-between relative z-10">
         {/* Brand Logo & Name */}
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href="/" className="tp-header__brand flex items-center gap-3 group">
           <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-[#2a170e]/20 group-hover:scale-105 transition-transform">
             <Image
               src="/brand/logo.png"
               alt={currentSite.brandName}
               fill
-              className="object-cover"
+              className="object-cover tp-header__logo"
               priority
             />
           </div>
-          <span className="font-serif text-2xl sm:text-[1.75rem] font-black tracking-tight text-[#2a170e]">
+          <span className="font-plush text-2xl sm:text-[1.75rem] font-black tracking-tight text-[#2a170e]">
             TeddyPups
           </span>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-8">
-          {NAV_LINKS.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`group relative flex flex-col items-center text-[0.95rem] font-bold transition-colors py-1 ${
-                  isActive ? 'text-[#c2622b]' : 'text-[#2a170e] hover:text-[#c2622b]'
-                }`}
-              >
-                <span>{link.name}</span>
-                {/* Active or hover paw indicator underneath link */}
-                <span
-                  className={`text-[12px] leading-none transition-all duration-200 ${
-                    isActive
-                      ? 'opacity-100 translate-y-0.5 text-[#c2622b]'
-                      : 'opacity-0 -translate-y-1 group-hover:opacity-70 group-hover:translate-y-0.5'
-                  }`}
-                >
-                  🐾
-                </span>
-              </Link>
-            );
-          })}
+        <nav className="hidden lg:flex items-center gap-7 tp-header__nav">
+          <ul className="flex items-center gap-7 list-none">
+            {NAV_LINKS.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className={`tp-nav-link text-[0.98rem] font-bold transition-colors py-1 relative inline-flex items-center ${
+                      isActive ? 'text-[#a24a1a]' : 'text-[#2a170e] hover:text-[#8e3f15]'
+                    }`}
+                    data-active={isActive ? 'true' : undefined}
+                  >
+                    <span>{link.name}</span>
+                    {/* Cute Paw icon under active/hovered link */}
+                    <svg
+                      viewBox="0 0 64 64"
+                      className="tp-nav-link__paw absolute -bottom-2 left-1/2 -translate-x-1/2 w-3.5 h-3.5 fill-[#c2622b] pointer-events-none transition-all duration-200"
+                      style={{
+                        opacity: isActive ? 1 : 0,
+                        transform: isActive ? 'translateX(-50%) scale(1)' : 'translateX(-50%) scale(0.4)',
+                      }}
+                      aria-hidden="true"
+                    >
+                      <path d="M32 30.5c-7.6 0-15.6 8.3-15.6 15.5 0 5.4 4.2 8.3 9.2 8.3 2.6 0 4.5-1.1 6.4-1.1s3.8 1.1 6.4 1.1c5 0 9.2-2.9 9.2-8.3 0-7.2-8-15.5-15.6-15.5zM19.28 26.71C21.07 30.08 20.42 33.92 17.84 35.29C15.25 36.67 11.71 35.05 9.92 31.69C8.13 28.32 8.78 24.48 11.36 23.11C13.95 21.73 17.49 23.35 19.28 26.71ZM29.62 15.64C30.32 19.62 28.46 23.26 25.47 23.79C22.48 24.32 19.48 21.53 18.78 17.56C18.08 13.58 19.94 9.94 22.93 9.41C25.92 8.88 28.92 11.67 29.62 15.64ZM45.22 17.56C44.52 21.53 41.52 24.32 38.53 23.79C35.54 23.26 33.68 19.62 34.38 15.64C35.08 11.67 38.08 8.88 41.07 9.41C44.06 9.94 45.92 13.58 45.22 17.56ZM54.08 31.69C52.29 35.05 48.75 36.67 46.16 35.29C43.58 33.92 42.93 30.08 44.72 26.71C46.51 23.35 50.05 21.73 52.64 23.11C55.22 24.48 55.87 28.32 54.08 31.69Z" />
+                    </svg>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
 
         {/* WhatsApp Button & Mobile Menu Toggle */}
@@ -93,7 +116,7 @@ export default function Navbar() {
             href={getGeneralWhatsAppUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-whatsapp hidden sm:inline-flex text-sm font-bold py-2.5 px-6 shadow-sm"
+            className="btn btn-whatsapp hidden sm:inline-flex text-sm font-bold"
           >
             WhatsApp us
           </a>
@@ -108,11 +131,30 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Scalloped "Round Round" Hem Edge */}
+      <svg
+        aria-hidden="true"
+        className="tp-header__hem"
+        width="100%"
+        height="14"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <pattern id="tp-hem" width="44" height="14" patternUnits="userSpaceOnUse">
+            <path d="M0 0H44V2A22 11 0 0 1 0 2Z" className="tp-header__hem-fill" />
+            <path d="M0 2A22 11 0 0 0 44 2" className="tp-header__hem-line" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="14" fill="url(#tp-hem)" />
+      </svg>
+
       {/* Mobile Drawer */}
       {isOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[70px] bg-[#fffdf8] border-b-2 border-[#2a170e]/15 shadow-xl px-6 py-6 transition-all duration-300">
+        <div className="lg:hidden fixed inset-x-0 top-[var(--header-h,4.75rem)] bg-[#fffdf8] border-b-2 border-[#2a170e]/15 shadow-xl px-6 py-6 transition-all duration-300">
           <div className="flex flex-col gap-4">
-            <span className="text-xs uppercase font-bold tracking-widest text-[#a24a1a]">where to, friend?</span>
+            <span className="font-scrawl text-xs uppercase font-bold tracking-widest text-[#a24a1a]">
+              where to, friend?
+            </span>
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -134,7 +176,7 @@ export default function Navbar() {
                 href={getGeneralWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-whatsapp w-full justify-center text-sm py-3"
+                className="btn btn-whatsapp w-full justify-center text-sm py-3"
               >
                 WhatsApp us
               </a>

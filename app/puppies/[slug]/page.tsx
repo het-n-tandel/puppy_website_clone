@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import '../../subpages.css';
 import { ALL_PUPPIES, getPuppyBySlug } from '@/data/puppiesData';
 import PuppyDetailView from '@/components/PuppyDetailView';
 import { currentSite } from '@/lib/siteConfig';

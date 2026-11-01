@@ -3,132 +3,117 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, X, ArrowRight } from 'lucide-react';
+import '../subpages.css';
+import { X } from 'lucide-react';
 import galleryMedia from '@/data/happy-families-gallery.json';
 
-const TAPE_COLORS = ['#f6d79a', '#bfddf5', '#f9cdbf', '#dcf8c6', '#e0cbfb', '#fed0e0'];
-
-const CAPTIONS = [
-  'Lulu 🧸 with her new mummy ❤️',
-  'Adorable Maltipoo baby 🧸❤️',
-  'My new teddy puppy 🥺🧸',
-  'Our new puppies 🧸🥺🤗',
-  'New puppy 🧸😍',
-  'Gang of 3 😍🧸',
-  'So happy 😍😍',
-  'New pup 🤗💫',
-  'First morning at home 🐾✨',
-  'Pure unconditional love ❤️',
-  'Nap time after playtime 😴💤',
-  'Best companion ever! 🧸',
-];
+const TAPE_COLORS = ['#f6d79a', '#cfe5f6', '#f9cdbf', '#dcf8c6', '#e0cbfb', '#fed0e0'];
+const TILTS = ['-2.2deg', '1.5deg', '-1.8deg', '2.4deg', '-1.2deg', '2.1deg', '-2.6deg', '1.8deg', '-0.9deg'];
 
 export default function HappyFamiliesPage() {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
-  // Generate deterministic rotation and tape color per photo
   const items = galleryMedia.map((mediaSrc, idx) => {
-    const tiltValues = [-2.6, 2.1, -1.8, 2.8, -3.2, 1.5, -1.2, 2.4, -2.1];
-    const tilt = tiltValues[idx % tiltValues.length];
+    const tilt = TILTS[idx % TILTS.length];
     const tape = TAPE_COLORS[idx % TAPE_COLORS.length];
-    const caption = CAPTIONS[idx % CAPTIONS.length];
     return {
       id: idx,
       src: mediaSrc,
-      tilt: `${tilt}deg`,
+      tilt,
       tape,
-      caption,
     };
   });
 
   return (
-    <div className="tp-memories min-h-screen py-10 sm:py-16">
-      <div className="gutter mx-auto max-w-[110rem] px-4 sm:px-6 lg:px-8">
-        {/* Head with Header & Sarah M Note */}
-        <div className="tp-memories__head mb-16">
-          <div>
-            <p className="font-serif italic text-lg sm:text-xl font-bold text-[#c2622b]">
-              our wall of happy endings
-            </p>
-            <h1 className="font-serif text-4xl sm:text-6xl font-black text-[#2a170e] tracking-tight mt-2 flex items-center gap-3">
-              Happy families
-              <svg viewBox="0 0 48 44" className="w-8 h-8 text-[#c2622b] inline-block" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M24 40C10 30 4 22 4 14.5 4 8.7 8.6 4 14.3 4c4.1 0 7.6 2.4 9.7 6 2.1-3.6 5.6-6 9.7-6C39.4 4 44 8.7 44 14.5 44 22 38 30 24 40z" />
-              </svg>
-            </h1>
-            <p className="mt-4 text-base sm:text-lg text-[#5a3a28] max-w-xl leading-relaxed">
-              Nothing makes us happier than seeing our puppies in loving homes! Here are some beautiful moments shared by our amazing clients after welcoming their furry friends.
-            </p>
-            <p className="font-serif italic mt-4 text-lg font-bold text-[#c2622b]">
-              {items.length} moments and counting
-            </p>
+    <div data-page="families" className="tp-page">
+      <section aria-labelledby="families-title" className="tp-memories min-h-screen">
+        <div className="gutter mx-auto max-w-[110rem] pb-24 pt-10 md:pt-16">
+          {/* Header */}
+          <div className="tp-memories__head">
+            <div>
+              <p className="font-scrawl text-lg text-toffee-ink" data-reveal="true">
+                our wall of happy endings
+              </p>
+              <h1 id="families-title" className="font-plush text-giant tp-memories__title" data-reveal="true">
+                Happy
+                <br />
+                families
+              </h1>
+              <div className="mt-4">
+                <svg viewBox="0 0 48 44" className="w-10 h-10 text-toffee" aria-hidden="true">
+                  <path
+                    d="M24 40C10 30 4 22 4 14.5 4 8.7 8.6 4 14.3 4c4.1 0 7.6 2.4 9.7 6 2.1-3.6 5.6-6 9.7-6C39.4 4 44 8.7 44 14.5 44 22 38 30 24 40z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <p className="text-lede mt-6 max-w-[50ch] text-cocoa-soft" data-reveal="true">
+                Nothing makes us happier than seeing our puppies in loving homes! Here are some beautiful moments shared by our amazing clients after welcoming their furry friends.
+              </p>
+              <p className="font-scrawl mt-5 text-lg text-toffee-ink" data-reveal="true">
+                64 moments and counting
+              </p>
+            </div>
+
+            {/* Featured Pinned Note */}
+            <figure className="tp-memories__note" data-reveal="true">
+              <span aria-hidden="true" className="tp-tape tp-tape--center" style={{ '--tape': '#cfe5f6' } as React.CSSProperties} />
+              <blockquote className="font-plush-text">
+                “TeddyPups truly made our dream a reality. They supported us at every step of the import journey. Our Maltipoo arrived healthy, cheerful, and absolutely perfect. Having 24/7 support throughout the process gave us complete peace of mind.”
+              </blockquote>
+              <figcaption className="font-scrawl">Sarah M., Dubai, UAE</figcaption>
+            </figure>
           </div>
 
-          {/* Featured Sarah M note */}
-          <figure className="tp-memories__note">
-            <span aria-hidden="true" className="tp-tape tp-tape--center" style={{ ['--tape' as any]: '#cfe5f6' }} />
-            <blockquote className="font-serif italic text-base sm:text-lg text-[#2a170e] leading-relaxed">
-              &ldquo;TeddyPups truly made our dream a reality. They supported us at every step of the import journey. Our Maltipoo arrived healthy, cheerful, and absolutely perfect. Having 24/7 support throughout the process gave us complete peace of mind.&rdquo;
-            </blockquote>
-            <figcaption className="font-serif font-bold text-sm text-[#a24a1a] mt-3">
-              Sarah M., Dubai, UAE
-            </figcaption>
-          </figure>
-        </div>
-
-        {/* Polaroid Wall */}
-        <ul className="tp-wall" aria-label="Photos from TeddyPups families">
-          {items.map((item) => (
-            <li key={item.id} className="tp-wall__item">
-              <button
-                type="button"
-                className="tp-wall__print text-left"
-                onClick={() => setSelectedPhoto(item.src)}
-                aria-label={`Open photo ${item.id + 1} of ${items.length}`}
-              >
-                <span
-                  className="tp-polaroid"
-                  style={{
-                    ['--tilt' as any]: item.tilt,
-                    ['--tape' as any]: item.tape,
-                  }}
+          {/* Polaroid Masonry Wall */}
+          <div className="mt-16 md:mt-20">
+            <ul className="tp-wall" aria-label="Photos from TeddyPups families">
+              {items.map((item, idx) => (
+                <li
+                  key={item.id}
+                  className="tp-wall__item mb-8 break-inside-avoid"
+                  data-reveal="true"
+                  style={{ '--d': `${idx * 15}ms` } as React.CSSProperties}
                 >
-                  <span aria-hidden="true" className="tp-tape tp-tape--center" />
-                  <span className="tp-polaroid__photo block aspect-[4/5] relative w-full overflow-hidden rounded-[2px]">
-                    <Image
-                      src={item.src}
-                      alt={item.caption}
-                      fill
-                      sizes="(min-width: 1280px) 22vw, (min-width: 768px) 30vw, 45vw"
-                      className="object-cover transition-transform duration-500 hover:scale-105"
-                    />
-                  </span>
-                  <span className="block mt-3 text-center text-xs sm:text-sm font-serif font-medium text-[#2a170e]">
-                    {item.caption}
-                  </span>
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        {/* Bottom CTA Banner */}
-        <div className="mt-20 max-w-3xl mx-auto bg-[#fffdf8] rounded-[36px] border-3 border-[#2a170e] p-8 sm:p-12 text-center space-y-4 shadow-[6px_8px_0px_#2a170e]">
-          <Heart className="w-10 h-10 text-rose-500 fill-rose-500 mx-auto" />
-          <h2 className="font-serif text-2xl sm:text-3xl font-black text-[#2a170e]">
-            Are You a TeddyPups Parent?
-          </h2>
-          <p className="text-sm sm:text-base text-[#5a3a28] max-w-lg mx-auto">
-            Send us your latest photos and puppy milestones on WhatsApp or tag @teddypups.worldwide to be featured on our Wall of Love!
-          </p>
-          <div className="pt-2">
-            <Link href="/contact" className="btn-primary text-sm py-3 px-8 shadow-md inline-flex items-center gap-2">
-              <span>Contact Us</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+                  <button
+                    type="button"
+                    className="tp-wall__print w-full text-left cursor-pointer"
+                    onClick={() => setSelectedPhoto(item.src)}
+                    aria-label={`Open photo ${item.id + 1} of ${items.length}`}
+                  >
+                    <span
+                      className="tp-polaroid hover:scale-[1.03] transition-transform duration-300"
+                      style={
+                        {
+                          '--tilt': item.tilt,
+                          '--tape': item.tape,
+                          '--i': idx,
+                        } as React.CSSProperties
+                      }
+                    >
+                      <span aria-hidden="true" className="tp-tape tp-tape--center" style={{ '--tape': item.tape } as React.CSSProperties} />
+                      <span className="tp-polaroid__photo block relative w-full overflow-hidden">
+                        <Image
+                          src={item.src}
+                          alt="A happy TeddyPups family with their new puppy"
+                          width={960}
+                          height={1280}
+                          sizes="(min-width: 1280px) 22vw, (min-width: 768px) 30vw, 45vw"
+                          className="w-full h-auto object-cover"
+                        />
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Lightbox Modal */}
       {selectedPhoto && (
@@ -137,27 +122,27 @@ export default function HappyFamiliesPage() {
           onClick={() => setSelectedPhoto(null)}
         >
           <div
-            className="relative max-w-2xl w-full bg-[#fffdf8] p-4 sm:p-6 rounded-3xl border-3 border-[#2a170e] shadow-2xl flex flex-col items-center"
+            className="relative max-w-xl w-full bg-milk p-4 rounded-3xl border-3 border-cocoa shadow-2xl flex flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setSelectedPhoto(null)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-[#fbe3b4] text-[#2a170e] hover:bg-[#c2622b] hover:text-white transition-colors"
-              aria-label="Close"
+              className="absolute -top-3 -right-3 size-9 bg-milk border-2 border-cocoa rounded-full flex items-center justify-center text-cocoa shadow-md hover:bg-honey-soft"
+              aria-label="Close photo"
             >
-              <X className="w-5 h-5" />
+              <X className="size-5" />
             </button>
-            <div className="relative w-full aspect-[4/5] max-h-[70vh] rounded-2xl overflow-hidden mt-2 border border-[#2a170e]/20">
+            <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden border-2 border-cocoa/20">
               <Image
                 src={selectedPhoto}
-                alt="Enlarged puppy moment"
+                alt="Happy puppy family"
                 fill
                 sizes="(max-width: 768px) 90vw, 600px"
-                className="object-contain bg-black/5"
+                className="object-cover"
               />
             </div>
-            <p className="font-serif italic font-bold text-[#2a170e] mt-4 text-center text-base">
-              TeddyPups Happy Moment
+            <p className="font-scrawl text-toffee-ink mt-3 text-base">
+              A happy TeddyPups family moment 🐾❤️
             </p>
           </div>
         </div>

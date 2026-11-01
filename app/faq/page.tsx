@@ -1,206 +1,240 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import Link from 'next/link';
-import { FAQS } from '@/data/contentData';
-import { getGeneralWhatsAppUrl } from '@/lib/whatsapp';
+import '../subpages.css';
 import PupBuddy from '@/components/PupBuddy';
-import { Search, ChevronDown, MessageCircle, HelpCircle } from 'lucide-react';
+import { getGeneralWhatsAppUrl } from '@/lib/whatsapp';
+
+interface FAQItem {
+  id: string;
+  question: string;
+  answer: string;
+  tilt: string;
+  pin: string;
+}
+
+const FAQS: FAQItem[] = [
+  {
+    id: 'q-1',
+    question: 'Are your puppies vaccinated and health-checked?',
+    answer:
+      'Yes. All our puppies come with a verified health certificate from licensed vets. Every puppy is vaccinated, dewormed, and thoroughly checked before joining your family.',
+    tilt: '-1.6deg',
+    pin: 'var(--color-toffee)',
+  },
+  {
+    id: 'q-2',
+    question: 'Can I meet a puppy before I decide?',
+    answer:
+      'Yes. Come meet our locally available puppies in our Downtown Dubai showroom and spend time bonding before making your decision.',
+    tilt: '1.2deg',
+    pin: 'var(--color-sky-deep)',
+  },
+  {
+    id: 'q-3',
+    question: 'Can I take my puppy home the same day?',
+    answer:
+      'Local puppies are available immediately, so you can take your puppy home the same day.',
+    tilt: '-0.8deg',
+    pin: '#d9a13c',
+  },
+  {
+    id: 'q-4',
+    question: 'Do you import puppies from abroad?',
+    answer:
+      'Yes. Through our Order Upon Request service we source rare and premium teacup breeds from the most reputable, certified breeders across Europe, Korea, and beyond — and we handle the import for you.',
+    tilt: '1.8deg',
+    pin: '#c45a6a',
+  },
+  {
+    id: 'q-5',
+    question: 'How does an imported puppy travel to Dubai?',
+    answer:
+      'We manage every part of the import process, including health checks, travel arrangements, and the necessary documentation, so your puppy arrives happy, healthy, and stress-free.',
+    tilt: '-1.2deg',
+    pin: 'var(--color-toffee)',
+  },
+  {
+    id: 'q-6',
+    question: 'Will I see photos and health details first?',
+    answer:
+      'Yes. Photos, videos, and health certificates are shared before your puppy travels, and our team sends real photos and health details directly on WhatsApp.',
+    tilt: '1.5deg',
+    pin: 'var(--color-sky-deep)',
+  },
+  {
+    id: 'q-7',
+    question: 'Do you deliver?',
+    answer:
+      'Yes. We deliver within Dubai, and our trusted international cargo partners deliver puppies safely to loving homes all around the world.',
+    tilt: '-1.8deg',
+    pin: '#d9a13c',
+  },
+  {
+    id: 'q-8',
+    question: 'Which breeds do you usually have?',
+    answer:
+      'Breeds we regularly have include Maltipoo, Pomeranian, Poodle and Bichon, plus rare teacup lines such as Korean teacup poodles, Maltese, Pom and Yorkie.',
+    tilt: '1.2deg',
+    pin: '#c45a6a',
+  },
+  {
+    id: 'q-9',
+    question: 'Is there help after my puppy comes home?',
+    answer:
+      'Yes. Our team is available 24/7 and offers advice on training, nutrition, and general care to ensure a smooth transition for you and your new furry friend.',
+    tilt: '-0.9deg',
+    pin: 'var(--color-toffee)',
+  },
+];
 
 export default function FAQPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [openIds, setOpenIds] = useState<Record<string, boolean>>({});
 
-  // Natural organic tilts and pushpin colors for sticky note aesthetic
-  const noteStyles = [
-    { tilt: '-1.8deg', pin: '#c2622b', bg: '#fffdf6' },
-    { tilt: '1.5deg', pin: '#1f7a4d', bg: '#fffef9' },
-    { tilt: '-1.2deg', pin: '#3b82f6', bg: '#fffdf8' },
-    { tilt: '2.1deg', pin: '#e4a352', bg: '#fffdf6' },
-    { tilt: '-2.4deg', pin: '#e11d48', bg: '#fffef8' },
-    { tilt: '1.2deg', pin: '#8b5cf6', bg: '#fffdf6' },
-    { tilt: '-1.5deg', pin: '#059669', bg: '#fffef9' },
-    { tilt: '2.4deg', pin: '#d97706', bg: '#fffdf8' },
-    { tilt: '-1.9deg', pin: '#4f46e5', bg: '#fffdf6' },
-  ];
+  const toggleNote = (id: string) => {
+    setOpenIds((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
-  // Filter questions based on search query
+  const hasAnyOpen = useMemo(() => Object.values(openIds).some(Boolean), [openIds]);
+
   const filteredFaqs = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
     if (!q) return FAQS;
     return FAQS.filter(
       (item) =>
-        item.question.toLowerCase().includes(q) ||
-        item.answer.toLowerCase().includes(q) ||
-        item.category.toLowerCase().includes(q)
+        item.question.toLowerCase().includes(q) || item.answer.toLowerCase().includes(q)
     );
   }, [searchQuery]);
 
-  const toggleQuestion = (idx: number) => {
-    setExpandedId(expandedId === idx ? null : idx);
-  };
-
   return (
-    <div className="tp-page min-h-screen py-10 sm:py-16 bg-[#fffdf8]">
-      <div className="gutter mx-auto max-w-[110rem] px-4 sm:px-6 lg:px-8 space-y-12">
-        {/* Page Header */}
-        <header className="max-w-3xl space-y-3">
-          <p className="font-serif italic text-lg sm:text-xl font-bold text-[#c2622b]">
-            every puppy is family
-          </p>
-          <h1 className="font-serif text-4xl sm:text-6xl font-black text-[#2a170e] tracking-tight">
-            Questions &amp; answers
-          </h1>
-          <p className="text-base sm:text-lg text-[#5a3a28] leading-relaxed">
-            Everything you need to know about adopting our puppies, health certifications, showroom visits, and overseas import flights.
-          </p>
-        </header>
+    <div data-page="faq" className="tp-page">
+      <section
+        data-pup-scene="true"
+        data-tone="dark"
+        className="tp-scene tp-faqroom overflow-hidden"
+        style={{ '--sky-top': '#a95e32', '--sky-bottom': '#331c11' } as React.CSSProperties}
+        aria-labelledby="faq-title"
+      >
+        <div className="gutter relative mx-auto max-w-[110rem] pb-24 pt-10 md:pt-16">
+          {/* Header */}
+          <header className="max-w-4xl">
+            <h1 id="faq-title" className="font-plush text-giant text-milk">
+              Questions
+              <br />
+              &amp; answers
+            </h1>
+            <p className="text-lede mt-6 max-w-[52ch] text-[var(--ink-soft)] text-milk/90">
+              Can&#x27;t find what you&#x27;re looking for? Message us on WhatsApp — our team is available 24/7.
+            </p>
+          </header>
 
-        {/* 2-Column Board: Left Search & Teddy, Right Pinned Sticky Notes */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          {/* Left Sidebar: Search & Interactive Mascot */}
-          <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
-            <div className="bg-[#fffdf8] rounded-[36px] border-3 border-[#2a170e] p-6 sm:p-8 shadow-[5px_6px_0px_#2a170e] space-y-5">
-              <label htmlFor="faq-search" className="font-serif italic font-bold text-lg text-[#c2622b] block">
-                sniff out a question
-              </label>
+          {/* 2-Column: Sidebar & Corkboard */}
+          <div className="mt-12 md:mt-16">
+            <div className="tp-notes" data-open={hasAnyOpen ? 'true' : undefined}>
+              {/* Left Column */}
+              <aside className="tp-notes__side" aria-label="Find a question">
+                <label htmlFor="faq-search" className="font-scrawl tp-notes__label text-milk/90">
+                  sniff out a question
+                </label>
 
-              {/* Search Bar */}
-              <div className="relative">
-                <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#2a170e]/50" />
-                <input
-                  id="faq-search"
-                  type="search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="delivery, Korea, vaccinated…"
-                  className="w-full pl-10 pr-4 py-3 rounded-2xl border-2 border-[#2a170e] bg-white text-[#2a170e] text-sm focus:outline-none focus:ring-2 focus:ring-[#f2be6b] font-medium shadow-inner"
-                />
-              </div>
+                <div className="tp-notes__search">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="tp-notes__lens">
+                    <circle cx="10.5" cy="10.5" r="6.5" />
+                    <path d="m15.5 15.5 5 5" />
+                  </svg>
+                  <input
+                    id="faq-search"
+                    type="search"
+                    placeholder="delivery, Korea, vaccinated…"
+                    autoComplete="off"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
 
-              {/* Count Indicator */}
-              <p className="text-xs font-bold text-[#a24a1a] tracking-wide uppercase">
-                {filteredFaqs.length} {filteredFaqs.length === 1 ? 'note' : 'notes'} on the board
-              </p>
+                <p className="tp-notes__count text-milk/80" aria-live="polite">
+                  {filteredFaqs.length} {filteredFaqs.length === 1 ? 'note' : 'notes'} on the board
+                </p>
 
-              {/* Curious Mascot with animated ? / ! bubble */}
-              <div className="pt-2 flex flex-col items-center">
-                <div className="relative">
-                  <span className="absolute -top-3 -right-2 bg-[#f2be6b] text-[#2a170e] text-xs font-black px-2 py-0.5 rounded-full border border-[#2a170e] shadow-sm animate-bounce">
-                    {expandedId !== null ? '💡 got it!' : '🐾 curious?'}
+                <div className="tp-notes__teddy">
+                  <span aria-hidden="true" className="tp-notes__bubble font-plush">
+                    <span className="tp-notes__q">?</span>
+                    <span className="tp-notes__a">!</span>
                   </span>
-                  <div className="w-36 sm:w-44">
-                    <PupBuddy
-                      pose="tilt"
-                      facing="right"
-                      label="Teddy, curious about your questions"
-                    />
+                  <div className="pup-buddy" data-facing="right">
+                    <PupBuddy facing="right" />
                   </div>
                 </div>
-                <p className="font-serif italic text-xs text-[#5a3a28] mt-2 text-center">
-                  Still wondering? We&apos;re 24/7 on WhatsApp!
-                </p>
-              </div>
-            </div>
 
-            {/* Direct WhatsApp Callout Card */}
-            <div className="bg-gradient-to-br from-[#eafaf1] to-[#d4f5e2] rounded-[32px] border-2 border-[#1f7a4d]/30 p-6 shadow-sm space-y-3">
-              <div className="flex items-center gap-2.5 text-[#1f7a4d]">
-                <MessageCircle className="w-5 h-5 fill-[#1f7a4d]/20" />
-                <h3 className="font-serif font-bold text-base">Direct Concierge</h3>
-              </div>
-              <p className="text-xs text-[#2a170e]/80 leading-relaxed">
-                Need immediate help with breed details, health charts, or showroom appointments?
-              </p>
-              <a
-                href={getGeneralWhatsAppUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary text-xs py-2.5 px-5 !bg-[#25D366] !text-white !border-transparent hover:brightness-105 inline-flex items-center gap-1.5"
-              >
-                <span>Chat on WhatsApp</span>
-              </a>
-            </div>
-          </aside>
-
-          {/* Right Area: Pinned Sticky Notes Accordion Wall */}
-          <div className="lg:col-span-8">
-            {filteredFaqs.length === 0 ? (
-              <div className="bg-[#fffdf8] rounded-[36px] border-3 border-dashed border-[#2a170e]/30 p-12 text-center space-y-3">
-                <HelpCircle className="w-10 h-10 text-[#c2622b] mx-auto opacity-60" />
-                <h3 className="font-serif text-2xl font-bold text-[#2a170e]">No notes match your sniff</h3>
-                <p className="text-sm text-[#5a3a28]">
-                  Try searching for keywords like &quot;Korea&quot;, &quot;vaccinated&quot;, or &quot;delivery&quot;.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery('')}
-                  className="btn-primary text-xs py-2 px-5 mt-2"
+                <a
+                  href={getGeneralWhatsAppUrl('Hi TeddyPups! I have a question:')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-whatsapp tp-notes__ask"
                 >
-                  Clear search
-                </button>
-              </div>
-            ) : (
-              <ul className="space-y-6 list-none p-0" aria-label="Frequently Asked Questions">
-                {filteredFaqs.map((faq, idx) => {
-                  const style = noteStyles[idx % noteStyles.length];
-                  const isExpanded = expandedId === idx;
+                  Ask your own question
+                </a>
+              </aside>
 
-                  return (
-                    <li
-                      key={faq.question}
-                      className="tp-note relative transition-all duration-300 rounded-[28px] border-2 border-[#2a170e]/20 p-6 sm:p-7 shadow-[4px_5px_0px_#2a170e18] hover:shadow-[4px_6px_0px_#2a170e30] group"
-                      style={{
-                        backgroundColor: style.bg,
-                        transform: `rotate(${isExpanded ? '0deg' : style.tilt})`,
-                      }}
-                    >
-                      {/* Realistic Colorful Pushpin */}
-                      <span
-                        className="tp-note__pin absolute -top-3.5 left-8 w-6 h-6 rounded-full border-2 border-[#2a170e] shadow-md flex items-center justify-center pointer-events-none"
-                        style={{ backgroundColor: style.pin }}
+              {/* Right Column: Corkboard */}
+              <div className="tp-notes__board">
+                <ul className="tp-notes__list">
+                  {filteredFaqs.map((item, index) => {
+                    const isOpen = !!openIds[item.id];
+                    return (
+                      <li
+                        key={item.id}
+                        className="tp-note"
+                        data-reveal="true"
+                        data-unfolded={isOpen ? 'true' : undefined}
+                        style={
+                          {
+                            '--tilt': item.tilt,
+                            '--pin': item.pin,
+                            '--i': index,
+                          } as React.CSSProperties
+                        }
                       >
-                        <span className="w-1.5 h-1.5 bg-white/70 rounded-full" />
-                      </span>
-
-                      {/* Question Button (Accordion Trigger) */}
-                      <button
-                        type="button"
-                        onClick={() => toggleQuestion(idx)}
-                        aria-expanded={isExpanded}
-                        className="w-full flex items-start justify-between gap-4 text-left focus:outline-none"
-                      >
-                        <span className="font-serif font-black text-lg sm:text-xl text-[#2a170e] leading-snug group-hover:text-[#c2622b] transition-colors">
-                          {faq.question}
-                        </span>
-                        <span
-                          className={`w-8 h-8 rounded-full border-2 border-[#2a170e] flex items-center justify-center shrink-0 transition-transform duration-300 bg-[#fbe3b4] text-[#2a170e] ${
-                            isExpanded ? 'rotate-180 bg-[#c2622b] text-white' : ''
-                          }`}
+                        <span aria-hidden="true" className="tp-note__pin"></span>
+                        <h2 className="tp-note__q">
+                          <button
+                            type="button"
+                            id={`q-${item.id}`}
+                            aria-expanded={isOpen}
+                            aria-controls={`a-${item.id}`}
+                            onClick={() => toggleNote(item.id)}
+                          >
+                            <span className="font-plush-text">{item.question}</span>
+                            <span
+                              aria-hidden="true"
+                              className="tp-note__chevron"
+                            ></span>
+                          </button>
+                        </h2>
+                        <div
+                          id={`a-${item.id}`}
+                          role="region"
+                          aria-labelledby={`q-${item.id}`}
+                          className="tp-note__answer"
+                          inert={!isOpen}
                         >
-                          <ChevronDown className="w-4 h-4" />
-                        </span>
-                      </button>
-
-                      {/* Expandable Answer */}
-                      {isExpanded && (
-                        <div className="tp-note__answer mt-4 pt-4 border-t border-[#2a170e]/10 text-sm sm:text-base text-[#5a3a28] leading-relaxed animate-fadeIn">
-                          <p>{faq.answer}</p>
-                          <div className="mt-3 flex items-center gap-2">
-                            <span className="text-[11px] font-bold text-[#c2622b] uppercase tracking-wider bg-[#fbe3b4]/60 px-2.5 py-0.5 rounded-full border border-[#2a170e]/15">
-                              {faq.category}
-                            </span>
+                          <div className="tp-note__flap">
+                            <p>{item.answer}</p>
                           </div>
                         </div>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

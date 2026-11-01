@@ -24,6 +24,12 @@
 .DS_Store
 *.pem
 
+# data dumps / scraping caches
+data/raw_*
+data/*.html
+data/flight_payload.txt
+data/extracted_subpages.css
+
 # debug
 npm-debug.log*
 yarn-debug.log*

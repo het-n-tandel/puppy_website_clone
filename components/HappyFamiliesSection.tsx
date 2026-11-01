@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/image';
+import Link from 'next/link';
 import PupBuddy from './PupBuddy';
 
 export default function HappyFamiliesSection() {
@@ -35,6 +35,90 @@ export default function HappyFamiliesSection() {
       tilt: 'rotate-2',
       tapeColor: '#dcf8c6',
     },
+    {
+      id: 5,
+      name: 'Coco & his cozy new bed 💤',
+      src: '/media/OcgEePeBmGuu/41fb22320b/edb2f5_adf88f7400c848249d60698fca0336e9-mv2.jpeg',
+      tilt: '-rotate-2',
+      tapeColor: '#fde047',
+    },
+    {
+      id: 6,
+      name: 'Milo welcomed home in Downtown 🏡',
+      src: '/media/RYkyuv4DBCTC/d9e02a0dc8/edb2f5_7ed2ee1ba89b4230b52f5e3981b1b198-mv2.jpeg',
+      tilt: 'rotate-2',
+      tapeColor: '#fed0e0',
+    },
+    {
+      id: 7,
+      name: 'Oliver enjoying a sunny walk ☀️',
+      src: '/media/d267R4d3lMSv/96d8604ca3/edb2f5_02b95a69a2c24c7e81b60e6d8c01baf7-mv2.jpeg',
+      tilt: '-rotate-3',
+      tapeColor: '#bae6fd',
+    },
+    {
+      id: 8,
+      name: 'Simba & family celebration 🎉',
+      src: '/media/bKP7vwN0R2OU/1aa47534b5/edb2f5_b8d76dffb97f46b5a9f2aaf9c1067b4b-mv2.jpeg',
+      tilt: 'rotate-3',
+      tapeColor: '#bbf7d0',
+    },
+    {
+      id: 9,
+      name: 'Buster finding cozy cuddles 🥰',
+      src: '/media/stDfO2jMfvb_/6228a11db2/edb2f5_4b08003ef57c4663b55c9ac0c4147c36-mv2.jpeg',
+      tilt: '-rotate-2',
+      tapeColor: '#fde047',
+    },
+    {
+      id: 10,
+      name: 'Rosie joining her sisters in JBR 💕',
+      src: '/media/K-U7RwW9j2A9/09d7edc058/edb2f5_22d3cc4ae0e14216a0d3a1ec9796649f-mv2.jpeg',
+      tilt: 'rotate-2',
+      tapeColor: '#f9cdbf',
+    },
+    {
+      id: 11,
+      name: 'Charlie living his best Dubai life 🌟',
+      src: '/media/s23WYu0qJQ_h/d0ad444e50/27b888_a887dbff51fb420d95774cce6a8d54fb-mv2.jpg',
+      tilt: '-rotate-3',
+      tapeColor: '#dcf8c6',
+    },
+    {
+      id: 12,
+      name: 'Penny on her first puppy playdate 🐕',
+      src: '/media/ab5hEGUKO4aY/de923fd8eb/edb2f5_d5177ed7ae1344d7acc11e9770df7b74-mv2.jpeg',
+      tilt: 'rotate-3',
+      tapeColor: '#fed0e0',
+    },
+    {
+      id: 13,
+      name: 'Toby adored by everyone in the villa 🏰',
+      src: '/media/yEfM9sdMluCX/46ecd570ef/edb2f5_099acc542ba14359aa8c0f933cb4ef2c-mv2.jpeg',
+      tilt: '-rotate-2',
+      tapeColor: '#bae6fd',
+    },
+    {
+      id: 14,
+      name: 'Honey soaking in afternoon sunshine 🍯',
+      src: '/media/_41LE-nBf847/2ea8e152eb/27b888_76aa3ad05faf40bd8eb2a6d826737525-mv2.jpg',
+      tilt: 'rotate-2',
+      tapeColor: '#f6d79a',
+    },
+    {
+      id: 15,
+      name: 'Rocky ready for evening walkies 🌙',
+      src: '/media/tuarxe-C9j5H/913026dd39/27b888_b22e1ced7da74ea7a14a68474d8c2dc0-mv2.jpg',
+      tilt: '-rotate-3',
+      tapeColor: '#bfddf5',
+    },
+    {
+      id: 16,
+      name: 'Daisy pure joyful tail wags 🌼',
+      src: '/media/UuJqjsRN-wKL/047b245604/b942a5_a1ead54bc6934e5ab953e98d4aa0312d-mv2.jpg',
+      tilt: 'rotate-3',
+      tapeColor: '#bbf7d0',
+    },
   ];
 
   return (
@@ -57,7 +141,7 @@ export default function HappyFamiliesSection() {
             </span>
             <h2
               id="dusk-title"
-              className="font-serif text-3xl sm:text-5xl font-black text-[#fffdf8] tracking-tight"
+              className="font-plush text-3xl sm:text-5xl md:text-6xl font-black text-[#fffdf8] tracking-tight"
             >
               Happy families &amp; puppies
             </h2>
@@ -77,7 +161,7 @@ export default function HappyFamiliesSection() {
           </div>
         </div>
 
-        {/* Photowall: Pinned Polaroid Wall */}
+        {/* Photowall: Pinned Polaroid Wall (2 Rows of 4 Polaroids) */}
         <div className="tp-photowall relative max-w-6xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {polaroids.map((p) => (
@@ -108,6 +192,17 @@ export default function HappyFamiliesSection() {
                 </p>
               </div>
             ))}
+          </div>
+
+          {/* View All Happy Families CTA Button */}
+          <div className="mt-12 text-center">
+            <Link
+              href="/happy-families"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-[#fffdf8] bg-transparent px-8 py-3.5 text-sm sm:text-base font-bold text-[#fffdf8] hover:bg-[#fffdf8] hover:text-[#2a170e] transition-all shadow-md hover:scale-105"
+            >
+              <span>See more happy family moments</span>
+              <span>→</span>
+            </Link>
           </div>
         </div>
 

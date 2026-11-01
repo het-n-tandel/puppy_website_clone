@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import '../subpages.css';
 import { getGoneHomePuppies } from '@/data/puppiesData';
 import { currentSite } from '@/lib/siteConfig';
 import { Heart, Sparkles, ArrowRight } from 'lucide-react';

@@ -1,205 +1,232 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { Puppy } from '@/types/puppy';
-import PuppyCard from '@/components/PuppyCard';
-import { Search, RotateCcw } from 'lucide-react';
 
 interface PuppiesCatalogProps {
   initialPuppies: Puppy[];
   initialBreed?: string;
 }
 
+const WASH_COLORS = ['#f2be6b', '#bfddf5', '#f9cdbf', '#e6f2df', '#fed0e0', '#fbe3b4'];
+const TILTS = ['0.4deg', '-0.6deg', '0.8deg', '-0.4deg', '0.5deg', '-0.7deg'];
+
 export default function PuppiesCatalog({ initialPuppies, initialBreed }: PuppiesCatalogProps) {
-  const [search, setSearch] = useState('');
-  const [selectedBreed, setSelectedBreed] = useState<string>(initialBreed || 'ALL');
-  const [selectedGender, setSelectedGender] = useState<string>('ALL');
-  const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
+  const [selectedWhere, setSelectedWhere] = useState<string>('everywhere');
+  const [selectedBreed, setSelectedBreed] = useState<string>(initialBreed || 'all');
+  const [selectedGender, setSelectedGender] = useState<string>('all');
 
-  // Compute unique breeds dynamically
-  const breedOptions = useMemo(() => {
-    const set = new Set<string>();
-    initialPuppies.forEach((p) => {
-      // Normalize breed categories
-      if (p.breed.toLowerCase().includes('maltipoo')) set.add('Maltipoo');
-      else if (p.breed.toLowerCase().includes('poodle')) set.add('Poodle');
-      else if (p.breed.toLowerCase().includes('pomeranian')) set.add('Pomeranian');
-      else if (p.breed.toLowerCase().includes('pomsky')) set.add('Pomsky');
-      else if (p.breed.toLowerCase().includes('bichon')) set.add('Bichon');
-      else if (p.breed.toLowerCase().includes('maltese')) set.add('Maltese');
-      else if (p.breed.toLowerCase().includes('shitzu') || p.breed.toLowerCase().includes('shih tzu')) set.add('Shih Tzu');
-      else set.add(p.breed);
-    });
-    return Array.from(set).sort();
-  }, [initialPuppies]);
+  const breeds = ['Maltipoo', 'Pomeranian', 'Poodle', 'Cavapoo', 'Shih Tzu'];
 
-  // Filter logic
   const filteredPuppies = useMemo(() => {
-    return initialPuppies.filter((p) => {
-      // Search
-      const searchLower = search.toLowerCase().trim();
-      const matchesSearch =
-        !searchLower ||
-        p.name.toLowerCase().includes(searchLower) ||
-        p.breed.toLowerCase().includes(searchLower) ||
-        p.slug.toLowerCase().includes(searchLower);
+    return initialPuppies.filter((pup) => {
+      // Where filter
+      if (selectedWhere === 'imported' && !pup.origin?.toLowerCase().includes('korea') && !pup.breed.toLowerCase().includes('korean')) {
+        return false;
+      }
+      if (selectedWhere === 'korean' && !pup.breed.toLowerCase().includes('korean') && !pup.origin?.toLowerCase().includes('korea')) {
+        return false;
+      }
 
       // Breed filter
-      const matchesBreed =
-        selectedBreed === 'ALL' ||
-        p.breed.toLowerCase().includes(selectedBreed.toLowerCase());
+      if (selectedBreed !== 'all' && !pup.breed.toLowerCase().includes(selectedBreed.toLowerCase())) {
+        return false;
+      }
 
       // Gender filter
-      const matchesGender =
-        selectedGender === 'ALL' ||
-        (selectedGender === 'Boy' && p.gender.includes('Boy')) ||
-        (selectedGender === 'Girl' && p.gender.includes('Girl'));
+      if (selectedGender === 'boys' && !pup.gender.toLowerCase().includes('boy') && !pup.gender.toLowerCase().includes('male')) {
+        return false;
+      }
+      if (selectedGender === 'girls' && !pup.gender.toLowerCase().includes('girl') && !pup.gender.toLowerCase().includes('female')) {
+        return false;
+      }
 
-      // Status filter
-      const matchesStatus =
-        selectedStatus === 'ALL' ||
-        p.status.toLowerCase() === selectedStatus.toLowerCase();
-
-      return matchesSearch && matchesBreed && matchesGender && matchesStatus;
+      return true;
     });
-  }, [initialPuppies, search, selectedBreed, selectedGender, selectedStatus]);
-
-  const handleReset = () => {
-    setSearch('');
-    setSelectedBreed('ALL');
-    setSelectedGender('ALL');
-    setSelectedStatus('ALL');
-  };
+  }, [initialPuppies, selectedWhere, selectedBreed, selectedGender]);
 
   return (
-    <div className="space-y-8">
-      {/* Search and Filters Bar */}
-      <div className="bg-[#fffdf8] rounded-3xl border-2 border-[#2a170e]/15 p-5 sm:p-6 shadow-sm space-y-4">
-        {/* Search input */}
-        <div className="relative">
-          <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#5a3a28]/60" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by puppy name or breed (e.g. Max, Maltipoo, Poodle)..."
-            className="w-full bg-[#fbe3b4]/30 rounded-full pl-12 pr-4 py-3 text-sm text-[#2a170e] placeholder-[#5a3a28]/60 border border-[#2a170e]/20 focus:outline-none focus:border-[#a24a1a] focus:ring-1 focus:ring-[#a24a1a]"
-          />
-          {search && (
-            <button
-              onClick={() => setSearch('')}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#a24a1a]"
-            >
-              Clear
-            </button>
-          )}
-        </div>
-
-        {/* Filter Chips */}
-        <div className="flex flex-wrap items-center gap-2 pt-2">
-          {/* Breed Chips */}
+    <div className="space-y-10">
+      {/* Sketchpad Filter Box */}
+      <div className="tp-sketchpad space-y-4">
+        {/* Row 1: Where */}
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm">
+          <span className="font-scrawl text-cocoa-soft min-w-[5.5rem] text-base">where</span>
           <button
-            onClick={() => setSelectedBreed('ALL')}
-            className={`text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full border transition-all ${
-              selectedBreed === 'ALL'
-                ? 'bg-[#2a170e] text-[#f2be6b] border-[#2a170e]'
-                : 'bg-[#fffdf8] text-[#2a170e] border-[#2a170e]/20 hover:border-[#2a170e]'
+            type="button"
+            onClick={() => setSelectedWhere('everywhere')}
+            className={`rounded-full px-5 py-1.5 font-semibold transition-all ${
+              selectedWhere === 'everywhere'
+                ? 'bg-cocoa text-milk shadow-sm'
+                : 'bg-milk text-cocoa border-2 border-cocoa hover:bg-honey-soft'
             }`}
           >
-            All Breeds
+            Everywhere
           </button>
-          {breedOptions.map((breed) => (
-            <button
-              key={breed}
-              onClick={() => setSelectedBreed(breed)}
-              className={`text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full border transition-all ${
-                selectedBreed === breed
-                  ? 'bg-[#2a170e] text-[#f2be6b] border-[#2a170e]'
-                  : 'bg-[#fffdf8] text-[#2a170e] border-[#2a170e]/20 hover:border-[#2a170e]'
-              }`}
-            >
-              {breed}
-            </button>
-          ))}
+          <button
+            type="button"
+            onClick={() => setSelectedWhere('imported')}
+            className={`rounded-full px-5 py-1.5 font-semibold transition-all ${
+              selectedWhere === 'imported'
+                ? 'bg-cocoa text-milk shadow-sm'
+                : 'bg-milk text-cocoa border-2 border-cocoa hover:bg-honey-soft'
+            }`}
+          >
+            Imported
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedWhere('korean')}
+            className={`rounded-full px-5 py-1.5 font-semibold transition-all ${
+              selectedWhere === 'korean'
+                ? 'bg-cocoa text-milk shadow-sm'
+                : 'bg-milk text-cocoa border-2 border-cocoa hover:bg-honey-soft'
+            }`}
+          >
+            Korean Teacup
+          </button>
         </div>
 
-        {/* Gender & Availability secondary row */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-[#2a170e]/10 text-xs sm:text-sm">
-          <div className="flex items-center gap-3">
-            <span className="font-semibold text-[#5a3a28]">Gender:</span>
-            {['ALL', 'Boy', 'Girl'].map((g) => (
+        {/* Row 2: Breed */}
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm">
+          <span className="font-scrawl text-cocoa-soft min-w-[5.5rem] text-base">breed</span>
+          {breeds.map((breed) => {
+            const isSelected = selectedBreed.toLowerCase() === breed.toLowerCase();
+            return (
               <button
-                key={g}
-                onClick={() => setSelectedGender(g)}
-                className={`font-medium px-3 py-1 rounded-full ${
-                  selectedGender === g
-                    ? 'bg-[#c2622b] text-white'
-                    : 'text-[#2a170e]/75 hover:text-[#2a170e]'
+                key={breed}
+                type="button"
+                onClick={() => setSelectedBreed(isSelected ? 'all' : breed.toLowerCase())}
+                className={`rounded-full px-5 py-1.5 font-semibold transition-all ${
+                  isSelected
+                    ? 'bg-cocoa text-milk shadow-sm'
+                    : 'bg-milk text-cocoa border-2 border-cocoa hover:bg-honey-soft'
                 }`}
               >
-                {g === 'ALL' ? 'Any' : g}
+                {breed}
               </button>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
-          <div className="flex items-center gap-3">
-            <span className="font-semibold text-[#5a3a28]">Status:</span>
-            {['ALL', 'Available', 'Reserved'].map((s) => (
-              <button
-                key={s}
-                onClick={() => setSelectedStatus(s)}
-                className={`font-medium px-3 py-1 rounded-full ${
-                  selectedStatus === s
-                    ? 'bg-[#c2622b] text-white'
-                    : 'text-[#2a170e]/75 hover:text-[#2a170e]'
-                }`}
-              >
-                {s === 'ALL' ? 'All Status' : s}
-              </button>
-            ))}
-          </div>
-
-          {(search || selectedBreed !== 'ALL' || selectedGender !== 'ALL' || selectedStatus !== 'ALL') && (
-            <button
-              onClick={handleReset}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#a24a1a] hover:underline"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset Filters</span>
-            </button>
-          )}
+        {/* Row 3: Boy or Girl */}
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm">
+          <span className="font-scrawl text-cocoa-soft min-w-[5.5rem] text-base">boy or girl</span>
+          <button
+            type="button"
+            onClick={() => setSelectedGender(selectedGender === 'boys' ? 'all' : 'boys')}
+            className={`rounded-full px-5 py-1.5 font-semibold transition-all ${
+              selectedGender === 'boys'
+                ? 'bg-cocoa text-milk shadow-sm'
+                : 'bg-milk text-cocoa border-2 border-cocoa hover:bg-honey-soft'
+            }`}
+          >
+            Boys
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedGender(selectedGender === 'girls' ? 'all' : 'girls')}
+            className={`rounded-full px-5 py-1.5 font-semibold transition-all ${
+              selectedGender === 'girls'
+                ? 'bg-cocoa text-milk shadow-sm'
+                : 'bg-milk text-cocoa border-2 border-cocoa hover:bg-honey-soft'
+            }`}
+          >
+            Girls
+          </button>
         </div>
       </div>
 
-      {/* Results Header */}
-      <div className="flex items-center justify-between text-sm text-[#5a3a28]">
-        <p>
-          Showing <span className="font-bold text-[#2a170e]">{filteredPuppies.length}</span> puppies
-        </p>
-      </div>
+      {/* Puppies Count */}
+      <p className="font-scrawl text-lg text-toffee-ink">
+        {filteredPuppies.length} {filteredPuppies.length === 1 ? 'puppy' : 'puppies'} looking for a home
+      </p>
 
-      {/* Puppy Grid */}
-      {filteredPuppies.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
-          {filteredPuppies.map((puppy, idx) => (
-            <PuppyCard key={puppy.id} puppy={puppy} priority={idx < 8} />
-          ))}
-        </div>
-      ) : (
-        /* Empty State */
-        <div className="bg-[#fffdf8] rounded-3xl border-2 border-dashed border-[#2a170e]/20 p-12 text-center space-y-4">
-          <span className="text-4xl">🐾</span>
-          <h3 className="font-serif text-2xl font-bold text-[#2a170e]">No puppies matched your filter</h3>
-          <p className="text-sm text-[#5a3a28] max-w-md mx-auto">
-            We regularly welcome new litters of Maltipoos, Poodles, and Pomeranians. Try clearing your filters or message us on WhatsApp for custom requests.
-          </p>
-          <div>
-            <button onClick={handleReset} className="btn-primary text-sm py-2 px-6">
-              Reset Filters
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Grid of Sketch Cards */}
+      <ul className="tp-sketches mt-12">
+        {filteredPuppies.map((pup, idx) => {
+          const tilt = TILTS[idx % TILTS.length];
+          const wash = WASH_COLORS[idx % WASH_COLORS.length];
+          const isAvailable = pup.status?.toLowerCase() !== 'reserved' && pup.status?.toLowerCase() !== 'adopted';
+
+          return (
+            <li key={pup.id}>
+              <Link
+                className="tp-sketch"
+                data-reveal="true"
+                style={{ '--tilt': tilt, '--d': '0ms', '--wash': wash } as React.CSSProperties}
+                aria-label={`${pup.name}, ${pup.breed}, ${pup.gender}, ${pup.age}, available`}
+                href={`/puppies/${pup.slug}`}
+              >
+                <span className="tp-sketch__frame">
+                  {/* Subtle color wash behind circular photo */}
+                  <span
+                    className="tp-sketch__wash rounded-full"
+                    style={{ background: wash, transform: 'scale(1.08)' }}
+                  />
+
+                  {/* Circular photo */}
+                  <span className="tp-sketch__photo !rounded-full">
+                    <Image
+                      src={pup.images[0] || '/brand/logo.png'}
+                      alt={pup.name}
+                      fill
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 90vw"
+                      className="object-cover"
+                    />
+                  </span>
+
+                  {/* Sketched outline ink circles */}
+                  <svg viewBox="0 0 100 100" className="tp-sketch__ink" aria-hidden="true">
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="46"
+                      fill="none"
+                      stroke="#2a170e"
+                      strokeWidth="2.4"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M20 10 C 50 2, 80 8, 95 35"
+                      fill="none"
+                      stroke="#2a170e"
+                      strokeWidth="1.6"
+                      strokeDasharray="4 6"
+                      strokeLinecap="round"
+                    />
+                    <circle cx="8" cy="40" r="1.5" fill="#2a170e" />
+                    <circle cx="92" cy="70" r="1.5" fill="#2a170e" />
+                  </svg>
+
+                  {/* Available badge */}
+                  {isAvailable && (
+                    <span className="tp-sketch__sticker font-scrawl">
+                      Available
+                    </span>
+                  )}
+
+                  {/* Video indicator */}
+                  {pup.videoUrl && (
+                    <span className="tp-sketch__video">
+                      ▶ video
+                    </span>
+                  )}
+                </span>
+
+                <span className="tp-sketch__name font-plush text-cocoa">
+                  {pup.name}
+                </span>
+                <span className="tp-sketch__meta">
+                  {pup.breed} · {pup.gender}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
