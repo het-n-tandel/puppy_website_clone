@@ -1,39 +1,150 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function PageCurtain() {
-  const [mounted, setMounted] = useState(true);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  // Curtain animation state:
+  // Initial load: starts at translate-y-0 and lifts after paws animate
   const [isLifting, setIsLifting] = useState(false);
+  const [isDropping, setIsDropping] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
 
+  const prevPathnameRef = useRef(pathname);
+  const isNavigatingRef = useRef(false);
+  const isFirstMountRef = useRef(true);
+
+  // Initial site load animation
   useEffect(() => {
-    // Start lifting curtain after walking paws animation
-    const liftTimer = setTimeout(() => {
-      setIsLifting(true);
-    }, 700);
+    if (isFirstMountRef.current) {
+      isFirstMountRef.current = false;
+      const liftTimer = setTimeout(() => {
+        setIsLifting(true);
+      }, 700);
 
-    // Completely unmount after transition completes
-    const unmountTimer = setTimeout(() => {
-      setMounted(false);
-    }, 1300);
-
-    return () => {
-      clearTimeout(liftTimer);
-      clearTimeout(unmountTimer);
-    };
+      return () => clearTimeout(liftTimer);
+    }
   }, []);
 
-  if (!mounted) return null;
+  // Handle route change when navigating between pages
+  useEffect(() => {
+    if (prevPathnameRef.current !== pathname) {
+      prevPathnameRef.current = pathname;
+
+      // Scroll smoothly to top of new page under the curtain
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }
+
+      // Replay the walking paws animation
+      setAnimKey((k) => k + 1);
+
+      if (!isNavigatingRef.current) {
+        // Back/Forward browser navigation without a link click
+        setIsLifting(false);
+        setIsDropping(false);
+      }
+
+      // Allow paws to walk across, then smoothly lift the curtain
+      const liftTimer = setTimeout(() => {
+        setIsLifting(true);
+        setIsDropping(false);
+        isNavigatingRef.current = false;
+      }, 550);
+
+      return () => clearTimeout(liftTimer);
+    }
+  }, [pathname]);
+
+  // Global Link Click listener for internal route transitions
+  useEffect(() => {
+    const handleLinkClick = (e: MouseEvent) => {
+      // Ignore non-primary clicks or modifier keys (allows Cmd+click / middle-click for new tabs)
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+        return;
+      }
+
+      const anchor = (e.target as HTMLElement).closest('a');
+      if (!anchor) return;
+
+      const href = anchor.getAttribute('href');
+      if (!href) return;
+
+      // Ignore hash anchors, mailto, tel, javascript, external links, download links
+      if (
+        href.startsWith('#') ||
+        href.startsWith('mailto:') ||
+        href.startsWith('tel:') ||
+        href.startsWith('javascript:') ||
+        anchor.getAttribute('target') === '_blank' ||
+        anchor.hasAttribute('download') ||
+        anchor.getAttribute('rel')?.includes('external')
+      ) {
+        return;
+      }
+
+      try {
+        const url = new URL(href, window.location.href);
+
+        // Ignore external hosts
+        if (url.origin !== window.location.origin) return;
+
+        // Ignore clicks to the exact same page
+        if (url.pathname === window.location.pathname && url.search === window.location.search) {
+          return;
+        }
+
+        // Intercept navigation for smooth page curtain transition
+        e.preventDefault();
+
+        if (isNavigatingRef.current) return;
+        isNavigatingRef.current = true;
+
+        setIsLifting(false);
+        setIsDropping(true);
+        setAnimKey((k) => k + 1);
+
+        // After curtain drops (280ms), navigate to the new page
+        setTimeout(() => {
+          router.push(href);
+        }, 280);
+
+        // Safety timeout so curtain never gets stuck if navigation is cancelled
+        setTimeout(() => {
+          if (isNavigatingRef.current) {
+            setIsLifting(true);
+            setIsDropping(false);
+            isNavigatingRef.current = false;
+          }
+        }, 3000);
+      } catch {
+        // Fallback to normal navigation
+      }
+    };
+
+    document.addEventListener('click', handleLinkClick, false);
+    return () => {
+      document.removeEventListener('click', handleLinkClick, false);
+    };
+  }, [router]);
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] pointer-events-none transition-transform duration-700 ease-in-out ${
-        isLifting ? '-translate-y-full' : 'translate-y-0'
+      aria-hidden="true"
+      className={`fixed inset-0 z-[9999] transition-transform ${
+        isLifting
+          ? '-translate-y-full duration-700 ease-in-out pointer-events-none'
+          : isDropping
+          ? 'translate-y-0 duration-300 ease-out pointer-events-auto'
+          : 'translate-y-0 duration-700 ease-in-out pointer-events-auto'
       }`}
     >
-      <div className="absolute inset-0 bg-[#fbe3b4] flex flex-col items-center justify-center border-b-4 border-[#2a170e] shadow-2xl">
+      <div className="absolute inset-0 bg-[#fbe3b4] flex flex-col items-center justify-center border-b-4 border-[#2a170e] shadow-2xl select-none">
         {/* Walking Paw Prints Animation */}
-        <div className="relative flex items-center justify-center gap-6 sm:gap-10">
+        <div key={animKey} className="relative flex items-center justify-center gap-6 sm:gap-10">
           {[0, 1, 2, 3, 4].map((i) => (
             <div
               key={i}
