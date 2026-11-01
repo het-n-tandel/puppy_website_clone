@@ -148,42 +148,61 @@ export default function Navbar() {
         <rect width="100%" height="14" fill="url(#tp-hem)" />
       </svg>
 
-      {/* Mobile Drawer */}
-      {isOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[var(--header-h,4.75rem)] bg-[#fffdf8] border-b-2 border-[#2a170e]/15 shadow-xl px-6 py-6 transition-all duration-300">
-          <div className="flex flex-col gap-4">
-            <span className="font-scrawl text-xs uppercase font-bold tracking-widest text-[#a24a1a]">
-              where to, friend?
-            </span>
-            {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`flex items-center gap-2 text-lg font-bold py-1 transition-colors ${
-                    isActive ? 'text-[#c2622b]' : 'text-[#2a170e] hover:text-[#c2622b]'
-                  }`}
-                >
-                  {isActive && <span>🐾</span>}
-                  <span>{link.name}</span>
-                </Link>
-              );
-            })}
-            <div className="pt-4 border-t border-[#2a170e]/10">
-              <a
-                href={getGeneralWhatsAppUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-whatsapp w-full justify-center text-sm py-3"
-              >
-                WhatsApp us
-              </a>
-            </div>
+      {/* Mobile Menu Dialog matching original */}
+      <dialog
+        aria-label="Site menu"
+        open={isOpen}
+        className={`tp-menu fixed inset-0 z-50 m-0 h-dvh max-h-none w-screen max-w-none bg-honey p-0 text-cocoa backdrop:bg-cocoa/40 ${
+          isOpen ? 'flex' : 'hidden'
+        }`}
+      >
+        <div className="flex h-full w-full flex-col gutter pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-5">
+          <div className="flex items-center justify-between">
+            <span className="font-scrawl text-lg">where to, friend?</span>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="h-11 rounded-full bg-cocoa px-5 font-semibold text-milk hover:bg-cocoa/80 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+          <nav aria-label="Mobile" className="mt-10 flex-1">
+            <ul className="space-y-1">
+              {NAV_LINKS.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      data-active={isActive ? 'true' : 'false'}
+                      aria-current={isActive ? 'page' : undefined}
+                      className="tp-menu-link font-plush block py-2 text-[clamp(2.4rem,11vw,3.4rem)] hover:text-toffee-deep transition-colors"
+                    >
+                      <span className="flex items-center gap-3">
+                        {isActive && <span className="text-xl">🐾</span>}
+                        <span>{link.name}</span>
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+          <div className="space-y-3">
+            <a
+              href={getGeneralWhatsAppUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-whatsapp w-full"
+            >
+              WhatsApp us
+            </a>
+            <p className="text-center text-sm font-medium">+971 54 167 6733</p>
           </div>
         </div>
-      )}
+      </dialog>
     </header>
   );
 }

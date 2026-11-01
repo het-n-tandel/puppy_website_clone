@@ -252,10 +252,10 @@ export default function PupBuddy({
 
       {/* Floating ZZZ for sleeping in basket */}
       {(pose === 'snug' || pose === 'sleep') && !isPet && (
-        <div className="pup-zzz font-scrawl pointer-events-none select-none" aria-hidden="true">
-          <span className="pup-z pup-z-1">z</span>
-          <span className="pup-z pup-z-2">z</span>
-          <span className="pup-z pup-z-3">z</span>
+        <div data-nosnippet className="pup-zzz font-scrawl pointer-events-none select-none" aria-hidden="true">
+          <span className="pup-z pup-z-1" aria-hidden="true">z</span>
+          <span className="pup-z pup-z-2" aria-hidden="true">z</span>
+          <span className="pup-z pup-z-3" aria-hidden="true">z</span>
         </div>
       )}
 

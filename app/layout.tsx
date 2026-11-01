@@ -19,7 +19,10 @@ export const metadata: Metadata = {
   title: `${currentSite.brandName} — Premium teacup puppies in ${currentSite.locationCity}`,
   description:
     'Teacup and teddy bear puppies available now in Dubai and imported from trusted breeders — every listing shows real photos of the puppy.',
-  metadataBase: new URL('https://puppy.instabizweb.com'),
+  metadataBase: new URL('https://puppywebsiteclone.vercel.app'),
+  alternates: {
+    canonical: '/',
+  },
   icons: {
     icon: '/icon.png',
     apple: '/icon.png',
@@ -31,6 +34,21 @@ export const metadata: Metadata = {
     siteName: currentSite.brandName,
     locale: 'en_AE',
     type: 'website',
+    images: [
+      {
+        url: '/brand/logo.png',
+        width: 800,
+        height: 800,
+        alt: currentSite.brandName,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${currentSite.brandName} — Premium teacup puppies in ${currentSite.locationCity}`,
+    description:
+      'Teacup and teddy bear puppies available now in Dubai and imported from trusted breeders — every listing shows real photos of the puppy.',
+    images: ['/brand/logo.png'],
   },
 };
 
@@ -50,6 +68,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-[#fffdf8] text-[#2a170e]">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[#2a170e] focus:text-[#fffdf8] focus:rounded-full focus:shadow-lg focus:outline-none"
+        >
+          Skip to content
+        </a>
         <PageCurtain />
         <CursorTrail />
         <Navbar />

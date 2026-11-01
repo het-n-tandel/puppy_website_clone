@@ -200,7 +200,7 @@ export default function HomeHero() {
               <span className="tp-lineup__ghost"><span className="tp-lineup__name font-scrawl">Maltipoo & Cavapoo</span></span>
             </li>
             <li className="tp-lineup__seat" style={{ '--x': '77.5%', '--w': '10.6rem', '--peek': '0.82', '--tilt': '-3deg', '--i': '4' } as React.CSSProperties}>
-              <span className="tp-lineup__ghost" data-tag="show"><span className="tp-lineup__name font-scrawl">Korean Teacup Pomeranian</span></span>
+              <span className="tp-lineup__ghost" data-tag="show"><span className="tp-lineup__name font-scrawl">Toy Poodle</span></span>
             </li>
             <li className="tp-lineup__seat" style={{ '--x': '91%', '--w': '8.4rem', '--peek': '0.6', '--tilt': '4deg', '--i': '5' } as React.CSSProperties}>
               <span className="tp-lineup__ghost"><span className="tp-lineup__name font-scrawl">Maltipoo</span></span>

@@ -7,8 +7,8 @@ import Link from 'next/link';
 export default function HomeQuestions() {
   const [openIndices, setOpenIndices] = useState<{ [key: number]: boolean }>({
     0: true,
-    1: false,
-    2: false,
+    1: true,
+    2: true,
   });
 
   const toggleQuestion = (idx: number) => {
