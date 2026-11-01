@@ -270,7 +270,6 @@ export default function PupFollower() {
         // Basket state check
         const isAtBasket = (currentStopIdx === stops.length - 1 && isHolding) || scrollY >= maxScroll - 60;
         document.documentElement.setAttribute('data-at-basket', isAtBasket ? 'true' : 'false');
-        document.documentElement.setAttribute('data-pup', 'true');
 
         // Damped Linear Interpolation (LERP) for velvety smooth momentum
         const LERP_FACTOR = 0.16;
@@ -335,47 +334,6 @@ export default function PupFollower() {
             </svg>
           </div>
         ))}
-      </div>
-
-      {/* Dynamic Moving Puppy Mascot Companion */}
-      <div
-        className="pup-layer"
-        data-front={!isBehindLayer}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: isBehindLayer ? 15 : 40,
-          pointerEvents: 'none',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          ref={actorRef}
-          className="pup-actor"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            willChange: 'transform, opacity',
-            pointerEvents: 'auto',
-          }}
-        >
-          <div
-            ref={bodyRef}
-            className="pup-actor__body"
-            style={{
-              transformOrigin: '0 0',
-              width: '300px',
-            }}
-          >
-            <PupBuddy
-              pose={pose}
-              facing={facing}
-              asStop={false}
-              hideBody={pose === 'snug' || pose === 'sleep'}
-            />
-          </div>
-        </div>
       </div>
     </>
   );

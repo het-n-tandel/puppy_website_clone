@@ -79,14 +79,10 @@
   font-weight: 500;
 }
 
-/* Authentic Paw Cursor matching the reference site */
+/* Custom Paw Cursor that tracks pointer with lag */
 @media (hover: hover) and (pointer: fine) {
-  html, body {
-    cursor: url('/cursor/paw.svg') 9 6, auto;
-  }
-
-  a, button, summary, label, [role="button"], select, input, textarea {
-    cursor: url('/cursor/paw-press.svg') 11 6, pointer;
+  html, body, a, button, summary, label, [role="button"], select, input, textarea {
+    cursor: none;
   }
 }
 
@@ -182,28 +178,14 @@
 }
 
 /* ==========================================================================
-   AUTHENTIC SCROLL-TRACKING PUPPY COMPANION & PLACEHOLDER MANAGEMENT
+   AUTHENTIC SECTION PUPPY MASCOT VISIBILITY & INTERACTION
    ========================================================================== */
-html[data-pup="true"] .pup-stop:not(.tp-basket__pup),
-html[data-pup="true"] .pup-stop:not(.tp-basket__pup) *,
-html[data-pup="true"] [data-pup-stop="true"]:not(.tp-basket__pup),
-html[data-pup="true"] [data-pup-stop="true"]:not(.tp-basket__pup) * {
-  visibility: hidden !important;
-  opacity: 0 !important;
-}
-
-html[data-pup="true"] .tp-night__wonder {
-  display: none !important;
-}
-
-html[data-pup="true"]:not([data-at-basket="true"]) .tp-basket__pup {
-  visibility: hidden !important;
-  opacity: 0 !important;
-}
-
-html[data-pup="true"][data-at-basket="true"] .tp-basket__pup {
+.pup-stop,
+[data-pup-stop="true"],
+.tp-basket__pup {
   visibility: visible !important;
   opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 html {

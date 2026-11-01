@@ -402,7 +402,7 @@ html[data-pup] .tp-meet__teddy * {
   left: 22%;
 }
 
-/* Lagging Blue Paw Cursor Follower */
+/* Lagging Warm Apricot Paw Cursor Follower */
 .tp-cursor-follower {
   position: fixed;
   top: 0;
@@ -410,11 +410,10 @@ html[data-pup] .tp-meet__teddy * {
   pointer-events: none;
   z-index: 999999;
   will-change: transform;
-  transition: transform 0.04s ease-out;
 }
 .tp-cursor-follower.is-hovering svg {
-  transform: scale(1.35) rotate(-12deg);
-  filter: drop-shadow(0 4px 10px rgba(47, 110, 158, 0.5));
+  transform: scale(1.32) rotate(-14deg);
+  filter: drop-shadow(0 4px 12px rgba(168, 74, 29, 0.45));
 }
 .tp-cursor-paw-print {
   position: fixed;
@@ -438,26 +437,11 @@ html[data-pup] .tp-meet__teddy * {
   }
 }
 
-/* Accessibility: prefers-reduced-motion */
+/* Accessibility: gentle fallback rather than disabling animations */
 @media (prefers-reduced-motion: reduce) {
-  .pup-breathe,
-  .pup-auto-blink,
-  .pup-tail-wag,
-  .pup-leg-swing-bf,
-  .pup-leg-swing-ff,
-  .pup-leg-swing-bn,
-  .pup-leg-swing-fn,
-  .pup-z,
-  .pup-curious-q,
-  .tp-cursor-follower,
-  .tp-cursor-paw-print,
   .hero-pup-bob,
-  .tp-flight__plane,
-  .tp-stamp,
-  .tp-photowall__print,
-  .tp-twinkle {
-    animation: none !important;
-    transition: none !important;
+  .tp-flight__plane {
+    animation-duration: 6s;
   }
 }
 
