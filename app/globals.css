@@ -183,9 +183,7 @@
 .pup-stop,
 [data-pup-stop="true"],
 .tp-basket__pup {
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
+  pointer-events: auto;
 }
 
 html {

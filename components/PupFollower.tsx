@@ -23,7 +23,7 @@ export default function PupFollower() {
   // Smooth physical position with damped linear interpolation (LERP)
   const currentPos = useRef({ x: 0, y: 0 });
   const currentScale = useRef(0.8);
-  const currentOpacity = useRef(1);
+  const currentOpacity = useRef(0);
 
   const isScrollingRef = useRef(false);
   const scrollStopTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -53,141 +53,202 @@ export default function PupFollower() {
       const vh = window.innerHeight;
       const scrollY = window.scrollY;
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - vh);
+      const anchorY = vh * 0.48;
 
-      // 1. Detect if user is inside the pinned Meet the pups runway
+      // Check if user is inside the pinned Meet the pups showroom runway
       const meetSec = document.querySelector('section.tp-meet, section[aria-labelledby="meet-title"]');
       let inMeetRunway = false;
       if (meetSec) {
         const mRect = meetSec.getBoundingClientRect();
-        if (mRect.top <= 80 && mRect.bottom >= vh * 0.35) {
+        if (mRect.top <= 80 && mRect.bottom >= vh * 0.4) {
           inMeetRunway = true;
         }
       }
 
-      // 2. Determine active segment across all page sections using live viewport coordinates
-      // Target anchor line is at vh * 0.5 (middle of the screen)
-      const anchorY = vh * 0.5;
-      let k = 0;
-      for (let i = 0; i < stopEls.length - 1; i++) {
-        const rNext = stopEls[i + 1].getBoundingClientRect();
-        if (rNext.top <= anchorY) {
-          k = i + 1;
+      // Check if user has reached the footer basket
+      const basketStop = stopEls[stopEls.length - 1];
+      let atBasket = false;
+      if (basketStop) {
+        const bRect = basketStop.getBoundingClientRect();
+        if (bRect.top <= vh * 0.85 || scrollY >= maxScroll - 70) {
+          atBasket = true;
+        }
+      }
+
+      // Determine if puppy should dock at a stationary stop
+      let dockedIndex = -1;
+
+      if (scrollY < 80) {
+        // At top of page: docked to Hero quilt
+        dockedIndex = 0;
+      } else if (inMeetRunway) {
+        // Inside pinned showroom: docked to runway track
+        dockedIndex = 1;
+      } else if (atBasket) {
+        // At bottom of page: docked inside wicker basket
+        dockedIndex = stopEls.length - 1;
+      } else if (!isScrollingRef.current) {
+        // When scrolling pauses, dock to nearest stop if within range
+        let nearestIdx = -1;
+        let minDist = Infinity;
+        for (let i = 2; i < stopEls.length - 1; i++) {
+          const r = stopEls[i].getBoundingClientRect();
+          const dist = Math.abs(r.top + r.height / 2 - anchorY);
+          if (dist < minDist) {
+            minDist = dist;
+            nearestIdx = i;
+          }
+        }
+        if (minDist < 120 && nearestIdx !== -1) {
+          dockedIndex = nearestIdx;
         }
       }
 
       let targetX = 0;
       let targetY = 0;
       let targetScale = 0.8;
-      const targetOpacity = inMeetRunway ? 0 : 1;
+      let targetOpacity = 0;
       let nextPose: NonNullable<PupBuddyProps['pose']> = 'stand';
       let nextFacing: 'left' | 'right' = 'right';
       let nextBehind = false;
 
-      const isFinalStop = k === stopEls.length - 1;
-      const isAtBasket = isFinalStop || scrollY >= maxScroll - 60;
-      document.documentElement.setAttribute('data-at-basket', isAtBasket ? 'true' : 'false');
+      if (dockedIndex !== -1) {
+        // DOCKED MODE: Show the stationary puppy at this stop; hide all others
+        stopEls.forEach((stop, idx) => {
+          const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
+          if (idx === dockedIndex) {
+            buddy.style.opacity = '1';
+            buddy.style.visibility = 'visible';
+          } else {
+            buddy.style.opacity = '0';
+            buddy.style.visibility = 'hidden';
+          }
+        });
 
-      if (isFinalStop) {
-        // At final stop (Wicker Basket in Footer)
-        const stopEl = stopEls[k];
-        const r = stopEl.getBoundingClientRect();
+        // Follower puppy hides when docked
+        targetOpacity = 0;
+
+        const dockedStop = stopEls[dockedIndex];
+        const r = dockedStop.getBoundingClientRect();
         targetX = r.left;
         targetY = r.top;
         targetScale = (r.width || 180) / 300;
-        nextFacing = (stopEl.dataset.facing as 'left' | 'right') || 'right';
-        nextBehind = true;
-        nextPose = 'snug';
-      } else {
-        const stopA = stopEls[k];
-        const stopB = stopEls[k + 1];
+        nextFacing = (dockedStop.dataset.facing as 'left' | 'right') || 'right';
+        nextBehind = dockedStop.dataset.behind === 'true';
+        nextPose = (dockedStop.dataset.pose as any) || 'sit';
 
+        const isAtBasket = dockedIndex === stopEls.length - 1;
+        document.documentElement.setAttribute('data-at-basket', isAtBasket ? 'true' : 'false');
+      } else {
+        // ACTIVE MOVING FOLLOWER MODE:
+        // Hide ALL stationary puppies so only the moving companion is on screen
+        stopEls.forEach((stop) => {
+          const buddy = stop.querySelector<HTMLElement>('.pup-buddy') || stop;
+          buddy.style.opacity = '0';
+          buddy.style.visibility = 'hidden';
+        });
+
+        document.documentElement.setAttribute('data-at-basket', 'false');
+        targetOpacity = 1;
+
+        // Find which two stops we are between in document coordinates
+        const currentDocY = scrollY + anchorY;
+        let fromIdx = 0;
+        let toIdx = 1;
+
+        for (let i = 0; i < stopEls.length - 1; i++) {
+          const r1 = stopEls[i].getBoundingClientRect();
+          const r2 = stopEls[i + 1].getBoundingClientRect();
+          const docY1 = r1.top + scrollY + r1.height / 2;
+          const docY2 = r2.top + scrollY + r2.height / 2;
+
+          if (currentDocY >= docY1 && currentDocY <= docY2) {
+            fromIdx = i;
+            toIdx = i + 1;
+            break;
+          } else if (currentDocY > docY2) {
+            fromIdx = i;
+            toIdx = Math.min(stopEls.length - 1, i + 1);
+          }
+        }
+
+        const stopA = stopEls[fromIdx];
+        const stopB = stopEls[toIdx];
         const rA = stopA.getBoundingClientRect();
         const rB = stopB.getBoundingClientRect();
 
-        const span = rB.top - rA.top;
-        const rawT = span > 0 ? Math.max(0, Math.min(1, (anchorY - rA.top) / span)) : 0;
+        const docY1 = rA.top + scrollY + rA.height / 2;
+        const docY2 = rB.top + scrollY + rB.height / 2;
+        const span = Math.max(1, docY2 - docY1);
+        const rawT = Math.min(1, Math.max(0, (currentDocY - docY1) / span));
 
-        if (rawT <= 0.12) {
-          // Resting comfortably at stop k
-          targetX = rA.left;
-          targetY = rA.top;
-          targetScale = (rA.width || 180) / 300;
-          nextFacing = (stopA.dataset.facing as 'left' | 'right') || 'right';
-          nextBehind = stopA.dataset.behind === 'true';
-          nextPose = (stopA.dataset.pose as any) || 'sit';
-        } else if (rawT >= 0.88) {
-          // Arriving comfortably at stop k + 1
-          targetX = rB.left;
-          targetY = rB.top;
-          targetScale = (rB.width || 180) / 300;
-          nextFacing = (stopB.dataset.facing as 'left' | 'right') || 'right';
-          nextBehind = stopB.dataset.behind === 'true';
-          nextPose = (stopB.dataset.pose as any) || 'sit';
-        } else {
-          // Actively walking between stops along the page!
-          const progress = (rawT - 0.12) / (0.88 - 0.12);
-          const v = progress * progress * (3 - 2 * progress); // Smoothstep
+        // Smoothstep interpolation (3t^2 - 2t^3)
+        const v = rawT * rawT * (3 - 2 * rawT);
 
-          const scaleA = (rA.width || 180) / 300;
-          const scaleB = (rB.width || 180) / 300;
-          targetScale = (1 - v) * scaleA + v * scaleB;
+        const xA = rA.left;
+        const xB = rB.left;
+        const yA = rA.top;
+        const yB = rB.top;
 
-          // Organic gentle sway across the screen
-          const sway = Math.sin(progress * Math.PI) * 16;
-          targetX = (1 - v) * rA.left + v * rB.left + sway;
+        const scaleA = (rA.width || 180) / 300;
+        const scaleB = (rB.width || 180) / 300;
+        targetScale = (1 - v) * scaleA + v * scaleB;
 
-          // Comfortable cruising height in viewport
-          const yCruise = vh * 0.52;
-          const cruiseBlend = Math.sin(progress * Math.PI);
-          targetY = (1 - cruiseBlend) * ((1 - v) * rA.top + v * rB.top) + cruiseBlend * yCruise;
+        // Subtle organic trot sway
+        const sway = Math.sin(v * Math.PI) * 16;
+        targetX = (1 - v) * xA + v * xB + sway;
 
-          const dx = rB.left - rA.left;
-          nextFacing = dx >= 0 ? 'right' : 'left';
-          nextPose = isScrollingRef.current ? 'walk' : 'stand';
-          nextBehind = false;
+        // Maintain comfortable cruising elevation in viewport
+        const yCruise = vh * 0.52;
+        const blend = Math.sin(v * Math.PI);
+        targetY = (1 - blend) * ((1 - v) * yA + v * yB) + blend * yCruise;
 
-          // Drop subtle 4-paw prints trail along movement path
-          if (isScrollingRef.current && currentOpacity.current > 0.4) {
-            const centerPupX = currentPos.current.x + 150 * currentScale.current;
-            const centerPupY = currentPos.current.y + 180 * currentScale.current;
-            const distSinceLast = Math.hypot(
-              centerPupX - lastPrintPosRef.current.x,
-              centerPupY - lastPrintPosRef.current.y
-            );
+        const dx = xB - xA;
+        nextFacing = dx >= 0 ? 'right' : 'left';
+        nextPose = isScrollingRef.current ? 'walk' : 'stand';
+        nextBehind = false;
 
-            if (distSinceLast > 52) {
-              lastPrintPosRef.current = { x: centerPupX, y: centerPupY };
-              const rad = Math.atan2(rB.top - rA.top, rB.left - rA.left);
-              const deg = (rad * 180) / Math.PI + 90;
-              const cos = Math.cos(rad);
-              const sin = Math.sin(rad);
+        // Drop subtle 4-paw prints trail along movement path
+        if (isScrollingRef.current && currentOpacity.current > 0.4) {
+          const centerPupX = currentPos.current.x + 150 * currentScale.current;
+          const centerPupY = currentPos.current.y + 180 * currentScale.current;
+          const distSinceLast = Math.hypot(
+            centerPupX - lastPrintPosRef.current.x,
+            centerPupY - lastPrintPosRef.current.y
+          );
 
-              const offsets = [
-                { ox: -sin * -7 + cos * 12, oy: cos * -7 + sin * 12 },
-                { ox: -sin * 7 + cos * 8, oy: cos * 7 + sin * 8 },
-                { ox: -sin * -6 + cos * -8, oy: cos * -6 + sin * -8 },
-                { ox: -sin * 6 + cos * -12, oy: cos * 6 + sin * -12 },
-              ];
+          if (distSinceLast > 50) {
+            lastPrintPosRef.current = { x: centerPupX, y: centerPupY };
+            const rad = Math.atan2(rB.top - rA.top, rB.left - rA.left);
+            const deg = (rad * 180) / Math.PI + 90;
+            const cos = Math.cos(rad);
+            const sin = Math.sin(rad);
 
-              const newPrints = offsets.map((p) => ({
-                id: ++printIdRef.current,
-                x: centerPupX + p.ox,
-                y: centerPupY + p.oy,
-                angle: deg,
-              }));
+            const offsets = [
+              { ox: -sin * -7 + cos * 12, oy: cos * -7 + sin * 12 },
+              { ox: -sin * 7 + cos * 8, oy: cos * 7 + sin * 8 },
+              { ox: -sin * -6 + cos * -8, oy: cos * -6 + sin * -8 },
+              { ox: -sin * 6 + cos * -12, oy: cos * 6 + sin * -12 },
+            ];
 
-              setPawPrints((prev) => [...prev.slice(-20), ...newPrints]);
-            }
+            const newPrints = offsets.map((p) => ({
+              id: ++printIdRef.current,
+              x: centerPupX + p.ox,
+              y: centerPupY + p.oy,
+              angle: deg,
+            }));
+
+            setPawPrints((prev) => [...prev.slice(-20), ...newPrints]);
           }
         }
       }
 
       // Damped Linear Interpolation (LERP) for velvety smooth momentum
-      const LERP_FACTOR = 0.16;
+      const LERP_FACTOR = 0.22;
       currentPos.current.x += (targetX - currentPos.current.x) * LERP_FACTOR;
       currentPos.current.y += (targetY - currentPos.current.y) * LERP_FACTOR;
       currentScale.current += (targetScale - currentScale.current) * LERP_FACTOR;
-      currentOpacity.current += (targetOpacity - currentOpacity.current) * 0.22;
+      currentOpacity.current += (targetOpacity - currentOpacity.current) * 0.28;
 
       // Apply direct DOM transforms for 60fps/120fps hardware acceleration
       if (actorRef.current) {

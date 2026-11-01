@@ -532,7 +532,11 @@ export default function HomeMeet() {
 
               {/* Teddy Mascot RUNNING ON FLOOR */}
               <div
-                className="tp-meet__teddy absolute bottom-[4.2rem] sm:bottom-[5rem] z-40 pointer-events-auto select-none"
+                data-pup-stop="true"
+                data-pose="walk"
+                data-facing={facing}
+                data-lane="true"
+                className="pup-stop tp-meet__teddy absolute bottom-[4.2rem] sm:bottom-[5rem] z-40 pointer-events-auto select-none"
                 style={{
                   left: `${runningLeftPercent}%`,
                   width: 'clamp(7.5rem, 10vw, 9rem)',
