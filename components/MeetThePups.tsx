@@ -188,23 +188,13 @@ export default function MeetThePups({ puppies }: MeetThePupsProps) {
 
           {/* Grounded Wooden Parquet Floor Runway with treadmill motion */}
           <div
+            aria-hidden="true"
             className="tp-meet__floor relative w-full h-20 sm:h-24 border-t-[3.5px] border-[#2a170e] z-10 shadow-[0_-10px_0_-4px_#f5d9a8]"
             style={{
               background: `linear-gradient(to bottom, #2a170e20, transparent 24%), repeating-linear-gradient(90deg, transparent 0 160px, #2a170e1a 160px 162px), linear-gradient(#e8b06a, #dc9a52)`,
               backgroundPosition: `${-scrollProgress * 800}px 0`,
             }}
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between text-xs font-bold text-[#2a170e]/80 uppercase tracking-widest">
-              <span className="flex items-center gap-2">
-                <span>🐾</span>
-                <span className="hidden sm:inline">Showroom Runway Track</span>
-              </span>
-              <span className="flex items-center gap-1.5 animate-pulse text-[#2a170e]">
-                <span>Scroll to see Teddy run &amp; explore pups</span>
-                <span>→</span>
-              </span>
-            </div>
-          </div>
+          />
         </div>
       </div>
     </section>
