@@ -127,48 +127,48 @@ export default function PupBuddy({
   let ledgeOpacity = 0;
   let bodyTransform = 'translate(0 0) rotate(0 196 206)';
   let headTransform = 'translate(0 0) rotate(0 212 100)';
-  let earLTransform = isPerked ? 'rotate(-7 174 82)' : 'rotate(0 174 82)';
-  let earRTransform = isPerked ? 'rotate(7 250 82)' : 'rotate(0 250 82)';
+  let earLTransform = isPerked ? 'rotate(-1 174 82)' : 'rotate(1 174 82)';
+  let earRTransform = isPerked ? 'rotate(-2 250 82)' : 'rotate(-4 250 82)';
 
   if (pose === 'peek') {
-    // Hero: Peeking centered over quilt blanket with paws on rim
+    // Hero: Peeking centered over quilt blanket with paws on rim, both ears down
     shadowOpacity = 0;
     bodyOpacity = 0;
     haunchOpacity = 0;
     ledgeOpacity = 1;
     headTransform = 'translate(0 4) rotate(0 212 100)';
-    earLTransform = 'rotate(-6 174 82)';
-    earRTransform = 'rotate(6 250 82)';
+    earLTransform = 'rotate(1 174 82)';
+    earRTransform = 'rotate(-4 250 82)';
   } else if (pose === 'sit') {
-    // Sitting: body and haunch disappear, cute head and front paws resting in front
+    // Sitting: body and haunch disappear, cute head and front paws resting in front, ears down
     shadowOpacity = 0.08;
     bodyOpacity = hideBody === false ? 1 : 0;
     haunchOpacity = hideBody === false ? 1 : 0;
     haunchTransform = 'translate(0 1.44)';
     ledgeOpacity = 1;
     headTransform = 'translate(0 2) rotate(0 212 100)';
-    earLTransform = isPerked ? 'rotate(-6 174 82)' : 'rotate(-3 174 82)';
-    earRTransform = isPerked ? 'rotate(6 250 82)' : 'rotate(3 250 82)';
+    earLTransform = 'rotate(1 174 82)';
+    earRTransform = 'rotate(-4 250 82)';
   } else if (pose === 'sit-turned') {
-    // Sitting turned: body hidden, head turned/tilted toward content
+    // Sitting turned: body hidden, head turned/tilted toward content, ears down
     shadowOpacity = 0.08;
     bodyOpacity = hideBody === false ? 1 : 0;
     haunchOpacity = hideBody === false ? 1 : 0;
     haunchTransform = 'translate(0 1.44)';
     ledgeOpacity = 1;
     headTransform = 'translate(6 2) rotate(10 212 100)';
-    earLTransform = 'rotate(-4 174 82)';
-    earRTransform = 'rotate(7 250 82)';
+    earLTransform = 'rotate(0 174 82)';
+    earRTransform = 'rotate(-3 250 82)';
   } else if (pose === 'tilt' || pose === 'curious') {
-    // Questions: sitting, body disappears, head tilted 16deg with curiosity looking up at '?'
+    // Questions: sitting, body disappears, head tilted 16deg with curiosity looking up at '?', ears down
     shadowOpacity = 0.08;
     bodyOpacity = hideBody === false ? 1 : 0;
     haunchOpacity = hideBody === false ? 1 : 0;
     haunchTransform = 'translate(0 1.44)';
     ledgeOpacity = 1;
     headTransform = 'translate(0 2) rotate(16 212 100)';
-    earLTransform = 'rotate(-2 174 82)';
-    earRTransform = 'rotate(12 250 82)';
+    earLTransform = 'rotate(0 174 82)';
+    earRTransform = 'rotate(-2 250 82)';
   } else if (pose === 'bow') {
     // Playful bow on doorstep
     shadowOpacity = 0.12;
@@ -178,41 +178,47 @@ export default function PupBuddy({
     haunchTransform = 'translate(0 -0.9)';
     ledgeOpacity = 0;
     headTransform = 'translate(14 30) rotate(0 212 100)';
+    earLTransform = 'rotate(1 174 82)';
+    earRTransform = 'rotate(-3 250 82)';
   } else if (pose === 'lie-happy') {
-    // CTA: Lying down flat on tummy, paws forward, happy curved eyes ^ ^ and tail wagging
+    // CTA: Lying down flat on tummy, paws forward, happy curved eyes ^ ^ and tail wagging, ears down
     shadowOpacity = 0.14;
     bodyTransform = 'translate(0 18) scale(1.05 0.76) rotate(0 196 206)';
     bodyOpacity = 1;
     haunchOpacity = 0;
     ledgeOpacity = 0;
     headTransform = 'translate(8 14) rotate(-3 212 100)';
-    earLTransform = 'rotate(-6 174 82)';
-    earRTransform = 'rotate(4 250 82)';
+    earLTransform = 'rotate(0 174 82)';
+    earRTransform = 'rotate(-3 250 82)';
   } else if (pose === 'snug' || pose === 'sleep') {
-    // Footer: Nestled inside wicker basket, body completely removed, paws on basket rim, sleeping eyes
+    // Footer: Nestled inside wicker basket, body completely removed, paws on basket rim, sleeping eyes, ears down
     shadowOpacity = 0;
     bodyOpacity = 0;
     haunchOpacity = 0;
     ledgeOpacity = 1;
     headTransform = 'translate(0 9) rotate(4 212 100)';
-    earLTransform = 'rotate(-2 174 82)';
-    earRTransform = 'rotate(5 250 82)';
+    earLTransform = 'rotate(1 174 82)';
+    earRTransform = 'rotate(-4 250 82)';
   } else if (pose === 'walk') {
-    // Meet the pups: Strolling on wooden showroom runway floor
+    // Meet the pups: Strolling on wooden showroom runway floor, ears down
     shadowOpacity = 0.12;
     bodyTransform = 'translate(0 0) rotate(0 196 206)';
     bodyOpacity = 1;
     haunchOpacity = 0;
     ledgeOpacity = 0;
     headTransform = 'translate(0 0) rotate(0 212 100)';
+    earLTransform = 'rotate(0 174 82)';
+    earRTransform = 'rotate(-3 250 82)';
   } else if (pose === 'stand') {
-    // Passport: Standing proudly beside certified guarantee stamps
+    // Passport: Standing proudly beside certified guarantee stamps, ears down
     shadowOpacity = 0.12;
     bodyTransform = 'translate(0 0) rotate(0 196 206)';
     bodyOpacity = 1;
     haunchOpacity = 0;
     ledgeOpacity = 0;
     headTransform = 'translate(0 0) rotate(0 212 100)';
+    earLTransform = 'rotate(0 174 82)';
+    earRTransform = 'rotate(-3 250 82)';
   }
 
   if (hideBody) {
@@ -366,30 +372,31 @@ export default function PupBuddy({
                 </g>
               </g>
 
-              {/* Tail */}
+              {/* Tail firmly attached to body */}
               <g
                 data-p="tail"
-                transform="rotate(-20 84 150)"
-                className={isSmiling || isPet || isLieHappy ? 'pup-tail-wag' : ''}
-                style={{ transformOrigin: '84px 150px' }}
+                className={isSmiling || isPet || isLieHappy ? 'pup-tail-wag' : 'pup-gentle-wag'}
+                style={{ transformOrigin: '100px 162px' }}
               >
+                {/* Tail stem starting well inside the rump at (102, 162) */}
                 <path
-                  d="M86 152 C80 146 76 140 74 136"
+                  d="M102 162 C92 154 82 144 76 134"
                   stroke="#2a170e"
-                  strokeWidth="9"
+                  strokeWidth="10"
                   strokeLinejoin="round"
                   strokeLinecap="round"
                   fill="none"
                 />
                 <path
-                  d="M86 152 C80 146 76 140 74 136"
+                  d="M102 162 C92 154 82 144 76 134"
                   stroke="#f2be6b"
-                  strokeWidth="4"
+                  strokeWidth="5"
                   fill="none"
                   strokeLinecap="round"
                 />
+                {/* Fluffy Pom-Pom tail puff */}
                 <path
-                  d="M70.0 110.0Q78.1 105.0 80.9 113.7Q90.5 114.8 86.7 123.2Q93.4 129.9 84.7 134.0Q85.2 143.1 75.8 141.0Q70.0 148.3 64.2 141.0Q54.8 143.1 55.3 134.0Q46.6 129.9 53.3 123.2Q49.5 114.8 59.1 113.7Q61.9 105.0 70.0 110.0Z"
+                  d="M72.0 108.0Q80.1 103.0 82.9 111.7Q92.5 112.8 88.7 121.2Q95.4 127.9 86.7 132.0Q87.2 141.1 77.8 139.0Q72.0 146.3 66.2 139.0Q56.8 141.1 57.3 132.0Q48.6 127.9 55.3 121.2Q51.5 112.8 61.1 111.7Q63.9 103.0 72.0 108.0Z"
                   fill="#f2be6b"
                   stroke="#2a170e"
                   strokeWidth="3.4"

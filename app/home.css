@@ -162,13 +162,13 @@ html[data-pup] .tp-meet__teddy * {
 }
 
 @keyframes pup-tail-wag {
-  0%, 100% { transform: rotate(-28deg 84 150); }
-  50% { transform: rotate(-8deg 84 150); }
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
 }
 
 .pup-tail-wag {
   animation: pup-tail-wag 0.35s ease-in-out infinite !important;
-  transform-origin: 84px 150px !important;
+  transform-origin: 100px 162px !important;
 }
 
 /* Interactive speech bubble */
